@@ -39,7 +39,7 @@ void ProcessBAM::Initialize(std::string bamfilename, int nOfExp, int padd, int r
 }
 
 
-void ProcessBAM::ProcessSortedBamFile_NegCtrls(ProbeSet& ProbeClass, ProbeRESitesClass dpnII, ProximityClass proximities, std::string BAMFILENAME, int ExperimentNo, std::string DesignName, std::string StatsOption){
+void ProcessBAM::ProcessSortedBamFile_NegCtrls(ProbeSet& ProbeClass, ProbeRESitesClass& dpnII, ProximityClass& proximities, std::string BAMFILENAME, int ExperimentNo, std::string DesignName, std::string StatsOption){
     
     BamAlignment al, almate;
     BamReader reader;
@@ -58,8 +58,7 @@ void ProcessBAM::ProcessSortedBamFile_NegCtrls(ProbeSet& ProbeClass, ProbeRESite
      }
     
     Alignment pairinfo;
-    int strandcomb = 0, sc_index;
-    bool read1_strand, read2_strand;
+    int strandcomb = 0, sc_index=0;
     std::string feature_id1, feature_id2;
     bool re1f, re1r;
     pairinfo.resites1 = new int [2];
@@ -70,16 +69,23 @@ void ProcessBAM::ProcessSortedBamFile_NegCtrls(ProbeSet& ProbeClass, ProbeRESite
         totalNumberofPairs=totalNumberofPairs+1;
     }
     
-    reader.Close();
-    
-    reader.Open(BAMFILENAME.c_str());
 	
 	for(int i = 0; i < Design_NegCtrl[DesignName].Probes.size(); i++){
 		probeRefID = ChrNamestoRefID[Design_NegCtrl[DesignName].Probes[i].chr];
 		probeRegion.LeftRefID = probeRefID;
 		probeRegion.RightRefID = probeRefID;
-		probeRegion.LeftPosition =  Design_NegCtrl[DesignName].Probes[i].start - padding;
-		probeRegion.RightPosition =  Design_NegCtrl[DesignName].Probes[i].end + padding;
+		//probeRegion.LeftPosition =  Design_NegCtrl[DesignName].Probes[i].start - padding;
+		//probeRegion.RightPosition =  Design_NegCtrl[DesignName].Probes[i].end + padding;
+		//left and right
+		if(Design_NegCtrl[DesignName].Probes[i].side=="L"){
+			probeRegion.LeftPosition =  Design_NegCtrl[DesignName].Probes[i].start;
+			probeRegion.RightPosition =  Design_NegCtrl[DesignName].Probes[i].end + padding;
+		}
+		else if(Design_NegCtrl[DesignName].Probes[i].side=="R"){
+			probeRegion.LeftPosition =  Design_NegCtrl[DesignName].Probes[i].start- padding;;
+			probeRegion.RightPosition =  Design_NegCtrl[DesignName].Probes[i].end;
+		}
+		
 		reader.SetRegion(probeRegion);
 
 		while(reader.GetNextAlignmentCore(al)){
@@ -107,21 +113,6 @@ void ProcessBAM::ProcessSortedBamFile_NegCtrls(ProbeSet& ProbeClass, ProbeRESite
 			   }
 			   
 			   if(StatsOption!="ComputeStatsOnly"){
-				   read1_strand = al.IsReverseStrand();
-				   read2_strand = al.IsMateReverseStrand();
-				   if(read1_strand == 0){
-					   if(read2_strand == 0)
-					     strandcomb = 0; // forward-forward
-					   else
-                         strandcomb = 1; //forward-reverse
-                    }
-                    else{
-						if(read2_strand == 0)
-							strandcomb = 2; // reverse-forward
-						if(read2_strand == 1)
-							strandcomb = 3; // reverse-reverse
-					}
-					sc_index = (ExperimentNo*4) + strandcomb;
 					proximities.RecordProximities(pairinfo, feature_id1, feature_id2, sc_index, ExperimentNo);
 				}
         if(NumberofPairs % 20000000 == 0)
@@ -134,7 +125,7 @@ void ProcessBAM::ProcessSortedBamFile_NegCtrls(ProbeSet& ProbeClass, ProbeRESite
 
 
 
-void ProcessBAM::ProcessSortedBAMFile(ProbeSet& ProbeClass, ProbeRESitesClass dpnII, ProximityClass proximities, std::string BAMFILENAME, int ExperimentNo, std::string whichchr, std::string DesignName, std::string StatsOption){
+void ProcessBAM::ProcessSortedBAMFile(ProbeSet& ProbeClass, ProbeRESitesClass& dpnII, ProximityClass& proximities, std::string BAMFILENAME, int ExperimentNo, std::string whichchr, std::string DesignName, std::string StatsOption){
    
 	BamAlignment al, almate;
 	BamReader reader;
@@ -156,9 +147,9 @@ void ProcessBAM::ProcessSortedBAMFile(ProbeSet& ProbeClass, ProbeRESitesClass dp
 	}
 
 	Alignment pairinfo;
-	int strandcomb = 0, sc_index;
+	int strandcomb = 0, sc_index=0;
 	std::string feature_id1, feature_id2;
-	bool read1_strand, read2_strand, re1f, re1r;
+	bool re1f, re1r;
 	pairinfo.resites1 = new int [2];
 	pairinfo.resites2 = new int [2];
 
@@ -178,16 +169,21 @@ void ProcessBAM::ProcessSortedBAMFile(ProbeSet& ProbeClass, ProbeRESitesClass dp
         totalNumberofPairs=totalNumberofPairs+1;
     }
     
-    reader.Close();
-    
-    reader.Open(BAMFILENAME.c_str());
 	
 	for(int i = 0; i < Design[DesignName].Probes.size(); i++){
 		probeRefID = ChrNamestoRefID[Design[DesignName].Probes[i].chr];
 		probeRegion.LeftRefID = probeRefID;
 		probeRegion.RightRefID = probeRefID;
-		probeRegion.LeftPosition =  Design[DesignName].Probes[i].start - padding;
-		probeRegion.RightPosition =  Design[DesignName].Probes[i].end + padding;
+		if(Design[DesignName].Probes[i].side=="L"){
+			probeRegion.LeftPosition =  Design[DesignName].Probes[i].start;
+			probeRegion.RightPosition =  Design[DesignName].Probes[i].end + padding;
+		}
+		else if(Design[DesignName].Probes[i].side=="R"){
+			probeRegion.LeftPosition =  Design[DesignName].Probes[i].start- padding;;
+			probeRegion.RightPosition =  Design[DesignName].Probes[i].end;
+		}
+		//probeRegion.LeftPosition =  Design[DesignName].Probes[i].start - padding;
+		//probeRegion.RightPosition =  Design[DesignName].Probes[i].end + padding;
 	
 		reader.SetRegion(probeRegion);
 		while(reader.GetNextAlignmentCore(al)){
@@ -264,21 +260,6 @@ void ProcessBAM::ProcessSortedBAMFile(ProbeSet& ProbeClass, ProbeRESitesClass dp
 				}
             
 				if(StatsOption!="ComputeStatsOnly"){
-						read1_strand = al.IsReverseStrand();
-						read2_strand = al.IsMateReverseStrand();
-						if(read1_strand == 0){
-							if(read2_strand == 0)
-								strandcomb = 0; // forward-forward
-							else
-								strandcomb = 1; //forward-reverse
-						}
-						else{
-							if(read2_strand == 0)
-									strandcomb = 2; // reverse-forward
-							if(read2_strand == 1)
-									strandcomb = 3; // reverse-reverse
-						}
-					sc_index = (ExperimentNo*4) + strandcomb;
 					proximities.RecordProximities(pairinfo, feature_id1, feature_id2, sc_index, ExperimentNo);
 				}
        
@@ -294,7 +275,7 @@ void ProcessBAM::ProcessSortedBAMFile(ProbeSet& ProbeClass, ProbeRESitesClass dp
 
 
 
-void ProcessBAM::ProcessSortedBAMFileForEnhancers(ProbeSet& ProbeClass, ProbeRESitesClass dpnII, ProximityClass proximities, std::string BAMFILENAME, int ExperimentNo, std::string whichchr, std::string DesignName, std::string StatsOption, EnhancerSet& EnClass){
+void ProcessBAM::ProcessSortedBAMFileForEnhancers(ProbeSet& ProbeClass, ProbeRESitesClass& dpnII, ProximityClass& proximities, std::string BAMFILENAME, int ExperimentNo, std::string whichchr, std::string DesignName, std::string StatsOption, EnhancerSet& EnClass){
     
 	BamAlignment al, almate;
 	BamReader reader;
@@ -316,7 +297,7 @@ void ProcessBAM::ProcessSortedBAMFileForEnhancers(ProbeSet& ProbeClass, ProbeRES
 	}
 
 	enAlignment enpairinfo;
-	int strandcomb = 0, sc_index;
+	int strandcomb = 0, sc_index=0;
 	std::string feature_id1, feature_id2;
 
 	bool read1_strand, read2_strand, re1f, re1r;
@@ -370,21 +351,6 @@ void ProcessBAM::ProcessSortedBAMFileForEnhancers(ProbeSet& ProbeClass, ProbeRES
      
             
 				if(StatsOption!="ComputeStatsOnly"){
-						read1_strand = al.IsReverseStrand();
-						read2_strand = al.IsMateReverseStrand();
-						if(read1_strand == 0){
-							if(read2_strand == 0)
-								strandcomb = 0; // forward-forward
-							else
-								strandcomb = 1; //forward-reverse
-						}
-						else{
-							if(read2_strand == 0)
-									strandcomb = 2; // reverse-forward
-							if(read2_strand == 1)
-									strandcomb = 3; // reverse-reverse
-						}
-						sc_index = (ExperimentNo*4) + strandcomb;
 						proximities.RecordEnhancerProximities(enpairinfo, enpairinfo.enid1, enpairinfo.enid2, sc_index, ExperimentNo);
 					}
        
@@ -412,21 +378,6 @@ void ProcessBAM::ProcessSortedBAMFileForEnhancers(ProbeSet& ProbeClass, ProbeRES
 				}
                            
 				if(StatsOption!="ComputeStatsOnly"){
-						read1_strand = al.IsReverseStrand();
-						read2_strand = al.IsMateReverseStrand();
-						if(read1_strand == 0){
-							if(read2_strand == 0)
-								strandcomb = 0; // forward-forward
-							else
-								strandcomb = 1; //forward-reverse
-						}
-						else{
-							if(read2_strand == 0)
-									strandcomb = 2; // reverse-forward
-							if(read2_strand == 1)
-									strandcomb = 3; // reverse-reverse
-						}
-					sc_index = (ExperimentNo*4) + strandcomb;
 					proximities.RecordEnhancerProximities(enpairinfo, enpairinfo.enid1, enpairinfo.enid2, sc_index, ExperimentNo, EnClass);
 				}
        

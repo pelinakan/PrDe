@@ -21,11 +21,11 @@ void ProximityClass::AnnotateDistalInteractor(std::string feature_id, std::strin
                     }
                     itx->junctions_ctx[n].refragend = interactor_resite[1];
                     itx->junctions_ctx[n].paircount[ExperimentNo] = 1;
-                    itx->junctions_ctx[n].strandcombination[sc_index] = 1;
+                    //itx->junctions_ctx[n].strandcombination[sc_index] = 1;
                  }
                 else{ // if inserted before
                     itx->junctions_ctx[n].paircount[ExperimentNo] += 1;
-                    itx->junctions_ctx[n].strandcombination[sc_index] += 1;
+                    //itx->junctions_ctx[n].strandcombination[sc_index] += 1;
                 }
                 
                 chrfound = 1;
@@ -45,7 +45,7 @@ void ProximityClass::AnnotateDistalInteractor(std::string feature_id, std::strin
             }
             Features[feature_id].proximities_ctx.back().junctions_ctx[n].refragend = interactor_resite[1];
             Features[feature_id].proximities_ctx.back().junctions_ctx[n].paircount[ExperimentNo] = 1;
-            Features[feature_id].proximities_ctx.back().junctions_ctx[n].strandcombination[sc_index] += 1;
+           // Features[feature_id].proximities_ctx.back().junctions_ctx[n].strandcombination[sc_index] += 1;
         }
     }
 }
@@ -72,11 +72,11 @@ void ProximityClass::AnnotateEnhancerDistalInteractor(std::string enid, std::str
                     }
                     itx->junctions_ctx[n].refragend = interactor_resite[1];
                     itx->junctions_ctx[n].paircount[ExperimentNo] = 1;
-                    itx->junctions_ctx[n].strandcombination[sc_index] = 1;
+                    //itx->junctions_ctx[n].strandcombination[sc_index] = 1;
                  }
                 else{ // if inserted before
                     itx->junctions_ctx[n].paircount[ExperimentNo] += 1;
-                    itx->junctions_ctx[n].strandcombination[sc_index] += 1;
+                    //itx->junctions_ctx[n].strandcombination[sc_index] += 1;
                 }
                 
                 chrfound = 1;
@@ -96,7 +96,7 @@ void ProximityClass::AnnotateEnhancerDistalInteractor(std::string enid, std::str
             }
             enClass.Enhancers[enid].proximities_ctx.back().junctions_ctx[n].refragend = interactor_resite[1];
             enClass.Enhancers[enid].proximities_ctx.back().junctions_ctx[n].paircount[ExperimentNo] = 1;
-            enClass.Enhancers[enid].proximities_ctx.back().junctions_ctx[n].strandcombination[sc_index] += 1;
+            //enClass.Enhancers[enid].proximities_ctx.back().junctions_ctx[n].strandcombination[sc_index] += 1;
         }
     }
 }
@@ -106,7 +106,7 @@ void ProximityClass::AnnotateFeatFeatInteraction(std::string feature_id1, std::s
     for (auto it = Features[feature_id1].Inter_feature_ints.begin(); it < Features[feature_id1].Inter_feature_ints.end(); ++it){ // Check if the interaction with that promoter is seen before
         if (it->interacting_feature_id == feature_id2){
             it->signal[ExperimentNo] += 1.0;
-            it->strandcombination[sc_index] += 1;
+            //it->strandcombination[sc_index] += 1;
             foundbefore = 1;
             break;
         }
@@ -120,7 +120,7 @@ void ProximityClass::AnnotateFeatFeatInteraction(std::string feature_id1, std::s
         for (int z = 0; z < ((NOFEXPERIMENTS)*4); ++z)
             Features[feature_id1].Inter_feature_ints.back().strandcombination[z] = 0;
         
-        Features[feature_id1].Inter_feature_ints.back().strandcombination[sc_index] = 1;
+        //Features[feature_id1].Inter_feature_ints.back().strandcombination[sc_index] = 1;
     }
 }
 
@@ -129,7 +129,7 @@ void ProximityClass::AnnotateEnEnInteraction(std::string enid1, std::string enid
     for (auto it = enClass.Enhancers[enid1].Inter_feature_ints.begin(); it < enClass.Enhancers[enid1].Inter_feature_ints.end(); ++it){ // Check if the interaction with that promoter is seen before
         if (it->interacting_feature_id == enid2){
             it->signal[ExperimentNo] += 1.0;
-            it->strandcombination[sc_index] += 1;
+           // it->strandcombination[sc_index] += 1;
             foundbefore = 1;
             break;
         }
@@ -143,7 +143,7 @@ void ProximityClass::AnnotateEnEnInteraction(std::string enid1, std::string enid
         for (int z = 0; z < ((NOFEXPERIMENTS)*4); ++z)
             enClass.Enhancers[enid1].Inter_feature_ints.back().strandcombination[z] = 0;
         
-        enClass.Enhancers[enid1].Inter_feature_ints.back().strandcombination[sc_index] = 1;
+        //enClass.Enhancers[enid1].Inter_feature_ints.back().strandcombination[sc_index] = 1;
     }
 }
 
@@ -161,14 +161,14 @@ int n = interactor_resite[0];
             signals[n].strandcombination[z] = 0;
         
         signals[n].paircount[ExperimentNo] = 1;
-        signals[n].strandcombination[sc_index] = 1;
+        //signals[n].strandcombination[sc_index] = 1;
         signals[n].refragend = interactor_resite[1];
         
         
     }
     else{
         signals[n].paircount[ExperimentNo] += 1;
-        signals[n].strandcombination[sc_index] += 1;
+        //signals[n].strandcombination[sc_index] += 1;
     }
     
 }

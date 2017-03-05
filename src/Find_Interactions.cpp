@@ -46,7 +46,7 @@ double DetectInteractions::CalculatepVal(std::map< int, double > mean, std::map<
 	return p_value;
 }
 
-void DetectInteractions::CalculatePvalAndPrintInteractionsProbeDistal(ProbeSet prs, std::vector<DetermineBackgroundLevels> background, std::string BaseFileName, int NumberofExperiments, std::vector < std::string > ExperimentNames, std::string whichchr, int BinSize){
+void DetectInteractions::CalculatePvalAndPrintInteractionsProbeDistal(ProbeSet& prs, std::vector<DetermineBackgroundLevels> background, std::string BaseFileName, int NumberofExperiments, std::vector < std::string >& ExperimentNames, std::string whichchr, int BinSize, PrDes::RENFileInfo& reInfo){
 
     fLog << "will print interactions " << std::endl;
 //Probe to Distal Interactions
@@ -55,13 +55,16 @@ void DetectInteractions::CalculatePvalAndPrintInteractionsProbeDistal(ProbeSet p
     int enoughpairs, count = 0;
     double p_value;
     
+    
 	FileName.append(BaseFileName);
     FileName.append(".");
+	FileName.append(reInfo.genomeAssembly.substr(0, reInfo.genomeAssembly.find_first_of(',')));
+	FileName.append(".");
     FileName.append(whichchr);
     FileName.append(".Interactions.Probe_Distal.");
-	FileName.append("txt");
+	FileName.append(reInfo.currTime);
+	FileName.append(".txt");
 	std::ofstream outf1(FileName.c_str());
-    
     
 	
     outf1 << "RefSeqName" << '\t' << "TranscriptName" << '\t' << "Feature_ID" << '\t' << "Probe_ID" << '\t' << "Feature Chr" << '\t' << "Feature Start" << '\t' << "Feature End" << '\t' << "Annotation" << '\t' <<  "Strand" << '\t';
@@ -69,7 +72,7 @@ void DetectInteractions::CalculatePvalAndPrintInteractionsProbeDistal(ProbeSet p
     outf1 << "Interactor Chr" << '\t' << "Interactor Start" << '\t' << "Interactor End" << '\t' << "distance" << '\t';
     
 	for (int e = 0; e < NumberofExperiments; ++e)
-		outf1 << ExperimentNames[e] << "_SuppPairs" << '\t' << ExperimentNames[e] << "_p_value" << '\t' << ExperimentNames[e] << "_Strand Combination" << '\t';
+		outf1 << ExperimentNames[e] << "_SuppPairs" << '\t' << ExperimentNames[e] << "_p_value" ;
     outf1 << std::endl;
 
     std::map<std::string, FeatureStruct>::iterator featiter;
@@ -189,10 +192,8 @@ void DetectInteractions::CalculatePvalAndPrintInteractionsProbeDistal(ProbeSet p
                 outf1 << it->second.distance << '\t';
                 
                 for (int e = 0; e < NumberofExperiments; ++e){
-                    outf1 << it->second.paircount[e] << '\t' << it->second.p_val[e] << '\t';
-                    for(int s = 0; s < 3; ++s)
-                        outf1 << it->second.strandcombination[(e*4)+s] << "_";
-                    outf1 << it->second.strandcombination[(e*4)+3] << '\t';
+                    outf1 << it->second.paircount[e] << '\t' << it->second.p_val[e] ;
+                    
                 }
                 outf1 << std::endl;
             }
@@ -212,10 +213,8 @@ void DetectInteractions::CalculatePvalAndPrintInteractionsProbeDistal(ProbeSet p
                           
 						outf1 << itx->maptochrname << '\t' << itt->first << '\t' << itt->second.refragend << '\t' << -1 << '\t';
 						for (int e = 0; e < NumberofExperiments; ++e){
-							outf1 << itt->second.paircount[e] << '\t' << -1 << '\t';
-							for(int s = 0; s < 3; ++s)
-								outf1 << itt->second.strandcombination[(e*4) + s] << "_";
-							outf1 << itt->second.strandcombination[(e*4) + 3] << '\t';
+							outf1 << itt->second.paircount[e] << '\t' << -1 ;
+							
 						}
 						outf1 << std::endl;
 					}
@@ -229,18 +228,24 @@ void DetectInteractions::CalculatePvalAndPrintInteractionsProbeDistal(ProbeSet p
     
 }  
     
-void DetectInteractions::CalculatePvalAndPrintInteractionsProbeProbe(ProbeSet prs, std::vector<DetermineBackgroundLevels> background, std::string BaseFileName, int NumberofExperiments, std::vector < std::string > ExperimentNames, std::string whichchr, int BinSizeProbeProbe){    
+void DetectInteractions::CalculatePvalAndPrintInteractionsProbeProbe(ProbeSet& prs, std::vector<DetermineBackgroundLevels> background, std::string BaseFileName, int NumberofExperiments, std::vector < std::string >& ExperimentNames, std::string whichchr, int BinSizeProbeProbe, PrDes::RENFileInfo& reInfo){    
 //Promoter-promoter Interactions
 
 	int bin;
 	int flag;
 	int count=0;
 	std::string FileName3;
+	
 	FileName3.append(BaseFileName);
     FileName3.append(".");
+	FileName3.append(reInfo.genomeAssembly.substr(0, reInfo.genomeAssembly.find_first_of(',')));
+	FileName3.append(".");
     FileName3.append(whichchr);
 	FileName3.append(".Interactions.Probe_Probe.");
-	FileName3.append("txt");
+	FileName3.append(reInfo.currTime);
+	FileName3.append(".txt");
+	
+		
 	std::ofstream outf3(FileName3.c_str());
 
     
@@ -253,7 +258,7 @@ void DetectInteractions::CalculatePvalAndPrintInteractionsProbeProbe(ProbeSet pr
     outf3 << "abs(Distance)";
 
     for (int e = 0; e < NumberofExperiments; ++e)
-        outf3 << '\t' << ExperimentNames[e] << "_SuppPairs" << ExperimentNames[e] << "_p_value" << '\t'<< ExperimentNames[e] << "_StrandCombination";
+        outf3 << '\t' << ExperimentNames[e] << "_SuppPairs" << ExperimentNames[e] << "_p_value";
     outf3 << std::endl;
 	std::vector< FeattoFeatSignalStruct >::const_iterator itff; //first: REpos, second: signal
 	std::string f;
@@ -299,26 +304,25 @@ void DetectInteractions::CalculatePvalAndPrintInteractionsProbeProbe(ProbeSet pr
 						if(background[e].bglevelsProbeProbe.smoothed.find(bin) == background[e].bglevelsProbeProbe.smoothed.end()){
 							background[e].bglevelsProbeProbe.smoothed[bin] = 0;
 							background[e].bglevelsProbeProbe.smoothed_stdev[bin] = 1;
-							outf3 << "1.0" << '\t';
+							outf3 << "1.0" ;
 						}
 						else{
 							if (background[e].bglevelsProbeProbe.smoothed_stdev[bin] == 0.0)
-								outf3 << "1.0" << '\t';
+								outf3 << "1.0"; 
 							
 							else{
 								double t= 1.0 - alglib::normaldistribution(( itff->signal[e] - background[e].bglevelsProbeProbe.smoothed[bin]) / background[e].bglevelsProbeProbe.smoothed_stdev[bin]);
-								outf3 << t << '\t';
+								outf3 << t ;
 							}
 						}
 					}
 					else
-                       outf3 << "1.0" << '\t';
+                       outf3 << "1.0";
                        
 					
                    /////Pval calc ends
-                   for(int s = 0; s < 3; ++s)
-                       outf3 << itff->strandcombination[(e*4) + s] << "_";
-                   outf3 << itff->strandcombination[(e*4) + 3] << '\t';
+                  
+                  
                 }
                 outf3 << std::endl;
             }
@@ -329,7 +333,7 @@ void DetectInteractions::CalculatePvalAndPrintInteractionsProbeProbe(ProbeSet pr
 
 }
 
-void DetectInteractions::CalculatePvalAndPrintInteractionsProbeDistal_NegCtrls(ProbeSet prs, std::vector<DetermineBackgroundLevels> background, std::string BaseFileName, int NumberofExperiments, std::vector<std::string> ExperimentNames, std::string whichchr, int BinSize){
+void DetectInteractions::CalculatePvalAndPrintInteractionsProbeDistal_NegCtrls(ProbeSet& prs, std::vector<DetermineBackgroundLevels> background, std::string BaseFileName, int NumberofExperiments, std::vector<std::string>& ExperimentNames, std::string whichchr, int BinSize, PrDes::RENFileInfo& reInfo){
 
     fLog << "will print interactions of NegCtrls" << std::endl; ////////////////////
     //Probe to Distal Interactions
@@ -339,9 +343,12 @@ void DetectInteractions::CalculatePvalAndPrintInteractionsProbeDistal_NegCtrls(P
     
     FileName2.append(BaseFileName);
     FileName2.append(".");
+    FileName2.append(reInfo.genomeAssembly.substr(0, reInfo.genomeAssembly.find_first_of(',')));
+	FileName2.append(".");
     FileName2.append(whichchr);
     FileName2.append(".Interactions.Probe_Distal.NegCtrls.");///////////////////////////////////
-    FileName2.append("txt");
+    FileName2.append(reInfo.currTime);
+    FileName2.append(".txt");
     std::ofstream outf2(FileName2.c_str());
     
     outf2 << "RefSeqName" << '\t' << "TranscriptName" << '\t' << "Feature_ID" << '\t' << "Probe_ID" << '\t' << "Feature Chr" << '\t' << "Feature Start" << '\t' << "Feature End" << '\t' << "Annotation" << '\t' <<  "Strand" << '\t';
@@ -349,7 +356,7 @@ void DetectInteractions::CalculatePvalAndPrintInteractionsProbeDistal_NegCtrls(P
     
     outf2 << "Interactor Chr" << '\t' << "Interactor Start" << '\t' << "Interactor End" << '\t' << "distance" << '\t';
     for (int e = 0; e < NumberofExperiments; ++e)
-        outf2 << ExperimentNames[e] << "_SuppPairs" << '\t' << ExperimentNames[e] << "_p_value" << '\t' << ExperimentNames[e] << "_Strand Combination" << '\t';
+        outf2 << ExperimentNames[e] << "_SuppPairs" << '\t' << ExperimentNames[e] << "_p_value";
     outf2 << std::endl;
 
     std::map<std::string, FeatureStruct>::iterator featiter;
@@ -455,10 +462,8 @@ void DetectInteractions::CalculatePvalAndPrintInteractionsProbeDistal_NegCtrls(P
                     
                     for (int e = 0; e < NumberofExperiments; ++e){
                                      
-                        outf2 << it->second.paircount[e] << '\t' << it->second.p_val[e] << '\t';
-                        for(int s = 0; s < 3; ++s)
-                            outf2 << it->second.strandcombination[(e*4)+s] << "_";
-                        outf2 << it->second.strandcombination[(e*4)+3] << '\t';
+                        outf2 << it->second.paircount[e] << '\t' << it->second.p_val[e] ;
+                        
                     }
                     outf2 << std::endl;
                 }
@@ -476,10 +481,8 @@ void DetectInteractions::CalculatePvalAndPrintInteractionsProbeDistal_NegCtrls(P
                         
                         outf2 << itx->maptochrname << '\t' << itt->first << '\t' << itt->second.refragend << '\t' << -1 << '\t';
                         for (int e = 0; e < NumberofExperiments; ++e){
-                            outf2 << itt->second.paircount[e] << '\t' << -1 << '\t';
-                            for(int s = 0; s < 3; ++s)
-                                outf2 << itt->second.strandcombination[(e*4) + s] << "_";
-                            outf2 << itt->second.strandcombination[(e*4) + 3] << '\t';
+                            outf2 << itt->second.paircount[e] << '\t' << -1 ;
+                            
                         }
                         outf2 << std::endl;
                     }
@@ -494,17 +497,21 @@ void DetectInteractions::CalculatePvalAndPrintInteractionsProbeDistal_NegCtrls(P
 
 
 
-void DetectInteractions::CalculatePvalAndPrintInteractionsProbeProbe_NegCtrls(ProbeSet prs, std::vector<DetermineBackgroundLevels> background, std::string BaseFileName, int NumberofExperiments, std::vector<std::string> ExperimentNames, std::string whichchr, int BinSizeProbeProbe){
+void DetectInteractions::CalculatePvalAndPrintInteractionsProbeProbe_NegCtrls(ProbeSet& prs, std::vector<DetermineBackgroundLevels> background, std::string BaseFileName, int NumberofExperiments, std::vector<std::string>& ExperimentNames, std::string whichchr, int BinSizeProbeProbe, PrDes::RENFileInfo& reInfo){
    
 	int bin;
 	int flag;
 	int count = 0;
     std::string FileName4;
+   
     FileName4.append(BaseFileName);
     FileName4.append(".");
+    FileName4.append(reInfo.genomeAssembly.substr(0, reInfo.genomeAssembly.find_first_of(',')));
+	FileName4.append(".");
     FileName4.append(whichchr);
     FileName4.append(".Interactions.Probe_Probe.NegCtrls.");
-    FileName4.append("txt");
+    FileName4.append(reInfo.currTime);
+    FileName4.append(".txt");
     std::ofstream outf4(FileName4.c_str());
     
     outf4<< "RefSeqName_1" << '\t' << "TranscriptName_1" << '\t' << "Feature_ID_1" << '\t' << "Probe_ID_1" << '\t' << "FeatureChr_1" << '\t' << "FeatureStart_1" << '\t' << "FeatureEnd_1" << '\t' << "Annotation_1" << '\t' <<  "Strand_1" << '\t';
@@ -513,7 +520,7 @@ void DetectInteractions::CalculatePvalAndPrintInteractionsProbeProbe_NegCtrls(Pr
    
     outf4 << "abs(Distance)";
     for (int e = 0; e < NumberofExperiments; ++e)
-        outf4 << '\t' << ExperimentNames[e] << "_SuppPairs"<< '\t' << ExperimentNames[e]<<"_pval" << '\t' << ExperimentNames[e] <<  "_StrandCombination";
+        outf4 << '\t' << ExperimentNames[e] << "_SuppPairs"<< '\t' << ExperimentNames[e]<<"_pval";
     outf4 << std::endl;
     
     std::vector< FeattoFeatSignalStruct >::const_iterator itff; //first: REpos, second: signal
@@ -556,28 +563,24 @@ void DetectInteractions::CalculatePvalAndPrintInteractionsProbeProbe_NegCtrls(Pr
 						if(background[e].bglevelsProbeProbe.smoothed.find(bin) == background[e].bglevelsProbeProbe.smoothed.end()){
 							background[e].bglevelsProbeProbe.smoothed[bin] = 0;
 							background[e].bglevelsProbeProbe.smoothed_stdev[bin] = 1;
-							outf4 << "1.0" << '\t';
+							outf4 << "1.0"; 
 						}
 						else{
 							if (background[e].bglevelsProbeProbe.smoothed_stdev[bin] == 0.0)
-								outf4 << "1.0" << '\t';
+								outf4 << "1.0";
 							
 							else{
 								double t= 1.0 - alglib::normaldistribution(( itff->signal[e] - background[e].bglevelsProbeProbe.smoothed[bin]) / background[e].bglevelsProbeProbe.smoothed_stdev[bin]);
-								outf4 << t << '\t';
+								outf4 << t ;
 							}
 						}
 					}
 					else        
-                       outf4 << "1.0" << '\t';
+                       outf4 << "1.0" ;
                        
 					
                    /////Pval calc ends
 
-                    
-                    for(int s = 0; s < 3; ++s)
-                        outf4 << itff->strandcombination[(e*4) + s] << "_";
-                    outf4 << itff->strandcombination[(e*4) + 3] << '\t';
                 }
                 outf4 << std::endl;
             }
@@ -586,17 +589,21 @@ void DetectInteractions::CalculatePvalAndPrintInteractionsProbeProbe_NegCtrls(Pr
  	outf4.close();
 }
 
-void DetectInteractions::PrintEnhancerEnhancerInteractions(ProbeSet prs, std::vector<DetermineBackgroundLevels> background, std::string BaseFileName, int NumberofExperiments, std::vector < std::string > ExperimentNames, std::string whichchr, EnhancerSet& enClass){
+void DetectInteractions::PrintEnhancerEnhancerInteractions(ProbeSet& prs, std::vector<DetermineBackgroundLevels> background, std::string BaseFileName, int NumberofExperiments, std::vector < std::string >& ExperimentNames, std::string whichchr, EnhancerSet& enClass, PrDes::RENFileInfo& reInfo){
    fLog << "will print enhancer-enhancer interactions " << std::endl;
 //Probe to Distal Interactions
 	std::string FileName, FileName2;
     
     int enoughpairs, count = 0;
+    
     FileName.append(BaseFileName);
     FileName.append(".");
+    FileName.append(reInfo.genomeAssembly.substr(0, reInfo.genomeAssembly.find_first_of(',')));
+	FileName.append(".");
     FileName.append(whichchr);
     FileName.append(".Interactions.Enhancer_Distal.");
-	FileName.append("txt");
+    FileName.append(reInfo.currTime);
+	FileName.append(".txt");
 	std::ofstream outf1(FileName.c_str());
     	
     outf1 << "Enhancer_ID" << '\t' << "Enhancer Chr" << '\t' << "Enhancer Start" << '\t' << "Enhancer End" << '\t' ;
@@ -604,7 +611,7 @@ void DetectInteractions::PrintEnhancerEnhancerInteractions(ProbeSet prs, std::ve
     outf1 << "Interactor Chr" << '\t' << "Interactor Start" << '\t' << "Interactor End" << '\t' << "distance" << '\t';
     
 	for (int e = 0; e < NumberofExperiments; ++e)
-		outf1 << ExperimentNames[e] << "_SuppPairs" << ExperimentNames[e] << "_Strand Combination" << '\t';
+		outf1 << ExperimentNames[e] << "_SuppPairs" ;
     outf1 << std::endl;
 
     //output to file
@@ -633,10 +640,7 @@ void DetectInteractions::PrintEnhancerEnhancerInteractions(ProbeSet prs, std::ve
                 outf1 << it->second.distance << '\t';
                 
                 for (int e = 0; e < NumberofExperiments; ++e){
-                   outf1 << it->second.paircount[e] << '\t';
-                    for(int s = 0; s < 3; ++s)
-                        outf1 << it->second.strandcombination[(e*4)+s] << "_";
-                    outf1 << it->second.strandcombination[(e*4)+3] << '\t';
+                   outf1 << it->second.paircount[e] ;
                 }
                 outf1 << std::endl;
             }
@@ -653,10 +657,7 @@ void DetectInteractions::PrintEnhancerEnhancerInteractions(ProbeSet prs, std::ve
                     outf1 << itx->maptochrname << '\t' << itt->first << '\t' << itt->second.refragend << '\t' << -1 << '\t';
                     
                     for (int e = 0; e < NumberofExperiments; ++e){
-                        outf1 << itt->second.paircount[e] << '\t' << -1 << '\t';
-                        for(int s = 0; s < 3; ++s)
-                            outf1 << itt->second.strandcombination[(e*4) + s] << "_";
-                        outf1 << itt->second.strandcombination[(e*4) + 3] << '\t';
+                        outf1 << itt->second.paircount[e] ;
                     }
                     outf1 << std::endl;
                 }
@@ -682,7 +683,7 @@ void DetectInteractions::PrintEnhancerEnhancerInteractions(ProbeSet prs, std::ve
     outf3 << "abs(Distance)";
 
     for (int e = 0; e < NumberofExperiments; ++e)
-        outf3 << '\t' << ExperimentNames[e] << "_SuppPairs" << '\t' << "StrandCombination";
+        outf3 << '\t' << ExperimentNames[e] << "_SuppPairs" ;
     outf3 << std::endl;
 	std::vector< FeattoFeatSignalStruct >::const_iterator itff; //first: REpos, second: signal
 	std::string f;
@@ -706,10 +707,7 @@ void DetectInteractions::PrintEnhancerEnhancerInteractions(ProbeSet prs, std::ve
                 else
                     outf3 << -1 << '\t';
                 for (int e = 0; e < NumberofExperiments; ++e){
-                    outf3 << itff->signal[e] << '\t';
-                    for(int s = 0; s < 3; ++s)
-                        outf3 << itff->strandcombination[(e*4) + s] << "_";
-                    outf3 << itff->strandcombination[(e*4) + 3] << '\t';
+                    outf3 << itff->signal[e];
                 }
                 outf3 << std::endl;
             }

@@ -118,11 +118,23 @@ void ProbeSet::ProcessProbeLine(std::map< std::string, std::vector < std::string
     }
     if(tempprobe.annotated == 3){
         Design_NegCtrl[tempprobe.name_of_design].Probes.push_back(tempprobe);
-        negctrl_probes_interval[tempprobe.name_of_design].push_back(Interval<int>((tempprobe.start -padding),(tempprobe.end +padding),(Design_NegCtrl[tempprobe.name_of_design].Probes.size()-1)));
+        //left and right
+        if(tempprobe.side=="L"){
+			negctrl_probes_interval[tempprobe.name_of_design].push_back(Interval<int>((tempprobe.start),(tempprobe.end +padding),(Design_NegCtrl[tempprobe.name_of_design].Probes.size()-1)));
+		}
+		else if(tempprobe.side=="R"){
+			negctrl_probes_interval[tempprobe.name_of_design].push_back(Interval<int>((tempprobe.start -padding),(tempprobe.end),(Design_NegCtrl[tempprobe.name_of_design].Probes.size()-1)));
+		}
     }
     else{
         Design[tempprobe.name_of_design].Probes.push_back(tempprobe);
-        probes_interval[tempprobe.name_of_design].push_back(Interval<int>((tempprobe.start -padding),(tempprobe.end + padding),(Design[tempprobe.name_of_design].Probes.size()-1)));
+        //left and right
+        if(tempprobe.side=="L"){
+			probes_interval[tempprobe.name_of_design].push_back(Interval<int>((tempprobe.start),(tempprobe.end + padding),(Design[tempprobe.name_of_design].Probes.size()-1)));
+		}
+		else if(tempprobe.side=="R"){
+			probes_interval[tempprobe.name_of_design].push_back(Interval<int>((tempprobe.start -padding),(tempprobe.end),(Design[tempprobe.name_of_design].Probes.size()-1)));
+		}
     }
 }
 
@@ -267,7 +279,7 @@ void ProbeSet::ReadProbeCoordinates(std::string ProbeFileName, std::map <std::st
 }
 
 
-int ProbeSet::FindClosestFeature(int probe_coord, std::vector<int> isoformcoords, std::string side){
+int ProbeSet::FindClosestFeature(int probe_coord, std::vector<int>& isoformcoords, std::string side){
     
     int smallest_distance = 0, dist = 0, index = 0;
     if(side == "L"){ // Left probe, upstream

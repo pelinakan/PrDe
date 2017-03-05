@@ -38,7 +38,7 @@ int main (std::string whichchr, std::string interactionOption, std::string stats
 		std::string designname;
 	};
 	int NOFEXPERIMENTS; // Number of Experiments
-	int padding = 750; //For Sequence Capture Probes
+	int padding = 300; //For Sequence Capture Probes
 	std::string DigestedGenomeFileName;
 	std::string TranscriptListFileName;
 	std::string SNPFile;
@@ -415,7 +415,7 @@ int main (std::string whichchr, std::string interactionOption, std::string stats
     
     //---------------------------------------------------------------------------------
     if(statsOption=="ComputeStatsOnly"){
-		statsFile.open(BaseFileName+".computeStats.txt");
+		statsFile.open(BaseFileName+"."+reFileInfo.genomeAssembly.substr(0, reFileInfo.genomeAssembly.find_first_of(',')) +".computeStats."+reInfo.currTime+".txt");
 		statsFile << "Total_Number_of_Pairs"<<'\t'<< "Total_Number_of_Pairs_on_Probes"<<'\t' << "Number_of_Pairs_Both_Reads_on_Probe" << '\t'<< "Number_of_Pairs_One_Read_on_Probe" << '\t' << "Number_of_Pairs_None_on_Probe" << '\t'<< "On_Probe_Pair_Fraction" <<std::endl;
 	}
     
@@ -477,20 +477,20 @@ int main (std::string whichchr, std::string interactionOption, std::string stats
     
 		if(interactiontype=="Neg"){
 			
-			Interactions.CalculatePvalAndPrintInteractionsProbeDistal_NegCtrls(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSize); //Print all same type of interactions
-			Interactions.CalculatePvalAndPrintInteractionsProbeProbe_NegCtrls(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSizeProbeProbe); //Print all same type of interactions
+			Interactions.CalculatePvalAndPrintInteractionsProbeDistal_NegCtrls(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSize, reFileInfo); //Print all same type of interactions
+			Interactions.CalculatePvalAndPrintInteractionsProbeProbe_NegCtrls(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSizeProbeProbe, reFileInfo); //Print all same type of interactions
 		}
 		else if(interactiontype=="NonNeg"){
 			
-			Interactions.CalculatePvalAndPrintInteractionsProbeDistal(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSize);//Print all same type of interactions
-			Interactions.CalculatePvalAndPrintInteractionsProbeProbe(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSizeProbeProbe);//Print all same type of interactions
+			Interactions.CalculatePvalAndPrintInteractionsProbeDistal(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSize, reFileInfo);//Print all same type of interactions
+			Interactions.CalculatePvalAndPrintInteractionsProbeProbe(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSizeProbeProbe, reFileInfo);//Print all same type of interactions
 		}
 		else{	
 		
-			Interactions.CalculatePvalAndPrintInteractionsProbeDistal(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSize);//Print all same type of interactions
-			Interactions.CalculatePvalAndPrintInteractionsProbeDistal_NegCtrls(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSize); //Print all same type of interactions
-			Interactions.CalculatePvalAndPrintInteractionsProbeProbe(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSizeProbeProbe);//Print all same type of interactions
-			Interactions.CalculatePvalAndPrintInteractionsProbeProbe_NegCtrls(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSizeProbeProbe); //Print all same type of interactions
+			Interactions.CalculatePvalAndPrintInteractionsProbeDistal(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSize, reFileInfo);//Print all same type of interactions
+			Interactions.CalculatePvalAndPrintInteractionsProbeDistal_NegCtrls(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSize, reFileInfo); //Print all same type of interactions
+			Interactions.CalculatePvalAndPrintInteractionsProbeProbe(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSizeProbeProbe, reFileInfo);//Print all same type of interactions
+			Interactions.CalculatePvalAndPrintInteractionsProbeProbe_NegCtrls(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSizeProbeProbe, reFileInfo); //Print all same type of interactions
 		}
 	}
 	
@@ -506,7 +506,7 @@ int main (std::string whichchr, std::string interactionOption, std::string stats
 			bamfile.Initialize(Exptemp.filepath);
 			ExperimentNames.push_back(Exptemp.name);
 		          
-			bamfile.ProcessSortedBAMFileForEnhancers(ProbeClass, dpnII, proximities, Exptemp.filepath, ExperimentNo, whichchr, Exptemp.designname, statsOption, enhancerClass);     
+			bamfile.ProcessSortedBAMFileForEnhancers(ProbeClass, dpnII, proximities, Exptemp.filepath, ExperimentNo, whichchr, Exptemp.designname, statsOption, enhancerClass, reFileInfo);     
 			++ExperimentNo;
 
 			log << Exptemp.filepath << "     finished" << std::endl;

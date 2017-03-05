@@ -36,7 +36,7 @@ private:
 	int filesReadCount;
 	
     void GetTrFeats(std::stringstream&, temppars&);
-    void ClusterIsoformPromoters(std::vector<int>, std::vector<std::string>, std::vector<int>&, std::vector<std::string>&, std::string);
+    void ClusterIsoformPromoters(std::vector<int>&, std::vector<std::string>&, std::vector<int>&, std::vector<std::string>&, std::string);
     int FindLeftMostCoord(std::vector<int>);
     int FindRightMostCoord(std::vector<int>);
 };

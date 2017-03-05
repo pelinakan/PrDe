@@ -101,7 +101,7 @@ int PromoterClass::FindRightMostCoord(std::vector<int> coords){
 }
 
 
-void PromoterClass::ClusterIsoformPromoters(std::vector <int> isoformprs, std::vector<std::string> tr_ids, std::vector <int>& clusteredtrcoords, std::vector<std::string>& clustered_ids, std::string strand){
+void PromoterClass::ClusterIsoformPromoters(std::vector <int>& isoformprs, std::vector<std::string>& tr_ids, std::vector <int>& clusteredtrcoords, std::vector<std::string>& clustered_ids, std::string strand){
     
     int j,k,l,z;
     

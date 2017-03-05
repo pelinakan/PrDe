@@ -3,6 +3,7 @@
 
 #include <map>
 #include "Promoters.h"
+#include "Data_Structures.h"
 
 class ProbeSet{
     friend class PromoterClass;

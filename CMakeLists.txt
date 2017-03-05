@@ -22,8 +22,8 @@ file(GLOB_RECURSE SOURCES "${CMAKE_SOURCE_DIR}/ExterAlg/*.cpp")
 
   add_executable(PrDe ${CPPFILES} ${HFILES} ${HPPFILES} ${SOURCES})
    
-  set_property(TARGET DesignProbes PROPERTY CXX_STANDARD 11)
-  set_property(TARGET DesignProbes PROPERTY CXX_STANDARD_REQUIRED ON)
+  set_property(TARGET PrDe PROPERTY CXX_STANDARD 11)
+  set_property(TARGET PrDe PROPERTY CXX_STANDARD_REQUIRED ON)
 
   find_package(ZLIB REQUIRED)
   add_library(libbamtools STATIC IMPORTED)

@@ -20,7 +20,7 @@
 
 int DistanceBetweenProbes = 1000;
 
-int ProbeDesignMain(std::string whichchr) {
+int PrDe::ProbeDesignMain(std::string whichchr) {
 	
 	int ClusterPromoters  = 1200;
 	int ProbeLen = 120;
@@ -33,7 +33,6 @@ int ProbeDesignMain(std::string whichchr) {
 	std::string SNPfile;
 	std::string repeatfile;
 	std::string config_file_name;
-    std::string whichchr;
     std::string line;
     std::string motif;
     std::locale l;

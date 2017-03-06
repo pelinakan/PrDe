@@ -271,7 +271,7 @@ void ProbeSet::ReadProbeCoordinates(std::string ProbeFileName, std::map <std::st
 	prLog << index <<  "   Probe Coordinates Read from "<< ProbeFileName<< std::endl;
     probefile.close();
     
-    ++fileReadCount; 
+    ++filesReadCount; 
  //////////////////////////////////////////////   how to get chr?what does this do
     //if(fileReadCount==fileCount){
 	//}	

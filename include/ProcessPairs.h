@@ -26,7 +26,6 @@ private:
     int NOFEXPERIMENTS;
     int padding;
     int ReadLen;
-    OutStream& pLog;
 };
 
 

@@ -9,15 +9,31 @@
 #ifndef PrintUsage_h
 #define PrintUsage_h
 
+#include <iostream>
+#include <iomanip>
+
 
 static int print_usage()
 {
-    fprintf(stderr, "\n");
-    fprintf(stderr, "Program: Design Probes for HiCap \n");
-    fprintf(stderr, "Contact: Pelin Akan <pelin.akan@scilifelab.se>\n\n");
-    fprintf(stderr, "Usage:   DesignProbes which_chr \n");
-    fprintf(stderr, "Parameter 1:  Which Chr to process in the format chrN where N is an integer[STR]\n");
+    std::cerr<<std::endl;
+    std::cerr<<"Program: PrDe (A software suite for Probe Design and Proximity Detection for targeted chromosome conformation capture applications)"<<std::endl;
+    std::cerr<<"Contact: Pelin Akan <pelin.akan@scilifelab.se>"<<std::endl;
+    std::cerr<<std::endl;
+    std::cerr<<"Usage:  PrDe <command> [arguments]"<<std::endl;
+    std::cerr<< "Commands:  "<<std::endl;
+    std::cerr<<std::endl;
+    std::cerr<< "    ProbeDesigner"<<std::endl;
+    std::cerr<< '\t'<< "Arguments:"<<std::endl;
+    std::cerr<< '\t'<<std::left<<std::setw(25)<<"-c or --chr"<< "the Chromosome to process in the format chrN, where N can be the name/number of the chromosome or All if processing all available chromosomes"<<std::endl;
+    std::cerr<<std::endl;
     
+    std::cerr<< "    ProximityDetector"<<std::endl;
+    std::cerr<< '\t'<<"Arguments:"<<std::endl;
+    std::cerr<< '\t'<<std::left<< std::setw(25)<<"-c or --chr" <<"the Chromosome to process in the format chrN, where N can be the name/number of the chromosome or All if processing all available chromosomes"<<std::endl;
+    std::cerr<< '\t'<<std::left<< std::setw(25)<<"-p or --proximitytype "<<"'PrintProbeProximities' to find and print Probe proximities or 'PrintEnhancerProximities' to find and print Enhancer proximities"<<std::endl;
+    std::cerr<< '\t'<<std::left <<std::setw(25)<<"-d or --displaytype"<<"'ComputeStatsOnly' to compute only the stats or 'PrintProximities' to also find and print proximities (currently only for Probe proximities)"<<std::endl;
+    std::cerr<< '\t'<<std::left<< std::setw(25)<<"-n or --printtype"<<"'Neg' to print only negative control Probe proximities or 'NonNeg' to print only Feature Probe proximities or 'Both' to print both "<<'\n'<<'\t'<<std::setw(25)<<" "<<
+												"(currently only for Probe proximities). This option will be set to 'Both' if '-d' is 'ComputeStatsOnly'"<<std::endl;
     return 0;
 }
 

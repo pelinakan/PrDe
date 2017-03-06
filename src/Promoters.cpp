@@ -1,4 +1,6 @@
 #include "Promoters.h"
+#include "Data_Structures.h"
+#include <map>
 #include <fstream>
 #include <algorithm>
 
@@ -101,7 +103,7 @@ int PromoterClass::FindRightMostCoord(std::vector<int> coords){
 }
 
 
-void PromoterClass::ClusterIsoformPromoters(std::vector <int>& isoformprs, std::vector<std::string>& tr_ids, std::vector <int>& clusteredtrcoords, std::vector<std::string>& clustered_ids, std::string strand){
+void PromoterClass::ClusterIsoformPromoters(std::vector <int>& isoformprs, std::vector<std::string>& tr_ids, std::vector <int>& clusteredtrcoords, std::vector<std::string>& clustered_ids, std::string strand, int ClusterPromoters){
     
     int j,k,l,z;
     
@@ -159,7 +161,7 @@ void PromoterClass::ClusterIsoformPromoters(std::vector <int>& isoformprs, std::
 
 
 
-void PromoterClass::ReadPromoterAnnotation(ProbeRESitesClass& dpnIIsites, std::string TranscriptListFileName, std::string option){
+void PromoterClass::ReadFeatureAnnotation(ProbeRESitesClass& dpnIIsites, std::string TranscriptListFileName, std::string option){
     std::string temp,tr1, tr2, feature_id;
     int nofgenes = 0, z = 0;
     std::locale l;
@@ -295,7 +297,7 @@ void PromoterClass::ReadPromoterAnnotation(ProbeRESitesClass& dpnIIsites, std::s
     ++filesReadCount;
     pLog << nofgenes << "  lines read corresponding to " << Features.size() << " features from " <<option<<" file."<< std::endl;
     
-    if(fileReadCount==fileCount){ 
+    if(filesReadCount==fileCount){ 
 		pLog<<"Total Number of Features annotated: "<< Features.size()<<std::endl;
 	}
 }

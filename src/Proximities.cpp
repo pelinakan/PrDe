@@ -1,11 +1,11 @@
 #include "Proximities.h"
 
-void ProximityClass::AnnotateDistalInteractor(std::string feature_id, std::string anchored_chr, std::string interactor_chr, int *interactor_resite, int sc_index, int ExperimentNo){
+void ProximityClass::AnnotateDistalInteractor(std::string feature_id, std::string anchored_chr, std::string interactor_chr, int *interactor_resite, int ExperimentNo){
     
     n = interactor_resite[0];
     // Intra chromosomal interaction
     if(anchored_chr.compare(interactor_chr) == 0){
-        PopulateInteractions(Features[feature_id].proximities.junctions, interactor_resite, sc_index, ExperimentNo);
+        PopulateInteractions(Features[feature_id].proximities.junctions, interactor_resite, ExperimentNo);
     }
     else{  // inter chromosomal interaction
         chrfound = 0;
@@ -21,11 +21,10 @@ void ProximityClass::AnnotateDistalInteractor(std::string feature_id, std::strin
                     }
                     itx->junctions_ctx[n].refragend = interactor_resite[1];
                     itx->junctions_ctx[n].paircount[ExperimentNo] = 1;
-                    //itx->junctions_ctx[n].strandcombination[sc_index] = 1;
+                    
                  }
                 else{ // if inserted before
                     itx->junctions_ctx[n].paircount[ExperimentNo] += 1;
-                    //itx->junctions_ctx[n].strandcombination[sc_index] += 1;
                 }
                 
                 chrfound = 1;
@@ -45,18 +44,18 @@ void ProximityClass::AnnotateDistalInteractor(std::string feature_id, std::strin
             }
             Features[feature_id].proximities_ctx.back().junctions_ctx[n].refragend = interactor_resite[1];
             Features[feature_id].proximities_ctx.back().junctions_ctx[n].paircount[ExperimentNo] = 1;
-           // Features[feature_id].proximities_ctx.back().junctions_ctx[n].strandcombination[sc_index] += 1;
+           
         }
     }
 }
 
 
-void ProximityClass::AnnotateEnhancerDistalInteractor(std::string enid, std::string anchored_chr, std::string interactor_chr, int *interactor_resite, int sc_index, int ExperimentNo, EnhancerSet& enClass){
+void ProximityClass::AnnotateEnhancerDistalInteractor(std::string enid, std::string anchored_chr, std::string interactor_chr, int *interactor_resite, int ExperimentNo, EnhancerSet& enClass){
     
     n = interactor_resite[0];
     // Intra chromosomal interaction
     if(anchored_chr.compare(interactor_chr) == 0){
-        PopulateInteractions(enClass.Enhancers[enid].proximities.junctions, interactor_resite, sc_index, ExperimentNo);
+        PopulateInteractions(enClass.Enhancers[enid].proximities.junctions, interactor_resite, ExperimentNo);
     }
     else{  // inter chromosomal interaction
         chrfound = 0;
@@ -72,11 +71,9 @@ void ProximityClass::AnnotateEnhancerDistalInteractor(std::string enid, std::str
                     }
                     itx->junctions_ctx[n].refragend = interactor_resite[1];
                     itx->junctions_ctx[n].paircount[ExperimentNo] = 1;
-                    //itx->junctions_ctx[n].strandcombination[sc_index] = 1;
                  }
                 else{ // if inserted before
                     itx->junctions_ctx[n].paircount[ExperimentNo] += 1;
-                    //itx->junctions_ctx[n].strandcombination[sc_index] += 1;
                 }
                 
                 chrfound = 1;
@@ -96,17 +93,15 @@ void ProximityClass::AnnotateEnhancerDistalInteractor(std::string enid, std::str
             }
             enClass.Enhancers[enid].proximities_ctx.back().junctions_ctx[n].refragend = interactor_resite[1];
             enClass.Enhancers[enid].proximities_ctx.back().junctions_ctx[n].paircount[ExperimentNo] = 1;
-            //enClass.Enhancers[enid].proximities_ctx.back().junctions_ctx[n].strandcombination[sc_index] += 1;
         }
     }
 }
 
-void ProximityClass::AnnotateFeatFeatInteraction(std::string feature_id1, std::string feature_id2, int sc_index, int ExperimentNo){
+void ProximityClass::AnnotateFeatFeatInteraction(std::string feature_id1, std::string feature_id2, int ExperimentNo){
     foundbefore = 0;
     for (auto it = Features[feature_id1].Inter_feature_ints.begin(); it < Features[feature_id1].Inter_feature_ints.end(); ++it){ // Check if the interaction with that promoter is seen before
         if (it->interacting_feature_id == feature_id2){
             it->signal[ExperimentNo] += 1.0;
-            //it->strandcombination[sc_index] += 1;
             foundbefore = 1;
             break;
         }
@@ -119,17 +114,14 @@ void ProximityClass::AnnotateFeatFeatInteraction(std::string feature_id1, std::s
         Features[feature_id1].Inter_feature_ints.back().strandcombination = new int[((NOFEXPERIMENTS)*4)];
         for (int z = 0; z < ((NOFEXPERIMENTS)*4); ++z)
             Features[feature_id1].Inter_feature_ints.back().strandcombination[z] = 0;
-        
-        //Features[feature_id1].Inter_feature_ints.back().strandcombination[sc_index] = 1;
     }
 }
 
-void ProximityClass::AnnotateEnEnInteraction(std::string enid1, std::string enid2, int sc_index, int ExperimentNo, EnhancerSet& enClass){
+void ProximityClass::AnnotateEnEnInteraction(std::string enid1, std::string enid2, int ExperimentNo, EnhancerSet& enClass){
     foundbefore = 0;
     for (auto it = enClass.Enhancers[enid1].Inter_feature_ints.begin(); it < enClass.Enhancers[enid1].Inter_feature_ints.end(); ++it){ // Check if the interaction with that promoter is seen before
         if (it->interacting_feature_id == enid2){
             it->signal[ExperimentNo] += 1.0;
-           // it->strandcombination[sc_index] += 1;
             foundbefore = 1;
             break;
         }
@@ -142,13 +134,11 @@ void ProximityClass::AnnotateEnEnInteraction(std::string enid1, std::string enid
         enClass.Enhancers[enid1].Inter_feature_ints.back().strandcombination = new int[((NOFEXPERIMENTS)*4)];
         for (int z = 0; z < ((NOFEXPERIMENTS)*4); ++z)
             enClass.Enhancers[enid1].Inter_feature_ints.back().strandcombination[z] = 0;
-        
-        //enClass.Enhancers[enid1].Inter_feature_ints.back().strandcombination[sc_index] = 1;
     }
 }
 
 
-void ProximityClass::PopulateInteractions(std::map<int, Junction >& signals, int *interactor_resite, int sc_index, int ExperimentNo){
+void ProximityClass::PopulateInteractions(std::map<int, Junction >& signals, int *interactor_resite, int ExperimentNo){
 int n = interactor_resite[0];
     
     if(signals.find(n) == signals.end()){
@@ -161,42 +151,40 @@ int n = interactor_resite[0];
             signals[n].strandcombination[z] = 0;
         
         signals[n].paircount[ExperimentNo] = 1;
-        //signals[n].strandcombination[sc_index] = 1;
         signals[n].refragend = interactor_resite[1];
         
         
     }
     else{
         signals[n].paircount[ExperimentNo] += 1;
-        //signals[n].strandcombination[sc_index] += 1;
     }
     
 }
 
-void ProximityClass::RecordProximities(Alignment pair, std::string feature_id1, std::string feature_id2, int sc_index, int ExperimentNo) {
+void ProximityClass::RecordProximities(Alignment pair, std::string feature_id1, std::string feature_id2, int ExperimentNo) {
     
     if ((feature_id1.length() != 4 && feature_id2.length() != 4)) { //"null"
-        AnnotateFeatFeatInteraction(feature_id1, feature_id2, sc_index, ExperimentNo);
-        AnnotateFeatFeatInteraction(feature_id2, feature_id1, sc_index, ExperimentNo);
+        AnnotateFeatFeatInteraction(feature_id1, feature_id2, ExperimentNo);
+        AnnotateFeatFeatInteraction(feature_id2, feature_id1, ExperimentNo);
         
     }
     else{
         
         if (feature_id1.length() != 4 ) // If first read is annotated with a probe, second read is the interactor
-            AnnotateDistalInteractor(feature_id1, pair.chr1, pair.chr2, pair.resites2, sc_index, ExperimentNo);
+            AnnotateDistalInteractor(feature_id1, pair.chr1, pair.chr2, pair.resites2, ExperimentNo);
         else
-            AnnotateDistalInteractor(feature_id2, pair.chr2, pair.chr1, pair.resites1, sc_index, ExperimentNo);
+            AnnotateDistalInteractor(feature_id2, pair.chr2, pair.chr1, pair.resites1, ExperimentNo);
     }
 }
 
-void ProximityClass::RecordEnhancerProximities(enAlignment pair, std::string enid1, std::string enid2, int sc_index, int ExperimentNo. EnhancerSet& enClass) {
+void ProximityClass::RecordEnhancerProximities(enAlignment pair, std::string enid1, std::string enid2, int ExperimentNo, EnhancerSet& enClass) {
     
     if (( enid2 != "null")) { //for both enhaners in the provided list 
-        AnnotateEnEnInteraction(enid1, enid2, sc_index, ExperimentNo, enClass);
-        AnnotateEnEnInteraction(enid2, enid1, sc_index, ExperimentNo, enClass);
+        AnnotateEnEnInteraction(enid1, enid2, ExperimentNo, enClass);
+        AnnotateEnEnInteraction(enid2, enid1, ExperimentNo, enClass);
         
     }
     else{
-        AnnotateEnhancerDistalInteractor(enid1, pair.chr1, pair.chr2, pair.resites2, sc_index, ExperimentNo, enClass);
+        AnnotateEnhancerDistalInteractor(enid1, pair.chr1, pair.chr2, pair.resites2, ExperimentNo, enClass);
     }
 }

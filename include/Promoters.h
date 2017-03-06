@@ -26,7 +26,7 @@ public:
     temppars *tp;
     void InitialiseData(int, int);
     
-    void ReadPromoterAnnotation(ProbeRESitesClass&, std::string, std::string);
+    void ReadFeatureAnnotation(ProbeRESitesClass&, std::string, std::string);
     PromoterClass(OutStream& plog) : pLog (plog) {}
        
 private:
@@ -35,8 +35,8 @@ private:
 	int fileCount ;
 	int filesReadCount;
 	
-    void GetTrFeats(std::stringstream&, temppars&);
-    void ClusterIsoformPromoters(std::vector<int>&, std::vector<std::string>&, std::vector<int>&, std::vector<std::string>&, std::string);
+    void GetTrFeats(std::stringstream&, temppars&, std::string);
+    void ClusterIsoformPromoters(std::vector<int>&, std::vector<std::string>&, std::vector<int>&, std::vector<std::string>&, std::string, int);
     int FindLeftMostCoord(std::vector<int>);
     int FindRightMostCoord(std::vector<int>);
 };

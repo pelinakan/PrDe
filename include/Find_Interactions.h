@@ -2,6 +2,7 @@
 #define INTSUITE_INC_FI_H_
 
 #include "BackgroundInteractionFrequency.h"
+#include "Enhancers.h"
 
 class DetectInteractions{
 public:
@@ -21,7 +22,7 @@ private:
 	int MinimumJunctionDistance;
 	OutStream& fLog;
 	
-	bool CheckSupportingPairs(int*);
+	bool CheckSupportingPairs(int*, int);
 	double CalculatepVal(std::map< int, double >,std::map< int, double >, int,int);
     int FindClosestTranscriptTSS(int, std::vector<int>);
 };

@@ -14,7 +14,6 @@
 #include "PrDe.h"
 
 
-
 int main(int argc, const char * argv[]) {
 	
 	std::string whichMod;
@@ -57,10 +56,10 @@ int main(int argc, const char * argv[]) {
 		else{
 			for(int i=2; i<argc; ++i){
 				if(argv[i]=="-c" || argv[i]=="--chr"){
-					whichchr=argv[i+1];
+					whichChr=argv[i+1];
 				}
 				else if(argv[i]=="-p" || argv[i]=="--proximitytype"){
-					if(argv[i+1]=="PrintProbeInteractions" || argv[i+1] =="PrintEnhancerInteractions")
+					if(argv[i+1]=="PrintProbeProximities" || argv[i+1] =="PrintEnhancerProximities")
 						proxType=argv[i+1];
 					else{
 						std::cout<<"Invalid argument for -p"<<std::endl;
@@ -69,7 +68,7 @@ int main(int argc, const char * argv[]) {
 					}
 				}
 				else if(argv[i]=="-d" || argv[i]=="--displaytype"){
-					if(argv[i+1]=="ComputeStatsOnly" || argv[i+1] == "PrintInteractions")
+					if(argv[i+1]=="ComputeStatsOnly" || argv[i+1] == "PrintProximities")
 						statsOption=argv[i+1];
 					else{
 						std::cout<<"Invalid argument for -d"<<std::endl;
@@ -91,7 +90,7 @@ int main(int argc, const char * argv[]) {
 					return -1;
 				}
 			}
-			prde.ProxDetectMain(whichchr, proxType, statsOption, printOption);
+			prde.ProxDetectMain(whichChr, proxType, statsOption, printOption);
 			
 		}
 		

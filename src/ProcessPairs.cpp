@@ -6,7 +6,7 @@
 #include "api/BamIndex.h"
 using namespace BamTools;
 
-void ProcessBAM::Initialize(std::string bamfilename, int nOfExp, int padd, int redLen){
+void ProcessBAM::Initialize(std::string bamfilename, int nOfExp, int padd, int readLen){
     
     NOFEXPERIMENTS = nOfExp;
     padding=padd;
@@ -113,7 +113,7 @@ void ProcessBAM::ProcessSortedBamFile_NegCtrls(ProbeSet& ProbeClass, ProbeRESite
 			   }
 			   
 			   if(StatsOption!="ComputeStatsOnly"){
-					proximities.RecordProximities(pairinfo, feature_id1, feature_id2, sc_index, ExperimentNo);
+					proximities.RecordProximities(pairinfo, feature_id1, feature_id2, ExperimentNo);
 				}
         if(NumberofPairs % 20000000 == 0)
            bLog << NumberofPairs/1000000 << " million pairs are processed  " << BAMFILENAME << std::endl;  
@@ -149,6 +149,7 @@ void ProcessBAM::ProcessSortedBAMFile(ProbeSet& ProbeClass, ProbeRESitesClass& d
 	Alignment pairinfo;
 	int strandcomb = 0, sc_index=0;
 	std::string feature_id1, feature_id2;
+	bool read1_strand, read2_strand;
 	bool re1f, re1r;
 	pairinfo.resites1 = new int [2];
 	pairinfo.resites2 = new int [2];
@@ -230,7 +231,7 @@ void ProcessBAM::ProcessSortedBAMFile(ProbeSet& ProbeClass, ProbeRESitesClass& d
 								strandcomb = 3; // reverse-reverse
 						}
 						sc_index = (ExperimentNo*4) + strandcomb;
-						proximities.RecordProximities(pairinfo, feature_id1, feature_id2, sc_index, ExperimentNo);
+						proximities.RecordProximities(pairinfo, feature_id1, feature_id2, ExperimentNo);
 					}
        
 					if(NumberofPairs % 20000000 == 0)
@@ -260,7 +261,7 @@ void ProcessBAM::ProcessSortedBAMFile(ProbeSet& ProbeClass, ProbeRESitesClass& d
 				}
             
 				if(StatsOption!="ComputeStatsOnly"){
-					proximities.RecordProximities(pairinfo, feature_id1, feature_id2, sc_index, ExperimentNo);
+					proximities.RecordProximities(pairinfo, feature_id1, feature_id2, ExperimentNo);
 				}
        
 				if(NumberofPairs % 20000000 == 0)
@@ -287,7 +288,7 @@ void ProcessBAM::ProcessSortedBAMFileForEnhancers(ProbeSet& ProbeClass, ProbeRES
 	indexFilename = BAMFILENAME;
   
 	if ( !reader.Open(BAMFILENAME.c_str()) )
-		std::cerr << "Could not open input BAM file." << std::endl;
+		bLog << "Could not open input BAM file." << std::endl;
 	else{
 		bLog << ExperimentNo+1 << " out of " << NOFEXPERIMENTS << " will be read" << std::endl;
 		if(!(reader.LocateIndex())){
@@ -351,7 +352,7 @@ void ProcessBAM::ProcessSortedBAMFileForEnhancers(ProbeSet& ProbeClass, ProbeRES
      
             
 				if(StatsOption!="ComputeStatsOnly"){
-						proximities.RecordEnhancerProximities(enpairinfo, enpairinfo.enid1, enpairinfo.enid2, sc_index, ExperimentNo);
+						proximities.RecordEnhancerProximities(enpairinfo, enpairinfo.enid1, enpairinfo.enid2, ExperimentNo, EnClass);
 					}
        
 				if(NumberofPairs % 20000000 == 0)
@@ -378,7 +379,7 @@ void ProcessBAM::ProcessSortedBAMFileForEnhancers(ProbeSet& ProbeClass, ProbeRES
 				}
                            
 				if(StatsOption!="ComputeStatsOnly"){
-					proximities.RecordEnhancerProximities(enpairinfo, enpairinfo.enid1, enpairinfo.enid2, sc_index, ExperimentNo, EnClass);
+					proximities.RecordEnhancerProximities(enpairinfo, enpairinfo.enid1, enpairinfo.enid2, ExperimentNo, EnClass);
 				}
        
 				if(NumberofPairs % 20000000 == 0)

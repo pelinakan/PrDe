@@ -7,7 +7,6 @@ using namespace std;
 
 #include "Global.h"
 #include "ProcessPairs.h"
-#include "GetOptions.h"
 #include "Find_Interactions.h"
 #include "OutStream.h"
 #include "PrDe.h"
@@ -28,7 +27,7 @@ const int BinSizeProbeProbe=20000;
 
 
 
-int main (std::string whichchr, std::string interactionOption, std::string statsOption, std::string interactiontype){
+int PrDe::ProxDetectMain(std::string whichchr, std::string interactionOption, std::string statsOption, std::string interactiontype){
 	
 	
 	struct Experiment{
@@ -47,16 +46,11 @@ int main (std::string whichchr, std::string interactionOption, std::string stats
 	std::string NegCtrlProbeFileName;
 	std::string ExpFileName;
 	std::string EnhancerListFileName;
-	std::string whichchr;
-
 	std::string BaseFileName;
-    std::string statsOption;
-    std::string interactionOption;
     std::vector <Experiment> Experiments; 
 	Experiment Exptemp;
 	std::string enhancerOption;
 	enhancerOption="No";
-	std::string interactiontype;
 	std::map <std::string, std::string> probeType;
 	std::locale l;
 	std::ofstream statsFile;
@@ -155,7 +149,7 @@ int main (std::string whichchr, std::string interactionOption, std::string stats
 					else{
 						CALCULATE_P_VALUES=false;
 						if(s.empty())
-							log<<"##Note## : Calculate p values is empty. Set to default: No!" <<std::std::endl;
+							log<<"##Note## : Calculate p values is empty. Set to default: No!" <<std::endl;
 					}
 				}
 				if(line.substr(0, line.find('=')).find("Window Size for Probe-Distal")){
@@ -201,7 +195,7 @@ int main (std::string whichchr, std::string interactionOption, std::string stats
 	log << "Calculate p values                  " ;
 	if(CALCULATE_P_VALUES)
 		log<< "Yes" << std::endl;
-	if(!CALCULATE_P_VALUES))
+	if(!CALCULATE_P_VALUES)
 		log<< "No" << std::endl;
     
     ifstream ExpFile(ExpFileName.c_str());
@@ -260,7 +254,7 @@ int main (std::string whichchr, std::string interactionOption, std::string stats
 						countFeatFiles-=1;
 						//emptyErrFlag = true;
 					}
-					SNPfile=s;
+					SNPFile=s;
 				}
 				if(line.substr(0, line.find('=')).find("Negative control region File")!=std::string::npos){
 					std::string s;
@@ -321,13 +315,13 @@ int main (std::string whichchr, std::string interactionOption, std::string stats
 				if(line.substr(0, line.find('=')).find("Number of Experiments")){
 					NOFEXPERIMENTS=std::stoi(line.substr(line.find('=')+1));
 				}
-				if(interactionOption.find("PrintEnhancerInteractions")){
+				if(interactionOption.find("PrintEnhancerProximities")){
 					if(line.substr(0, line.find('=')).find("Enhancer List File")){
 						string s;
 						s=line.substr(line.find('=')+1);
 						s.erase(std::remove_if(s.begin(), s.end(), [l](char ch) { return std::isspace(ch, l); }), s.end());
 						if(s.empty()){
-						log<<"!!Error!! : Enhancee List File Path is empty. It is required!" <<std::endl;
+						log<<"!!Error!! : Enhancer List File Path is empty. It is required!" <<std::endl;
 						emptyErrFlag=true;
 						}
 						EnhancerListFileName = s;
@@ -355,7 +349,7 @@ int main (std::string whichchr, std::string interactionOption, std::string stats
 		log<<"ExperimentFile.txt not found in config directory."<<std::endl;
 	}
     
-    if(TranscriptListFileName.empty()&&SNPfile.empty()){
+    if(TranscriptListFileName.empty()&&SNPFile.empty()){
 		log << "Both transcript list file and SNV list file paths are not entered"<< std::endl;
 		emptyErrFlag=true;
 	}
@@ -388,14 +382,14 @@ int main (std::string whichchr, std::string interactionOption, std::string stats
    // proms.ReadPromoterAnnotation(dpnII, TranscriptListFileName, ClusterPromoters);
     switch(featFileCount){
 		case 1:	
-			proms.ReadFeatureAnnotation(dpnII, SNPfile, "SNV");
+			proms.ReadFeatureAnnotation(dpnII, SNPFile, "SNV");
 			break;
 		case 2:
 			proms.ReadFeatureAnnotation(dpnII, TranscriptListFileName, "transcript");	
 			break;
 		case 3:
 			proms.ReadFeatureAnnotation(dpnII, TranscriptListFileName, "transcript");
-			proms.ReadFeatureAnnotation(dpnII, SNPfile, "SNV");
+			proms.ReadFeatureAnnotation(dpnII, SNPFile, "SNV");
 			break;
 		default:
 			break;
@@ -415,7 +409,7 @@ int main (std::string whichchr, std::string interactionOption, std::string stats
     
     //---------------------------------------------------------------------------------
     if(statsOption=="ComputeStatsOnly"){
-		statsFile.open(BaseFileName+"."+reFileInfo.genomeAssembly.substr(0, reFileInfo.genomeAssembly.find_first_of(',')) +".computeStats."+reInfo.currTime+".txt");
+		statsFile.open(BaseFileName+"."+reFileInfo.genomeAssembly.substr(0, reFileInfo.genomeAssembly.find_first_of(',')) +".computeStats."+reFileInfo.currTime+".txt");
 		statsFile << "Total_Number_of_Pairs"<<'\t'<< "Total_Number_of_Pairs_on_Probes"<<'\t' << "Number_of_Pairs_Both_Reads_on_Probe" << '\t'<< "Number_of_Pairs_One_Read_on_Probe" << '\t' << "Number_of_Pairs_None_on_Probe" << '\t'<< "On_Probe_Pair_Fraction" <<std::endl;
 	}
     
@@ -424,12 +418,12 @@ int main (std::string whichchr, std::string interactionOption, std::string stats
     
     ProximityClass proximities(NOFEXPERIMENTS);
         
-    if(interactionOption=="PrintProbeInteractions"){
+    if(interactionOption=="PrintProbeProximities"){
 		
 		for (unsigned i=0; i<Experiments.size(); ++i){ // Reads all the pairs in each experiment and fills the interaction maps
 
 			Exptemp=Experiments[i];
-			bamfile.Initialize(Exptemp.filepath, , NOFEXPERIMENTS, padding, ReadLen);
+			bamfile.Initialize(Exptemp.filepath, NOFEXPERIMENTS, padding, ReadLen);
 			ExperimentNames.push_back(Exptemp.name);
 		
 		
@@ -494,7 +488,7 @@ int main (std::string whichchr, std::string interactionOption, std::string stats
 		}
 	}
 	
-	if(interactionOption=="PrintEnhancerInteractions"){
+	if(interactionOption=="PrintEnhancerProximities"){
 		
 		EnhancerSet enhancerClass;
 		log<<"Enhancer File is "<<EnhancerListFileName<<std::endl;
@@ -503,17 +497,17 @@ int main (std::string whichchr, std::string interactionOption, std::string stats
 		for (unsigned i=0; i<Experiments.size(); i++){ // Reads all the pairs in each experiment and fills the interaction maps
 
 			Exptemp=Experiments[i];
-			bamfile.Initialize(Exptemp.filepath);
+			bamfile.Initialize(Exptemp.filepath, NOFEXPERIMENTS, padding, ReadLen);
 			ExperimentNames.push_back(Exptemp.name);
 		          
-			bamfile.ProcessSortedBAMFileForEnhancers(ProbeClass, dpnII, proximities, Exptemp.filepath, ExperimentNo, whichchr, Exptemp.designname, statsOption, enhancerClass, reFileInfo);     
+			bamfile.ProcessSortedBAMFileForEnhancers(ProbeClass, dpnII, proximities, Exptemp.filepath, ExperimentNo, whichchr, Exptemp.designname, statsOption, enhancerClass);     
 			++ExperimentNo;
 
 			log << Exptemp.filepath << "     finished" << std::endl;
 
 		}
     	
-		Interactions.PrintEnhancerEnhancerInteractions(ProbeClass, background, BaseFileName, ExperimentNo, ExperimentNames, whichchr, enhancerClass);
+		Interactions.PrintEnhancerEnhancerInteractions(ProbeClass, background, BaseFileName, ExperimentNo, ExperimentNames, whichchr, enhancerClass, reFileInfo);
 
 	}
 

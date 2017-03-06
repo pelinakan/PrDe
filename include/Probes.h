@@ -14,7 +14,7 @@ public:
 	int FindOverlaps(std::string, unsigned long int, unsigned long int, std::string);
     int FindOverlaps_NegCtrls(std::string, unsigned long int, unsigned long int, std::string);
     
-    ProbeSet(OutStream& prlog, int fcount, int fRCount) : prLog (prlog), fileCount(fCount), filesReadCount (fRCount) {}
+    ProbeSet(OutStream& prlog, int fCount, int fRCount) : prLog (prlog), fileCount(fCount), filesReadCount (fRCount) {}
     
 private:
 	OutStream& prLog;

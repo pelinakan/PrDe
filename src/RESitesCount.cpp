@@ -1,8 +1,8 @@
-#include "ProbeRESitesCount.h"
+#include "RESitesCount.h"
 #include <fstream>
 #include <iostream>
 
-void ProbeRESitesClass::InitialiseVars(std::string DigestedGenomeFileName){
+void RESitesClass::InitialiseVars(std::string DigestedGenomeFileName){
 
     std::string s;
     s.append(DigestedGenomeFileName);
@@ -71,7 +71,7 @@ void ProbeRESitesClass::InitialiseVars(std::string DigestedGenomeFileName){
 
 }
 
-bool ProbeRESitesClass::GettheREPositions(std::string chr, int pos, int* renums){ // Returns closest RE sites to a position
+bool RESitesClass::GettheREPositions(std::string chr, int pos, int* renums){ // Returns closest RE sites to a position
 	
     int HalfClusterDist = 5000; //in case the pos is at the end of a bin
     int rightchr;
@@ -135,7 +135,7 @@ bool ProbeRESitesClass::GettheREPositions(std::string chr, int pos, int* renums)
 }
 
 
-void ProbeRESitesClass::CleanClass(){
+void RESitesClass::CleanClass(){
 
 	posvector.clear();
 	chr_names.clear();

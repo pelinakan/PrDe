@@ -2,7 +2,7 @@
 #define INTSUITE_INC_PROM_H_
 
 #include <sstream>
-#include "ProbeRESitesCount.h"
+#include "RESitesCount.h"
 
 struct temppars{
     std::string chr;
@@ -20,14 +20,14 @@ struct temppars{
 
 
 
-class PromoterClass{ //Probe Clusters Associated with a Promoter
+class FeatureClass{ //Probe Clusters Associated with a Promoter
 public:
     
     temppars *tp;
     void InitialiseData(int, int);
     
-    void ReadFeatureAnnotation(ProbeRESitesClass&, std::string, std::string);
-    PromoterClass(OutStream& plog) : pLog (plog) {}
+    void ReadFeatureAnnotation(RESitesClass&, std::string, std::string);
+    FeatureClass(OutStream& plog) : pLog (plog) {}
        
 private:
 	OutStream& pLog;

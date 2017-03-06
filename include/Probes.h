@@ -2,11 +2,11 @@
 #define INTSUITE_INC_PROBES_H_
 
 #include <map>
-#include "Promoters.h"
+#include "Features.h"
 #include "Data_Structures.h"
 
 class ProbeSet{
-    friend class PromoterClass;
+    friend class FeatureClass;
 public:
    
 	void ReadProbeCoordinates(std::string, std::map <std::string, std::string>&, int, bool, PrDes::RENFileInfo&);

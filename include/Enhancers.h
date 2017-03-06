@@ -2,7 +2,7 @@
 #define INTSUITE_INC_ENHANCERS_H_
 
 #include <map>
-#include "ProbeRESitesCount.h"
+#include "RESitesCount.h"
 #include "Data_Structures.h"
 #include "IntervalTree.h"
 

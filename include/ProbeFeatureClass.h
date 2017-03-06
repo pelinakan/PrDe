@@ -1,7 +1,7 @@
 #ifndef PRSUITE_INC_PROMOTER_H_
 #define PRSUITE_INC_PROMOTER_H_
 
-#include "ProbeRESitesCount.h"
+#include "RESitesCount.h"
 #include "IntervalTree.h"
 #include <map>
 
@@ -18,7 +18,7 @@ struct temppars{
     int FeatureType;
 };
 
-class ProbePromoterClass{ //Probe Clusters Associated with a Promoter
+class ProbeFeatureClass{ //Probe Clusters Associated with a Promoter
 public:
 	int promPadding;//padding for Promoter Interval Tree
 	int NofPromoters;
@@ -29,9 +29,8 @@ public:
 	std::map< std::string, IntervalTree <std::string> > promIntTree; //Promoter Interval Tree
 
 	void InitialiseData(int, int, int);
-	void ReadFeatureAnnotation(ProbeRESitesClass&, std::string, std::string);
-	bool AnnotatewithPromoters(std::string, int, int, int, std::string, int, int, int, ProbeRESitesClass&, int);
-	ProbePromoterClass(OutStream& plog) : pLog (plog) {}
+	void ReadFeatureAnnotation(RESitesClass&, std::string, std::string);
+	ProbeFeatureClass(OutStream& plog) : pLog (plog) {}
 
 private:
 	int ClusterPromoters;

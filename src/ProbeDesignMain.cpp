@@ -323,7 +323,7 @@ int PrDe::ProbeDesignMain(std::string whichchr) {
 	reFileInfo.REName = motif.substr(motif.find_first_of(",")+1);
     
     log << "Reading Digest file and finding RE sites: Starting!" << std::endl;
-    ProbeRESitesClass dpnIIsites(log);
+    RESitesClass dpnIIsites(log);
     dpnIIsites.InitialiseVars(DigestedGenomeFileName);
     log << "Reading Digest file and finding RE sites: Done!" << std::endl;
     
@@ -335,7 +335,7 @@ int PrDe::ProbeDesignMain(std::string whichchr) {
     }
 //-------------------//------------------------------
     log << "Reading Feature files and annotating features: Starting!" << std::endl;
-    ProbePromoterClass Features(log);
+    ProbeFeatureClass Features(log);
     Features.InitialiseData(ClusterPromoters, countFeatFiles, dforbidProm); //ReadFeatureAnnotation called with 1 or 2 files
    
     switch(featFileCount){

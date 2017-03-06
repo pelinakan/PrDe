@@ -5,7 +5,7 @@
 #include "NegativeProbeDesign.h"
 
 
-void NegativeProbeDesign::InitialiseDesign(ProbePromoterClass& Features, std::string transcriptfile, std::string regRegionFile, bool ifRReg, int prlen, std::string bgwgsumbin, std::string mapfp, int minREfragLength, PrDes::RENFileInfo& reInfo, int bufSize, std::string digestFile){
+void NegativeProbeDesign::InitialiseDesign(ProbeFeatureClass& Features, std::string transcriptfile, std::string regRegionFile, bool ifRReg, int prlen, std::string bgwgsumbin, std::string mapfp, int minREfragLength, PrDes::RENFileInfo& reInfo, int bufSize, std::string digestFile){
 	
 	//Set class variables
 	minREfragLen = minREfragLength;
@@ -214,7 +214,7 @@ void NegativeProbeDesign::InitialiseDesign(ProbePromoterClass& Features, std::st
 }
 
 
-void NegativeProbeDesign::ConstructPools(std::string digestFile, ProbePromoterClass& Features){
+void NegativeProbeDesign::ConstructPools(std::string digestFile, ProbeFeatureClass& Features){
 	
 	bool flag;
 	int istart, iend;

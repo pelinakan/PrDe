@@ -1,4 +1,4 @@
-#include "Promoters.h"
+#include "Features.h"
 #include "Data_Structures.h"
 #include <map>
 #include <fstream>
@@ -7,7 +7,7 @@
 std::map< std::string, FeatureStruct > Features;
 std::map< std::string, std::vector < std::string > > MetaFeatures;
 
-void PromoterClass::InitialiseData(int clustProm, int fCount){
+void FeatureClass::InitialiseData(int clustProm, int fCount){
 	
 	ClusterPromoters = clustProm;
 	fileCount = fCount;
@@ -17,7 +17,7 @@ void PromoterClass::InitialiseData(int clustProm, int fCount){
 
 }
 
-void PromoterClass::GetTrFeats(std::stringstream &trx, temppars &tpars, std::string option){
+void FeatureClass::GetTrFeats(std::stringstream &trx, temppars &tpars, std::string option){
 	
 	std::string field, start, end;
     
@@ -77,7 +77,7 @@ void PromoterClass::GetTrFeats(std::stringstream &trx, temppars &tpars, std::str
 
 
 
-int PromoterClass::FindLeftMostCoord(std::vector<int> coords){
+int FeatureClass::FindLeftMostCoord(std::vector<int> coords){
     
     int leftmosttss;
     
@@ -90,7 +90,7 @@ int PromoterClass::FindLeftMostCoord(std::vector<int> coords){
 }
 
 
-int PromoterClass::FindRightMostCoord(std::vector<int> coords){
+int FeatureClass::FindRightMostCoord(std::vector<int> coords){
 	
     int rightmosttss;
     
@@ -103,7 +103,7 @@ int PromoterClass::FindRightMostCoord(std::vector<int> coords){
 }
 
 
-void PromoterClass::ClusterIsoformPromoters(std::vector <int>& isoformprs, std::vector<std::string>& tr_ids, std::vector <int>& clusteredtrcoords, std::vector<std::string>& clustered_ids, std::string strand, int ClusterPromoters){
+void FeatureClass::ClusterIsoformPromoters(std::vector <int>& isoformprs, std::vector<std::string>& tr_ids, std::vector <int>& clusteredtrcoords, std::vector<std::string>& clustered_ids, std::string strand, int ClusterPromoters){
     
     int j,k,l,z;
     
@@ -161,7 +161,7 @@ void PromoterClass::ClusterIsoformPromoters(std::vector <int>& isoformprs, std::
 
 
 
-void PromoterClass::ReadFeatureAnnotation(ProbeRESitesClass& dpnIIsites, std::string TranscriptListFileName, std::string option){
+void FeatureClass::ReadFeatureAnnotation(RESitesClass& dpnIIsites, std::string TranscriptListFileName, std::string option){
     std::string temp,tr1, tr2, feature_id;
     int nofgenes = 0, z = 0;
     std::locale l;

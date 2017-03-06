@@ -20,7 +20,7 @@ typedef struct{
 class ProximityClass{
 	friend class ProbeSet;
     friend class ProcessBAM;
-    friend class PromoterClass;
+    friend class FeatureClass;
 
 public:
 

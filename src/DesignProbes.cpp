@@ -3,7 +3,7 @@
 #include <cstdio>
 
 
-void DesignClass::InitialiseDesign(ProbePromoterClass& proms, std::vector<PrDes::REPosMap>& fragmap ){
+void DesignClass::InitialiseDesign(ProbeFeatureClass& proms, std::vector<PrDes::REPosMap>& fragmap ){
      
     for(int k = 0;k < proms.ChrNames_proms.size(); ++k){
         chrIndex[proms.ChrNames_proms[k]] = k;
@@ -55,7 +55,7 @@ double DesignClass::BigWigSummary(std::string chr, int start, int end){
 }
 
 
-bool DesignClass::overlap(ProbeRESitesClass& dpnII, Repeats repeat_trees, int& closest_re, int tss, int whichside, std::string chr, int probe_start, int probe_end, bool ifRep, bool ifMap){
+bool DesignClass::overlap(RESitesClass& dpnII, Repeats repeat_trees, int& closest_re, int tss, int whichside, std::string chr, int probe_start, int probe_end, bool ifRep, bool ifMap){
     
     int *resites;
     resites = new int[2];
@@ -103,7 +103,7 @@ bool DesignClass::overlap(ProbeRESitesClass& dpnII, Repeats repeat_trees, int& c
 }
 
 
-bool DesignClass::CheckRepeatOverlaps(ProbeRESitesClass & dpnII, std::string chr, int tss, int& closest_re, bool rightside, Repeats repeat_trees, bool ifRep, bool ifMap){
+bool DesignClass::CheckRepeatOverlaps(RESitesClass & dpnII, std::string chr, int tss, int& closest_re, bool rightside, Repeats repeat_trees, bool ifRep, bool ifMap){
     
     if(!ifRep && !ifMap){
 		return true;
@@ -121,7 +121,7 @@ bool DesignClass::CheckRepeatOverlaps(ProbeRESitesClass & dpnII, std::string chr
 }
 
 
-int DesignClass::CheckDistanceofProbetoTSS(ProbeRESitesClass& dpnII, std::string chr, int tss, int closest_re, bool rightside){
+int DesignClass::CheckDistanceofProbetoTSS(RESitesClass& dpnII, std::string chr, int tss, int closest_re, bool rightside){
     //If probe is less than 120 bases away from the TSS, it looks at the next RE site to design probe
     
     int *resites;
@@ -158,7 +158,7 @@ bool DesignClass::createNewEntry(std::unordered_map<int, PrDes::REposStruct >& t
 }
 
 
-void DesignClass::DesignProbes(ProbePromoterClass & Feats, ProbeRESitesClass & dpnII, Repeats repeat_trees, std::string bgwgsumbin, std::string mappabilityfilepath, std::string whichchr, int mDisttoTSS, int prlen, PrDes::RENFileInfo& reInfo, int bufSize){
+void DesignClass::DesignProbes(ProbeFeatureClass & Feats, RESitesClass & dpnII, Repeats repeat_trees, std::string bgwgsumbin, std::string mappabilityfilepath, std::string whichchr, int mDisttoTSS, int prlen, PrDes::RENFileInfo& reInfo, int bufSize){
     
     // There is only one design layer which contains both upstream and downstream designs. Each feature will have two probes if possible.
     ProbeLen = prlen;
@@ -253,7 +253,7 @@ void DesignClass::DesignProbes(ProbePromoterClass & Feats, ProbeRESitesClass & d
 
 
 
-int DesignClass::CheckREsiteAroundProbe(ProbeRESitesClass& dpnII, std::string chr, int probe_re, int direction){
+int DesignClass::CheckREsiteAroundProbe(RESitesClass& dpnII, std::string chr, int probe_re, int direction){
     // It checks if for neighbouring restriction enzyme positions any probes designed. if yes, it will move it to a new design layer.
     int *resites;
     resites = new int[2];
@@ -270,7 +270,7 @@ int DesignClass::CheckREsiteAroundProbe(ProbeRESitesClass& dpnII, std::string ch
 }
 
 
-bool DesignClass::WritetoFile(std::ofstream &outfile, std::string chr, int chrind, int repos, std::vector< std::string > values, bool direction, std::string design, ProbePromoterClass& feats){
+bool DesignClass::WritetoFile(std::ofstream &outfile, std::string chr, int chrind, int repos, std::vector< std::string > values, bool direction, std::string design, ProbeFeatureClass& feats){
 	
 	std::string target, side;
 	int disttotss, probestart, probeend;
@@ -331,7 +331,7 @@ bool DesignClass::WritetoFile(std::ofstream &outfile, std::string chr, int chrin
     return true;
 }
 
-void DesignClass::MergeAllChrOutputs(ProbePromoterClass& Feats, PrDes::RENFileInfo& reInfo){
+void DesignClass::MergeAllChrOutputs(ProbeFeatureClass& Feats, PrDes::RENFileInfo& reInfo){
 	
 	std::string fnameAllChr = reInfo.desName+"."+reInfo.genomeAssembly.substr(0, reInfo.genomeAssembly.find_first_of(','))+".AllProbes."+reInfo.REName+"."+reInfo.currTime+".gff3";    
     

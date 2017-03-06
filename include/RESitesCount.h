@@ -4,8 +4,7 @@
 #include "ProbeDataStructs.h"
 #include "OutStream.h"
 
-class ProbeRESitesClass{
-	//friend class ProbePromoterClass;
+class RESitesClass{
 public :
 	int span;
 	std::vector <std::string> chr_names;
@@ -15,7 +14,7 @@ public :
 	std::vector < PrDes::REindexes > indexes;
 	std::vector < int > posvector;
 	
-	ProbeRESitesClass(OutStream& rlog) : rLog (rlog) {}
+	RESitesClass(OutStream& rlog) : rLog (rlog) {}
 	
 	void InitialiseVars(std::string);
 	bool GettheREPositions(std::string, int, int*);

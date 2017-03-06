@@ -4,7 +4,7 @@
 #include "Proximities.h"
 
 class ProcessBAM{
-    friend class PromoterClass;
+    friend class FeatureClass;
     //friend class ProbeSet;
     friend class ProximityClass;
 public:
@@ -14,9 +14,9 @@ public:
 
     void Initialize(std::string, int, int, int);
   
-    void ProcessSortedBAMFile(ProbeSet&, ProbeRESitesClass&, ProximityClass&, std::string, int, std::string, std::string, std::string);
-    void ProcessSortedBamFile_NegCtrls(ProbeSet&, ProbeRESitesClass&, ProximityClass&, std::string, int, std::string, std::string);    
-    void ProcessSortedBAMFileForEnhancers(ProbeSet&, ProbeRESitesClass&, ProximityClass &, std::string, int, std::string, std::string, std::string, EnhancerSet&);
+    void ProcessSortedBAMFile(ProbeSet&, RESitesClass&, ProximityClass&, std::string, int, std::string, std::string, std::string);
+    void ProcessSortedBamFile_NegCtrls(ProbeSet&, RESitesClass&, ProximityClass&, std::string, int, std::string, std::string);    
+    void ProcessSortedBAMFileForEnhancers(ProbeSet&, RESitesClass&, ProximityClass &, std::string, int, std::string, std::string, std::string, EnhancerSet&);
     
     ProcessBAM(OutStream& blog) : bLog (blog) {}
     

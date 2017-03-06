@@ -39,7 +39,7 @@ void ProcessBAM::Initialize(std::string bamfilename, int nOfExp, int padd, int r
 }
 
 
-void ProcessBAM::ProcessSortedBamFile_NegCtrls(ProbeSet& ProbeClass, ProbeRESitesClass& dpnII, ProximityClass& proximities, std::string BAMFILENAME, int ExperimentNo, std::string DesignName, std::string StatsOption){
+void ProcessBAM::ProcessSortedBamFile_NegCtrls(ProbeSet& ProbeClass, RESitesClass& dpnII, ProximityClass& proximities, std::string BAMFILENAME, int ExperimentNo, std::string DesignName, std::string StatsOption){
     
     BamAlignment al, almate;
     BamReader reader;
@@ -125,7 +125,7 @@ void ProcessBAM::ProcessSortedBamFile_NegCtrls(ProbeSet& ProbeClass, ProbeRESite
 
 
 
-void ProcessBAM::ProcessSortedBAMFile(ProbeSet& ProbeClass, ProbeRESitesClass& dpnII, ProximityClass& proximities, std::string BAMFILENAME, int ExperimentNo, std::string whichchr, std::string DesignName, std::string StatsOption){
+void ProcessBAM::ProcessSortedBAMFile(ProbeSet& ProbeClass, RESitesClass& dpnII, ProximityClass& proximities, std::string BAMFILENAME, int ExperimentNo, std::string whichchr, std::string DesignName, std::string StatsOption){
    
 	BamAlignment al, almate;
 	BamReader reader;
@@ -276,7 +276,7 @@ void ProcessBAM::ProcessSortedBAMFile(ProbeSet& ProbeClass, ProbeRESitesClass& d
 
 
 
-void ProcessBAM::ProcessSortedBAMFileForEnhancers(ProbeSet& ProbeClass, ProbeRESitesClass& dpnII, ProximityClass& proximities, std::string BAMFILENAME, int ExperimentNo, std::string whichchr, std::string DesignName, std::string StatsOption, EnhancerSet& EnClass){
+void ProcessBAM::ProcessSortedBAMFileForEnhancers(ProbeSet& ProbeClass, RESitesClass& dpnII, ProximityClass& proximities, std::string BAMFILENAME, int ExperimentNo, std::string whichchr, std::string DesignName, std::string StatsOption, EnhancerSet& EnClass){
     
 	BamAlignment al, almate;
 	BamReader reader;

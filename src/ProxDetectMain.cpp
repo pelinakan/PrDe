@@ -360,7 +360,7 @@ int PrDe::ProxDetectMain(std::string whichchr, std::string interactionOption, st
 	}
     
     //------------------------------------------------------------------------------------
-    ProbeRESitesClass dpnII(log);
+    RESitesClass dpnII(log);
     dpnII.InitialiseVars(DigestedGenomeFileName);
     //-------------------------------------------------------------------------------------
     
@@ -373,7 +373,7 @@ int PrDe::ProxDetectMain(std::string whichchr, std::string interactionOption, st
     std::vector < std::string > ExperimentNames;
     int ExperimentNo = 0;
     
-    PromoterClass proms(log);
+    FeatureClass proms(log);
    
     //-------------------------------------------------------------------------------
 	log << "Reading Feature files and annotating features: Starting!" << std::endl;

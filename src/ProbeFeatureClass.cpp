@@ -1,4 +1,4 @@
-#include "ProbePromoterClass.h"
+#include "ProbeFeatureClass.h"
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -7,7 +7,7 @@
 temppars *tp;
 
 
-void ProbePromoterClass::InitialiseData(int clustProm, int fCount, int pPadding){
+void ProbeFeatureClass::InitialiseData(int clustProm, int fCount, int pPadding){
 
 	promPadding = pPadding, //padding for Promoter Interval Tree
 	tp=new temppars [2];
@@ -24,7 +24,7 @@ void ProbePromoterClass::InitialiseData(int clustProm, int fCount, int pPadding)
 }
 
 
-void ProbePromoterClass::GetTrFeats(std::stringstream &trx, temppars &tpars, std::string option){
+void ProbeFeatureClass::GetTrFeats(std::stringstream &trx, temppars &tpars, std::string option){
 	
 	std::string field, start, end;
     
@@ -79,7 +79,7 @@ void ProbePromoterClass::GetTrFeats(std::stringstream &trx, temppars &tpars, std
    }  
 }
 
-int ProbePromoterClass::FindLeftMostCoord(std::vector<int> coords){
+int ProbeFeatureClass::FindLeftMostCoord(std::vector<int> coords){
     int leftmosttss;
     
     leftmosttss = coords[0];
@@ -90,7 +90,7 @@ int ProbePromoterClass::FindLeftMostCoord(std::vector<int> coords){
     return leftmosttss;
 }
 
-int ProbePromoterClass::FindRightMostCoord(std::vector<int> coords){
+int ProbeFeatureClass::FindRightMostCoord(std::vector<int> coords){
     int rightmosttss;
 
     rightmosttss = coords[0];
@@ -103,7 +103,7 @@ int ProbePromoterClass::FindRightMostCoord(std::vector<int> coords){
 }
 
 																																																										/////////////
-void ProbePromoterClass::ClusterIsoformPromoters(std::vector <int> isoformprs, std::vector<std::string> tr_ids, std::vector<std::string> probe_ids, std::vector <int>& clusteredtrcoords, std::vector<std::string>& clustered_ids, std::vector<std::string>& clustered_probe_ids, std::string strand){
+void ProbeFeatureClass::ClusterIsoformPromoters(std::vector <int> isoformprs, std::vector<std::string> tr_ids, std::vector<std::string> probe_ids, std::vector <int>& clusteredtrcoords, std::vector<std::string>& clustered_ids, std::vector<std::string>& clustered_probe_ids, std::string strand){
     
     unsigned int j,k,l,cluster_idx=0;
     
@@ -166,7 +166,7 @@ void ProbePromoterClass::ClusterIsoformPromoters(std::vector <int> isoformprs, s
     }
 }
 
-void ProbePromoterClass::ReadFeatureAnnotation(ProbeRESitesClass& dpnIIsites, std::string transcriptfile, std::string option)
+void ProbeFeatureClass::ReadFeatureAnnotation(RESitesClass& dpnIIsites, std::string transcriptfile, std::string option)
 {
 	std::string temp,tr1,tr2, feature_id;
 	int promindex = 0; 
@@ -350,7 +350,7 @@ void ProbePromoterClass::ReadFeatureAnnotation(ProbeRESitesClass& dpnIIsites, st
 }
 
 
-void ProbePromoterClass::DealwithSharedPromoters(){ // If promoters are too close to each other
+void ProbeFeatureClass::DealwithSharedPromoters(){ // If promoters are too close to each other
 	
 	for (auto it = promFeatures.begin(); it != promFeatures.end(); ++it) {
 		it->second.sharedpromoter = false;

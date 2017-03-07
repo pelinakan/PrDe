@@ -38,7 +38,7 @@ int main(int argc, const char * argv[]) {
 		}
 		else{
 			if(std::string(argv[2])=="-c" || std::string(argv[2])=="--chr"){
-				whichChr=argv[2];
+				whichChr=argv[3];
 				prde.ProbeDesignMain(whichChr);
 			}
 			else{

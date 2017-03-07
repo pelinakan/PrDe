@@ -292,8 +292,8 @@ bool DesignClass::WritetoFile(std::ofstream &outfile, std::string chr, int chrin
         return 0;
     
     if (direction) {// DOWNSTREAM - RIGHT
-		probestart=( repos - ProbeLen + reRightCut -1); //add
-		probeend=( repos + reRightCut - 1); //1 based
+		probestart=( repos - ProbeLen + reRightCut); //add
+		probeend=( repos + reRightCut); //1 based
 		
 		side="R";
 		disttotss=abs(probeend - feats.promFeatures[values[0]].TSS); 

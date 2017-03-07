@@ -19,8 +19,8 @@ static int print_usage()
     std::cerr<<"Program: PrDe (A software suite for Probe Design and Proximity Detection for targeted chromosome conformation capture applications)"<<std::endl;
     std::cerr<<"Contact: Pelin Akan <pelin.akan@scilifelab.se>"<<std::endl;
     std::cerr<<std::endl;
-    std::cerr<<"Usage:  PrDe <command> [arguments]"<<std::endl;
-    std::cerr<< "Commands:  "<<std::endl;
+    std::cerr<<"Usage:  PrDe <option> [arguments]"<<std::endl;
+    std::cerr<< "Options:  "<<std::endl;
     std::cerr<<std::endl;
     std::cerr<< "    ProbeDesigner"<<std::endl;
     std::cerr<< '\t'<< "Arguments:"<<std::endl;

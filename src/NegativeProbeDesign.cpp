@@ -315,7 +315,7 @@ int NegativeProbeDesign::ConstructNegativeControlProbes(int nCtrls,std::string n
 	if(!flag){
 		outFile<<"##gff-version 3.2.1"<<std::endl;
 		outFile<<"##genome-build "<<genAssem.substr(genAssem.find_first_of(',')+1)<<" "<<genAssem.substr(0, genAssem.find_first_of(',')) <<std::endl;
-		summaryFile<<"chrom"<<'\t' <<"Start"<< '\t'<<"End"<< '\t'<<"name"<<std::endl;
+		summaryFile<<"track name=\""<<designName<<"\" description=\"Negative control probe target fragment for "<< designName<<"\""<<std::endl;
 	}
 
 	

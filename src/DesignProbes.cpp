@@ -300,8 +300,10 @@ bool DesignClass::WritetoFile(std::ofstream &outfile, std::string chr, int chrin
 	}
 	
 	else if(!direction){ // UPSTREAM - LEFT
-		probestart = ( (repos+1) - reLeftCut );
-		probeend =( (repos+1) + ProbeLen - reLeftCut); //+1 to select the right fragment
+		//probestart = ( (repos+1) - reLeftCut );
+		//probeend =( (repos+1) + ProbeLen - reLeftCut); //+1 to select the right fragment
+		probestart = ( (repos+1) );
+		probeend =( (repos+1) + ProbeLen ); //+1 to select the right fragment
 		side = "L";
 		disttotss = abs(probestart - feats.promFeatures[values[0]].TSS);  
 	}   

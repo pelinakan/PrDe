@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.1)
 
-project(PrDe CXX)
+project(HiCapTools CXX)
 
 find_package(OpenMP REQUIRED)
 include(FindOpenMP)
@@ -20,10 +20,10 @@ file(GLOB_RECURSE SOURCES "${CMAKE_SOURCE_DIR}/ExterAlg/*.cpp")
   file (GLOB HFILES "${CMAKE_SOURCE_DIR}/include/*.h") 
   file (GLOB HPPFILES "${CMAKE_SOURCE_DIR}/include/*.hpp")
 
-  add_executable(PrDe ${CPPFILES} ${HFILES} ${HPPFILES} ${SOURCES})
+  add_executable(HiCapTools ${CPPFILES} ${HFILES} ${HPPFILES} ${SOURCES})
    
-  set_property(TARGET PrDe PROPERTY CXX_STANDARD 11)
-  set_property(TARGET PrDe PROPERTY CXX_STANDARD_REQUIRED ON)
+  set_property(TARGET HiCapTools PROPERTY CXX_STANDARD 11)
+  set_property(TARGET HiCapTools PROPERTY CXX_STANDARD_REQUIRED ON)
 
   find_package(ZLIB REQUIRED)
   add_library(libbamtools STATIC IMPORTED)
@@ -32,5 +32,5 @@ file(GLOB_RECURSE SOURCES "${CMAKE_SOURCE_DIR}/ExterAlg/*.cpp")
   include_directories( "${CMAKE_SOURCE_DIR}/ExterAlg")
   include_directories("${CMAKE_SOURCE_DIR}/include")
   include_directories("${CMAKE_SOURCE_DIR}/external")
-  target_link_libraries( PrDe libbamtools ${ZLIB_LIBRARIES})
+  target_link_libraries( HiCapTools libbamtools ${ZLIB_LIBRARIES})
 

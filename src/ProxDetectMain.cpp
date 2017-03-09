@@ -9,7 +9,7 @@ using namespace std;
 #include "ProcessPairs.h"
 #include "Find_Interactions.h"
 #include "OutStream.h"
-#include "PrDe.h"
+#include "HiCapTools.h"
 
 
 unsigned int totalNumberofPairs=0;
@@ -27,7 +27,7 @@ const int BinSizeProbeProbe=20000;
 
 
 
-int PrDe::ProxDetectMain(std::string whichchr, std::string interactionOption, std::string statsOption, std::string interactiontype){
+int HiCapTools::ProxDetectMain(std::string whichchr, std::string interactionOption, std::string statsOption, std::string interactiontype){
 	
 	
 	struct Experiment{

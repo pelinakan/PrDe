@@ -11,7 +11,7 @@
 #include <algorithm>
 
 #include "PrintUsage.h"
-#include "PrDe.h"
+#include "HiCapTools.h"
 
 
 int main(int argc, const char * argv[]) {
@@ -22,7 +22,7 @@ int main(int argc, const char * argv[]) {
 	std::string statsOption;
 	std::string printOption; 
 	
-	PrDe prde;
+	HiCapTools prde;
 	
     if (argc < 2) {
         print_usage();

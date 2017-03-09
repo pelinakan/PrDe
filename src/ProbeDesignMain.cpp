@@ -13,14 +13,14 @@
 #include <algorithm>
 #include <ctime>
 
-#include "PrDe.h"
+#include "HiCapTools.h"
 #include "NegativeProbeDesign.h"
 #include "PrintUsage.h"
 #include "OutStream.h"
 
 int DistanceBetweenProbes = 1000;
 
-int PrDe::ProbeDesignMain(std::string whichchr) {
+int HiCapTools::ProbeDesignMain(std::string whichchr) {
 	
 	int ClusterPromoters  = 1200;
 	int ProbeLen = 120;

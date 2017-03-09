@@ -446,7 +446,8 @@ void NegativeProbeDesign::WritetoFile(){
 	for(auto it=chrToIndex.begin(); it!=chrToIndex.end(); ++it){
 		for(int ind : it->second){
 			//left side
-			probeStart = ( toWriteSorted[ind].start - reLeftCut); /////check 1 based 0 based
+			//probeStart = ( toWriteSorted[ind].start - reLeftCut); /////check 1 based 0 based
+			probeStart = ( toWriteSorted[ind].start ); /////check 1 based 0 based
 			probeEnd =probeStart+ProbeLen;
 			side="L";
 			

@@ -135,8 +135,12 @@ void DetermineBackgroundLevels::CalculateMeanandStdRegress(std::string BaseFileN
     for(w = ((WindowSizeloc - 1)/2); w < (dm.size() - ((WindowSizeloc - 1)/2));++w){
         boost::accumulators::accumulator_set<double, stats<tag::rolling_mean> > acc(tag::rolling_window::window_size = (WindowSizeloc));
         boost::accumulators::accumulator_set<double, stats<tag::rolling_mean> > acc2(tag::rolling_window::window_size = (WindowSizeloc));
-        dwm.push_back(dm[s - 1]);
-        dws.push_back(ds[s - 1]);
+        
+        if(w>(WindowSizeloc - 1)){
+			dwm.push_back(dm[s - 1]);
+			dws.push_back(ds[s - 1]);
+		}
+		
         for(z = 0; z < WindowSizeloc;++z){
             acc(dwm[z]);
             acc2(dws[z]);

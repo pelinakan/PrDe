@@ -36,12 +36,12 @@ Probe Length=120
 Minimum distance between Probes=1000
 
 /--The maximum distance allowed from a Probe to the TSS of the promoter it targets. Enter an integer. The default is 2500 base pairs--/
-Maximum distance from Probe to TSS=2500
+Maximum distance from Probe to feature start (TSS if the feature is transcript)=2500
 
 /--The distance within which two promoters, if they occur, will be clustered. Enter an integer. The default is 1200 base pairs--/
 Cluster Promoters=1200
 
-/--The extent of overlap of fragments with repeats. The default is 6 base pairs--/
+/--e number of allowed repeat elements within a probe. The default is 6 base pairs--/
 Extent of Repeat Overlaps=6
 
 /--The mappability threshold. The default is 0.7--/
@@ -58,14 +58,14 @@ Design negative probe set=No
 /--The minimum length of the restriction enzyme fragment for which negative control probes are designed. Enter an integer. The recommended value is 500 base pairs--/
 Minimum fragment length for negative probe=500
 
-/--The number of intergenic negative control probes to be designed. Enter an integer.--/
-Number of Intergenic Negative control probes=500
+/--The number of intergenic negative control fragments to place probes. Enter an integer. Two probes will be placed on each negative control fragment.--/
+Number of Intergenic Negative control fragments=500
 
-/--The number of intronic negative control probes to be designed. Enter an integer.--/
-Number of Intronic Negative control probes=500
+/--The number of intronic negative control fragments to place probes. Enter an integer. Two probes will be placed on each negative control fragment.--/
+Number of Intronic Negative control fragments=500
 
-/--The number of exonic negative control probes to be designed. Enter an integer. Recommended value is 0--/
-Number of Exonic Negative control probes=0
+/--The number of exonic negative control probes fragments to place probes. Enter an integer. Recommended value is 0. Two probes will be placed on each negative control fragment.--/
+Number of Exonic Negative control fragments=0
 
 /--The minimum distance around a promoter in which negative control probes will not be designed. Enter an integer. The recommended value is 50000 base pairs or higher--/
 Minimum distance to a known promoter for negative control probes=50000
@@ -74,10 +74,10 @@ Minimum distance to a known promoter for negative control probes=50000
 Minimum distance to a known gene for intergenic negative control probes=50000
 
 /--Option to add genomic regions to avoid in the design of negative control probes. Enter Yes or No.--/
-Use user provided regions to avoid?=No
+Use user provided forbidden regions?=No
 
 /--The file path to the Regulatory regions file in bed format(.bed). These regions will be avoided while designing negative control probes--/
 User provided forbidden regions File=/pica/v16/b2015060/supplementaryFiles/somefile.bed
 
 /--The minimum distance around the provided regulatory regions in which negative control probes will not be designed. Enter an integer. The recommended value is 50000 base pairs or higher--/
-Minimum distance to a user provided forbidden regions=50000
+Minimum distance to any user provided forbidden region=50000

@@ -2,7 +2,6 @@
 #define INTSUITE_INC_FI_H_
 
 #include "BackgroundInteractionFrequency.h"
-#include "Enhancers.h"
 
 class DetectInteractions{
 public:
@@ -13,7 +12,6 @@ public:
 	void CalculatePvalAndPrintInteractionsProbeDistal_NegCtrls(ProbeSet&, std::vector<DetermineBackgroundLevels>, std::string, int, std::vector < std::string >&, std::string, int, PrDes::RENFileInfo&);
 	void CalculatePvalAndPrintInteractionsProbeProbe_NegCtrls(ProbeSet&, std::vector<DetermineBackgroundLevels>, std::string, int, std::vector < std::string >&, std::string, int, PrDes::RENFileInfo&);
 
-	void PrintEnhancerEnhancerInteractions(ProbeSet&, std::vector<DetermineBackgroundLevels>, std::string, int, std::vector < std::string >&, std::string, EnhancerSet&, PrDes::RENFileInfo&);
 	DetectInteractions(OutStream& flog, int minNSuppPair, bool p_val, int minJDist) : fLog (flog), MinNumberofSupportingPairs (minNSuppPair), CALCULATE_P_VALUES(p_val), MinimumJunctionDistance (minJDist) {}
 
 private:

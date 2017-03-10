@@ -16,7 +16,6 @@ public:
   
     void ProcessSortedBAMFile(ProbeSet&, RESitesClass&, ProximityClass&, std::string, int, std::string, std::string, std::string);
     void ProcessSortedBamFile_NegCtrls(ProbeSet&, RESitesClass&, ProximityClass&, std::string, int, std::string, std::string);    
-    void ProcessSortedBAMFileForEnhancers(ProbeSet&, RESitesClass&, ProximityClass &, std::string, int, std::string, std::string, std::string, EnhancerSet&);
     
     ProcessBAM(OutStream& blog) : bLog (blog) {}
     

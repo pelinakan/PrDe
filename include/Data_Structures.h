@@ -104,28 +104,8 @@ struct BG_signals{
     std::map< int, double > smoothed_stdev;
     std::map< int, int > samplesize;
 	
-	double a; // a[0] is upstream a[1] is downstream (power law fit)
-	double b; // b[0] is upstream b[1] is downstream (power law fit)
+	double a; 
+	double b; 
 };
-
-struct EnhancerStruct{
-    
-    std::string enId; //  "chr_start"
-	std::string chr;
-	int start; //Transcription Start Site in case of genes
-    int end;
-
-	SignalStruct proximities; // Intra-chromosomal interactions
-    std::vector < SignalStruct_CTX > proximities_ctx; // Each element of this vector will represent a chromosome
-    std::vector < FeattoFeatSignalStruct > Inter_feature_ints; // Each element represent a promoter
-
-};
-
-struct EnhancerTree{
-    std::vector < std::string > EnhancerList;
-    std::map< std::string, IntervalTree < std::string > > En_Tree;  //chr, enhancers
-};
-
-
 
 #endif  // INTSUITE_INC_DS_H_

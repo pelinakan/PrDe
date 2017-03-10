@@ -186,7 +186,7 @@ int HiCapTools::ProbeDesignMain(std::string whichchr) {
 					if(!(line.substr(line.find('=')+1).empty()))
 						DistanceBetweenProbes=std::stoi(line.substr(line.find('=')+1));
 				}
-				if(line.substr(0, line.find('=')).find("Maximum distance from Probe to TSS")!=std::string::npos){
+				if(line.substr(0, line.find('=')).find("Maximum distance from Probe to feature start (TSS if the feature is transcript)")!=std::string::npos){
 					if(!(line.substr(line.find('=')+1).empty()))
 						MaxDistancetoTSS=std::stoi(line.substr(line.find('=')+1));
 				}
@@ -220,19 +220,19 @@ int HiCapTools::ProbeDesignMain(std::string whichchr) {
 					if(!(line.substr(line.find('=')+1).empty()))
 						MinNegFragLen=std::stoi(line.substr(line.find('=')+1));
 				}
-				if(line.substr(0, line.find('=')).find("Number of Intergenic Negative control probes")!=std::string::npos){
+				if(line.substr(0, line.find('=')).find("Number of Intergenic Negative control fragments")!=std::string::npos){
 					if(!(line.substr(line.find('=')+1).empty()))
 						intergenNegCtrls=std::stoi(line.substr(line.find('=')+1));
 					else
 						intergenNegCtrls=0;
 				}
-				if(line.substr(0, line.find('=')).find("Number of Exonic Negative control probes")!=std::string::npos){
+				if(line.substr(0, line.find('=')).find("Number of Exonic Negative control fragments")!=std::string::npos){
 					if(!(line.substr(line.find('=')+1).empty()))
 						exonNegCtrls=std::stoi(line.substr(line.find('=')+1));
 					else
 						exonNegCtrls=0;
 				}
-				if(line.substr(0, line.find('=')).find("Number of Intronic Negative control probes")!=std::string::npos){
+				if(line.substr(0, line.find('=')).find("Number of Intronic Negative control fragments")!=std::string::npos){
 					if(!(line.substr(line.find('=')+1).empty()))
 						intronNegCtrls=std::stoi(line.substr(line.find('=')+1));
 					else
@@ -246,7 +246,7 @@ int HiCapTools::ProbeDesignMain(std::string whichchr) {
 					if(!(line.substr(line.find('=')+1).empty()))
 						dforbidIntergen=std::stoi(line.substr(line.find('=')+1));
 				}
-				if(line.substr(0, line.find('=')).find("Use user provided regions to avoid?")!=std::string::npos){
+				if(line.substr(0, line.find('=')).find("Use user provided forbidden regions?")!=std::string::npos){
 					std::string s;
 					s=line.substr(line.find('=')+1);
 					s.erase(std::remove_if(begin(s), end(s), [l](char ch) { return std::isspace(ch, l); }), end(s));
@@ -263,7 +263,7 @@ int HiCapTools::ProbeDesignMain(std::string whichchr) {
 					}
 					regRegionFile=s;
 				}
-				if(line.substr(0, line.find('=')).find("Minimum distance to a user provided forbidden regions")!=std::string::npos){
+				if(line.substr(0, line.find('=')).find("Minimum distance to any user provided forbidden region")!=std::string::npos){
 					if(!(line.substr(line.find('=')+1).empty()))
 						dforbidRegReg=std::stoi(line.substr(line.find('=')+1));
 				}

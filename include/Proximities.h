@@ -2,7 +2,6 @@
 #define INTSUITE_INC_PROX_H_
 
 #include "Probes.h"
-#include "Enhancers.h"
 
 typedef struct{
     std::string chr1, chr2;
@@ -25,11 +24,8 @@ class ProximityClass{
 public:
 
 	void RecordProximities(Alignment, std::string, std::string, int);
-	void RecordEnhancerProximities(enAlignment, std::string, std::string, int, EnhancerSet& );
 	void AnnotateDistalInteractor(std::string, std::string, std::string, int*, int);
-	void AnnotateEnhancerDistalInteractor(std::string, std::string, std::string, int*, int, EnhancerSet&);
 	void AnnotateFeatFeatInteraction(std::string, std::string, int);
-	void AnnotateEnEnInteraction(std::string, std::string, int, EnhancerSet&);
 	void PopulateInteractions(std::map<int, Junction >&, int*, int);
 	void CountProximities(ProbeSet, int);
 	ProximityClass(int nOfExp) : NOFEXPERIMENTS (nOfExp) {}

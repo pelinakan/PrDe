@@ -27,13 +27,12 @@ const int BinSizeProbeProbe=20000;
 
 
 
-int HiCapTools::ProxDetectMain(std::string whichchr, std::string interactionOption, std::string statsOption, std::string interactiontype){
+int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, std::string interactiontype){
 	
 	
 	struct Experiment{
 		std::string filepath;
 		std::string name;
-		std::string celltype;
 		std::string designname;
 	};
 	int NOFEXPERIMENTS; // Number of Experiments
@@ -45,12 +44,9 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string interactionOpti
 	std::string ProbeFileName;
 	std::string NegCtrlProbeFileName;
 	std::string ExpFileName;
-	std::string EnhancerListFileName;
 	std::string BaseFileName;
     std::vector <Experiment> Experiments; 
 	Experiment Exptemp;
-	std::string enhancerOption;
-	enhancerOption="No";
 	std::map <std::string, std::string> probeType;
 	std::locale l;
 	std::ofstream statsFile;
@@ -58,7 +54,7 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string interactionOpti
 	char currTime[100];
 	int featFileCount = 3; //4 - transcript and SNV files, 2 - transcript file only, 1 - snp file only
     int countFeatFiles = 2;
-    int MinNumberofSupportingPairs = 1; // To be entered by the user
+    int MinNumberofSupportingPairs = 2; // To be entered by the user
     int ReadLen = 80;//ReadLength
     const int ClusterPromoters  = 1200;
     int MinimumJunctionDistance = 1000; // To be entered by the user
@@ -71,16 +67,7 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string interactionOpti
 	std::ifstream configFile("config/configFile.txt");
 	std::string line;
    
-   /***
-	if (argc !=5) {
-		print_usage();
-		return -1;
-	}
-	//whichchr = argv[1];
-	//interactionOption = argv[2];
-	//statsOption = argv[3];
-	//interactiontype = argv[4];
-	***/
+
 	std::time_t now_time = std::time(NULL);
     std::strftime(reFileInfo.currTime, sizeof(currTime), "%H.%M.%S_%F", std::localtime(&now_time));//Date and time when run starts
     
@@ -152,11 +139,23 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string interactionOpti
 							log<<"##Note## : Calculate p values is empty. Set to default: No!" <<std::endl;
 					}
 				}
+				if(line.substr(0, line.find('=')).find("Bin Size for Probe-Distal")){
+					if(!(line.substr(line.find('=')+1).empty()))
+						BinSize=std::stoi(line.substr(line.find('=')+1));
+					else
+						log<<"##Warning## :Bin Size for Probe-Distal is empty. Set to default : "<< BinSize<<std::endl;
+				}
 				if(line.substr(0, line.find('=')).find("Window Size for Probe-Distal")){
 					if(!(line.substr(line.find('=')+1).empty()))
 						WindowSize=std::stoi(line.substr(line.find('=')+1));
 					else
 						log<<"##Warning## :Window Size for Probe-Distal is empty. Set to default : "<< WindowSize<<std::endl;
+				}
+				if(line.substr(0, line.find('=')).find("Bin Size for Probe-Probe")){
+					if(!(line.substr(line.find('=')+1).empty()))
+						BinSizeProbeProbe=std::stoi(line.substr(line.find('=')+1));
+					else
+						log<<"##Warning## :Bin Size for Probe-Probe is empty. Set to default : "<< BinSizeProbeProbe<<std::endl;
 				}
 				if(line.substr(0, line.find('=')).find("Window Size for Probe-Probe")){
 					if(!(line.substr(line.find('=')+1).empty()))
@@ -315,18 +314,6 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string interactionOpti
 				if(line.substr(0, line.find('=')).find("Number of Experiments")){
 					NOFEXPERIMENTS=std::stoi(line.substr(line.find('=')+1));
 				}
-				if(interactionOption.find("PrintEnhancerProximities")){
-					if(line.substr(0, line.find('=')).find("Enhancer List File")){
-						string s;
-						s=line.substr(line.find('=')+1);
-						s.erase(std::remove_if(s.begin(), s.end(), [l](char ch) { return std::isspace(ch, l); }), s.end());
-						if(s.empty()){
-						log<<"!!Error!! : Enhancer List File Path is empty. It is required!" <<std::endl;
-						emptyErrFlag=true;
-						}
-						EnhancerListFileName = s;
-					}
-				}
 				if(line.substr(0, line.find('=')).find("Experiment BAM File Name Path")){
 					
 					string s;
@@ -338,8 +325,6 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string interactionOpti
 					Exptemp.name=line.substr(line.find('=')+1);
 					getline(ExpFile, line);
 					Exptemp.designname=line.substr(line.find('=')+1);
-					getline(ExpFile, line);
-					Exptemp.celltype=line.substr(line.find('=')+1);
 					Experiments.push_back(Exptemp);
 				}
 			}
@@ -418,97 +403,71 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string interactionOpti
     
     ProximityClass proximities(NOFEXPERIMENTS);
         
-    if(interactionOption=="PrintProbeProximities"){
 		
-		for (unsigned i=0; i<Experiments.size(); ++i){ // Reads all the pairs in each experiment and fills the interaction maps
+	for (unsigned i=0; i<Experiments.size(); ++i){ // Reads all the pairs in each experiment and fills the interaction maps
 
-			Exptemp=Experiments[i];
-			bamfile.Initialize(Exptemp.filepath, NOFEXPERIMENTS, padding, ReadLen);
-			ExperimentNames.push_back(Exptemp.name);
+		Exptemp=Experiments[i];
+		bamfile.Initialize(Exptemp.filepath, NOFEXPERIMENTS, padding, ReadLen);
+		ExperimentNames.push_back(Exptemp.name);
 		
 		
 		
-			if(CALCULATE_P_VALUES){ //Fill NegCtrl proximities to calculate background interaction frequencies
-				bamfile.ProcessSortedBamFile_NegCtrls(ProbeClass, dpnII, proximities, Exptemp.filepath, ExperimentNo, Exptemp.designname, statsOption);
+		if(CALCULATE_P_VALUES){ //Fill NegCtrl proximities to calculate background interaction frequencies
+			bamfile.ProcessSortedBamFile_NegCtrls(ProbeClass, dpnII, proximities, Exptemp.filepath, ExperimentNo, Exptemp.designname, statsOption);
 		
-				background.push_back(DetermineBackgroundLevels());
+			background.push_back(DetermineBackgroundLevels());
+		
+			background.back().CalculateMeanandStdRegress(Exptemp.name+".Probe_Distal", ExperimentNo, Exptemp.designname, background.back().bglevels, BinSize, "ProbeDistal", MinimumJunctionDistance, log, WindowSize);
+			background.back().CalculateMeanandStdRegress(Exptemp.name+".Probe_Probe", ExperimentNo, Exptemp.designname, background.back().bglevelsProbeProbe, BinSizeProbeProbe, "ProbeProbe", MinimumJunctionDistance, log, WindowSizeProbeProbe);
 			
-				//background.back().CalculateMeanandStdRegress(Exptemp.name, ExperimentNo, Exptemp.designname);
-				background.back().CalculateMeanandStdRegress(Exptemp.name+".Probe_Distal", ExperimentNo, Exptemp.designname, background.back().bglevels, BinSize, "ProbeDistal", MinimumJunctionDistance, log, WindowSize);
-				background.back().CalculateMeanandStdRegress(Exptemp.name+".Probe_Probe", ExperimentNo, Exptemp.designname, background.back().bglevelsProbeProbe, BinSizeProbeProbe, "ProbeProbe", MinimumJunctionDistance, log, WindowSizeProbeProbe);
-				
-				log << "Total_Number_of_Pairs" << '\t' << totalNumberofPairs << std::endl;
-				log << "Total_Number_of_Pairs on Probes" << '\t' << NumberofPairs << std::endl;
-				log << "Number_of_Pairs_Both_Reads_on_Probe" << '\t' << NofPairs_Both_on_Probe << std::endl;
-				log << "Number_of_Pairs_One_Read_on_Probe" << '\t' << NofPairs_One_on_Probe << std::endl;
-				log << "Number_of_Pairs_None_on_Probe" << '\t' << NofPairsNoAnn << std::endl;
-				log << "FractionofPairsOnProbe" << '\t' << (NumberofPairs)/double(totalNumberofPairs) << std::endl; 	    
-				NumberofPairs = 0; NofPairs_Both_on_Probe = 0; NofPairs_One_on_Probe = 0; NofPairsNoAnn = 0;
-			}
-        	bamfile.ProcessSortedBAMFile(ProbeClass, dpnII, proximities, Exptemp.filepath, ExperimentNo, whichchr, Exptemp.designname, statsOption);
-          
 			log << "Total_Number_of_Pairs" << '\t' << totalNumberofPairs << std::endl;
-			log << "Total_Number_of_Pairs" << '\t' << NumberofPairs << std::endl;
+			log << "Total_Number_of_Pairs on Probes" << '\t' << NumberofPairs << std::endl;
 			log << "Number_of_Pairs_Both_Reads_on_Probe" << '\t' << NofPairs_Both_on_Probe << std::endl;
 			log << "Number_of_Pairs_One_Read_on_Probe" << '\t' << NofPairs_One_on_Probe << std::endl;
 			log << "Number_of_Pairs_None_on_Probe" << '\t' << NofPairsNoAnn << std::endl;
-			log << "On_Probe_Pair_Fraction" << '\t' << (NumberofPairs)/double(totalNumberofPairs) << std::endl; 	    
+			log << "FractionofPairsOnProbe" << '\t' << (NumberofPairs)/double(totalNumberofPairs) << std::endl; 	    
+			NumberofPairs = 0; NofPairs_Both_on_Probe = 0; NofPairs_One_on_Probe = 0; NofPairsNoAnn = 0;
+		}
+       	bamfile.ProcessSortedBAMFile(ProbeClass, dpnII, proximities, Exptemp.filepath, ExperimentNo, whichchr, Exptemp.designname, statsOption);
+         
+		log << "Total_Number_of_Pairs" << '\t' << totalNumberofPairs << std::endl;
+		log << "Total_Number_of_Pairs" << '\t' << NumberofPairs << std::endl;
+		log << "Number_of_Pairs_Both_Reads_on_Probe" << '\t' << NofPairs_Both_on_Probe << std::endl;
+		log << "Number_of_Pairs_One_Read_on_Probe" << '\t' << NofPairs_One_on_Probe << std::endl;
+		log << "Number_of_Pairs_None_on_Probe" << '\t' << NofPairsNoAnn << std::endl;
+		log << "On_Probe_Pair_Fraction" << '\t' << (NumberofPairs)/double(totalNumberofPairs) << std::endl; 	    
 			
-			if(statsOption=="ComputeStatsOnly"){
-				statsFile <<  Exptemp.name << std::endl;
-				statsFile << totalNumberofPairs << '\t' <<NumberofPairs << '\t' << NofPairs_Both_on_Probe<< '\t' << NofPairs_One_on_Probe<< '\t' << NofPairsNoAnn << '\t' << (NumberofPairs)/double(totalNumberofPairs) << std::endl;
-			}
+		if(statsOption=="ComputeStatsOnly"){
+			statsFile <<  Exptemp.name << std::endl;
+			statsFile << totalNumberofPairs << '\t' <<NumberofPairs << '\t' << NofPairs_Both_on_Probe<< '\t' << NofPairs_One_on_Probe<< '\t' << NofPairsNoAnn << '\t' << (NumberofPairs)/double(totalNumberofPairs) << std::endl;
+		}
         
-			NumberofPairs = 0; 
-			NofPairs_Both_on_Probe = 0; 
-			NofPairs_One_on_Probe = 0; 
-			NofPairsNoAnn = 0;       
-			++ExperimentNo;
+		NumberofPairs = 0; 
+		NofPairs_Both_on_Probe = 0; 
+		NofPairs_One_on_Probe = 0; 
+		NofPairsNoAnn = 0;       
+		++ExperimentNo;
 
-			log << Exptemp.filepath << "     finished" << std::endl;
-
-		}
+		log << Exptemp.filepath << "     finished" << std::endl;
+	}
     
-		if(interactiontype=="Neg"){
+	if(interactiontype=="Neg"){
 			
-			Interactions.CalculatePvalAndPrintInteractionsProbeDistal_NegCtrls(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSize, reFileInfo); //Print all same type of interactions
-			Interactions.CalculatePvalAndPrintInteractionsProbeProbe_NegCtrls(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSizeProbeProbe, reFileInfo); //Print all same type of interactions
-		}
-		else if(interactiontype=="NonNeg"){
+		Interactions.CalculatePvalAndPrintInteractionsProbeDistal_NegCtrls(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSize, reFileInfo); //Print all same type of interactions
+		Interactions.CalculatePvalAndPrintInteractionsProbeProbe_NegCtrls(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSizeProbeProbe, reFileInfo); //Print all same type of interactions
+	}
+	else if(interactiontype=="NonNeg"){
 			
-			Interactions.CalculatePvalAndPrintInteractionsProbeDistal(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSize, reFileInfo);//Print all same type of interactions
-			Interactions.CalculatePvalAndPrintInteractionsProbeProbe(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSizeProbeProbe, reFileInfo);//Print all same type of interactions
-		}
-		else{	
-		
-			Interactions.CalculatePvalAndPrintInteractionsProbeDistal(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSize, reFileInfo);//Print all same type of interactions
-			Interactions.CalculatePvalAndPrintInteractionsProbeDistal_NegCtrls(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSize, reFileInfo); //Print all same type of interactions
-			Interactions.CalculatePvalAndPrintInteractionsProbeProbe(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSizeProbeProbe, reFileInfo);//Print all same type of interactions
-			Interactions.CalculatePvalAndPrintInteractionsProbeProbe_NegCtrls(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSizeProbeProbe, reFileInfo); //Print all same type of interactions
-		}
+		Interactions.CalculatePvalAndPrintInteractionsProbeDistal(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSize, reFileInfo);//Print all same type of interactions
+		Interactions.CalculatePvalAndPrintInteractionsProbeProbe(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSizeProbeProbe, reFileInfo);//Print all same type of interactions
+	}
+	else{	
+	
+		Interactions.CalculatePvalAndPrintInteractionsProbeDistal(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSize, reFileInfo);//Print all same type of interactions
+		Interactions.CalculatePvalAndPrintInteractionsProbeDistal_NegCtrls(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSize, reFileInfo); //Print all same type of interactions
+		Interactions.CalculatePvalAndPrintInteractionsProbeProbe(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSizeProbeProbe, reFileInfo);//Print all same type of interactions
+		Interactions.CalculatePvalAndPrintInteractionsProbeProbe_NegCtrls(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSizeProbeProbe, reFileInfo); //Print all same type of interactions
 	}
 	
-	if(interactionOption=="PrintEnhancerProximities"){
-		
-		EnhancerSet enhancerClass;
-		log<<"Enhancer File is "<<EnhancerListFileName<<std::endl;
-		enhancerClass.ReadEnhancerCoordinates(EnhancerListFileName, padding, log);
-		
-		for (unsigned i=0; i<Experiments.size(); i++){ // Reads all the pairs in each experiment and fills the interaction maps
-
-			Exptemp=Experiments[i];
-			bamfile.Initialize(Exptemp.filepath, NOFEXPERIMENTS, padding, ReadLen);
-			ExperimentNames.push_back(Exptemp.name);
-		          
-			bamfile.ProcessSortedBAMFileForEnhancers(ProbeClass, dpnII, proximities, Exptemp.filepath, ExperimentNo, whichchr, Exptemp.designname, statsOption, enhancerClass);     
-			++ExperimentNo;
-
-			log << Exptemp.filepath << "     finished" << std::endl;
-
-		}
-    	
-		Interactions.PrintEnhancerEnhancerInteractions(ProbeClass, background, BaseFileName, ExperimentNo, ExperimentNames, whichchr, enhancerClass, reFileInfo);
-
-	}
 
 }

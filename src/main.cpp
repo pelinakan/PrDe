@@ -50,7 +50,7 @@ int main(int argc, const char * argv[]) {
 	}
 	
 	else if(whichMod=="ProximityDetector"){
-		if (argc != 10) {
+		if (argc != 8) {
 			print_usage();
 			return -1;
 		}
@@ -59,29 +59,20 @@ int main(int argc, const char * argv[]) {
 				if(std::string(argv[i])=="-c" || std::string(argv[i])=="--chr"){
 					whichChr=argv[i+1];
 				}
-				else if(std::string(argv[i])=="-p" || std::string(argv[i])=="--proximitytype"){
-					if(std::string(argv[i+1])=="PrintProbeProximities" || std::string(argv[i+1]) =="PrintEnhancerProximities")
-						proxType=argv[i+1];
-					else{
-						std::cout<<"Invalid argument for -p"<<std::endl;
-						print_usage();
-						return -1;
-					}
-				}
-				else if(std::string(argv[i])=="-d" || std::string(argv[i])=="--displaytype"){
+				else if(std::string(argv[i])=="-m" || std::string(argv[i])=="--outputmode"){
 					if(std::string(argv[i+1])=="ComputeStatsOnly" || std::string(argv[i+1]) == "PrintProximities")
 						statsOption=argv[i+1];
 					else{
-						std::cout<<"Invalid argument for -d"<<std::endl;
+						std::cout<<"Invalid argument for -m"<<std::endl;
 						print_usage();
 						return -1;
 					}
 				}
-				else if(std::string(argv[i])=="-n" || std::string(argv[i])=="--printtype"){
+				else if(std::string(argv[i])=="-p" || std::string(argv[i])=="--proximitytype"){
 					if(std::string(argv[i+1])=="Neg" || std::string(argv[i+1]) == "NonNeg"||std::string(argv[i+1])=="Both")
 						printOption=argv[i+1];
 						else{
-						std::cout<<"Invalid argument for -n"<<std::endl;
+						std::cout<<"Invalid argument for -p"<<std::endl;
 						print_usage();
 						return -1;
 					}
@@ -91,7 +82,7 @@ int main(int argc, const char * argv[]) {
 					return -1;
 				}
 			}
-			prde.ProxDetectMain(whichChr, proxType, statsOption, printOption);
+			prde.ProxDetectMain(whichChr, statsOption, printOption);
 			
 		}
 		

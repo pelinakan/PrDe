@@ -29,29 +29,21 @@ Other=other
 /--The experiment details. Enter the experiment details below. Enter integer for number of experiments--/
 Number of Experiments=4
 
-/--The file path to Distal Interacting elements list File. Leave the field empty if not used--/
-Enhancer List File=hg19_FeatureList_for_ProbeDesign_Design4_Downstream_020616.txt
-
+/--Experiment Detail fields. --/
 /--Copy, Paste and fill the below 3 fields as many times as there are number of experiments. --/
-/--Cell Type= 0:mES, 1:XEN, 2:TS --/
+
 Experiment BAM File Name Path=/pica/v16/b2015060_nobackup/ANALYSIS/THP1_merged/THP1.nLPS.rep1/THP1.nLPS.rep1.trunc.dedup.sortedbycoord.bam
 Experiment Name=THP1.nLPS.rep1
 Probe Design Name=merged
-Experiment Cell Type=0
 
 Experiment BAM File Name Path=/pica/v16/b2015060_nobackup/ANALYSIS/THP1_merged/THP1.wLPS.rep1/THP1.wLPS.rep1.trunc.dedup.sortedbycoord.bam
 Experiment Name=THP1.wLPS.rep1
 Probe Design Name=merged
-Experiment Cell Type=0
 
 Experiment BAM File Name Path=/pica/v16/b2015060_nobackup/ANALYSIS/THP1_merged/THP1.nLPS.rep3/THP1.nLPS.rep3.trunc.dedup.sortedbycoord.bam
 Experiment Name=THP1.nLPS.rep3
 Probe Design Name=merged
-Experiment Cell Type=0
 
 Experiment BAM File Name Path=/pica/v16/b2015060_nobackup/ANALYSIS/THP1_merged/THP1.wLPS.rep3/THP1.wLPS.rep3.trunc.dedup.sortedbycoord.bam
 Experiment Name=THP1.wLPS.rep3
 Probe Design Name=merged
-Experiment Cell Type=0
-
-END

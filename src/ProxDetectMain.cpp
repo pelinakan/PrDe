@@ -20,12 +20,6 @@ unsigned int NofPairsNoAnn=0;
 const int coreprom_upstream = 1000;
 const int coreprom_downstream = 1000;
 
-const int BinSize  = 1000; // Only To Calculate Background Interaction Frequencies
-
-
-const int BinSizeProbeProbe=20000;
-
-
 
 int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, std::string interactiontype){
 	
@@ -61,6 +55,8 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 	bool CALCULATE_P_VALUES;
 	int WindowSize = 101; 
 	int WindowSizeProbeProbe = 3; 
+	int BinSize  = 1000; // Only To Calculate Background Interaction Frequencies
+	int BinSizeProbeProbe=20000;
 	
 	PrDes::RENFileInfo reFileInfo;
    

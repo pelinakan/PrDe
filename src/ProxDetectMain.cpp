@@ -192,6 +192,13 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 		log<< "Yes" << std::endl;
 	if(!CALCULATE_P_VALUES)
 		log<< "No" << std::endl;
+	
+	log << "Read Length                  "<<	ReadLen<<std::endl;
+	log << "Base File name                  "<<	BaseFileName<<std::endl;
+	log << "Bin Size for Probe-Distal                 "	<<BinSize<<std::endl;
+	log << "Window Size for Probe-Distal                  "	<<WindowSize<<std::endl;
+	log << "Bin Size for Probe-Probe                  "	<<BinSizeProbeProbe<<std::endl;
+	log << "Window Size for Probe-Probe                  "<<WindowSizeProbeProbe<<std::endl;
     
     ifstream ExpFile(ExpFileName.c_str());
     if(ExpFile.good()){
@@ -338,6 +345,26 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 	if(emptyErrFlag){ // a required field is empty
 		log<< " Enter all required fields."<<std::endl;
 		return 0;
+	}
+	
+	log << "Feature Probe File                  "<<ProbeFileName<<std::endl;
+	if(CALCULATE_P_VALUES)
+		log << "Negative Control Probe File                 "<<NegCtrlProbeFileName<<std::endl;
+	log << "Digested Genome File                  "<<DigestedGenomeFileName<<std::endl;
+	if(!TranscriptListFileName.empty())
+		log << "Transcript List File                  "<<TranscriptListFileName<<std::endl;
+	if(!SNPFile.empty())
+		log << "SNV List File                  "<<SNPFile<<std::endl;
+	if(CALCULATE_P_VALUES)
+		log << "Negative control region File                  "<<negCtrlRegFile<<std::endl;
+	for(auto i=probeType.begin(); i!=probeType.end();++i)
+		log << "Target-"<<i->first<<":                 "<<i->second<<std::endl;
+	log << "Number of Experiments                  "<<NOFEXPERIMENTS<<std::endl;
+	for (unsigned i=0; i<Experiments.size(); ++i){ 
+		log<<"Experiment "<<i<<std::endl;
+		log << "BAM file path                  "<<Experiments[i].filepath<<std::endl;
+		log << "Experiment Name                  "<<Experiments[i].name<<std::endl;
+		log << "Probe Design Name                   "<<Experiments[i].designname<<std::endl;
 	}
     
     //------------------------------------------------------------------------------------

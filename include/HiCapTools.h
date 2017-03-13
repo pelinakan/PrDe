@@ -7,5 +7,7 @@ public:
 	int ProbeDesignMain(std::string);
 	int ProxDetectMain(std::string, std::string, std::string);
 	
+private:
+	bool checkFile(std::string);
 };
 #endif // PRDE_INC_HCTMAIN_H_

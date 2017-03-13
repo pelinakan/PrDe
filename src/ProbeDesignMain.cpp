@@ -283,15 +283,45 @@ int HiCapTools::ProbeDesignMain(std::string whichchr) {
 	if(emptyErrFlag){ // a required field is empty
 		return 0;
 	}
+	
+	if(!checkFile(DigestedGenomeFileName)){
+		log<<"!!Error!! : Digested Genome File is not accessible " << std::endl;
+		return 0;
+	}
+	if(!transcriptfile.empty() && !checkFile(transcriptfile)){
+		log<<"!!Error!! : Transcript List File is not accessible " << std::endl;
+		return 0;
+	}
+	if(!SNPfile.empty() && !checkFile(SNPfile)){
+		log<<"!!Error!! : SNV List File is not accessible " << std::endl;
+		return 0;
+	}
+	if(reFileInfo.ifRepeatAvail && !checkFile(repeatfile)){
+		log<<"!!Error!! : Repeats File is not accessible " << std::endl;
+		return 0;
+	}
+	if(reFileInfo.ifMapAvail && !checkFile(mappabilityfile)){
+		log<<"!!Error!! : Mappability File is not accessible " << std::endl;
+		return 0;
+	}
+	if(ifRegRegion && !checkFile(regRegionFile)){
+		log<<"!!Error!! : User provided forbidden regions file is not accessible " << std::endl;
+		return 0;
+	}
+	
     
-    
-    
+        
     log << "Base File Name: " << reFileInfo.desName << std::endl;    
     log << "Digested Genome File:  " << DigestedGenomeFileName << std::endl;
     log << "RE cut site motif:  " << motif << std::endl;
-    log << "Transcript List File:  " << transcriptfile << std::endl;
-    log << "Repeat File:  " << repeatfile << std::endl;
-    log << "Mappability File:  " << mappabilityfile << std::endl;
+    if(!transcriptfile.empty())
+		log << "Transcript List File:  " << transcriptfile << std::endl;
+	if(!SNPfile.empty())
+		log << "SNV List File:  " << SNPfile << std::endl;
+	if(reFileInfo.ifRepeatAvail)	
+		log << "Repeat File:  " << repeatfile << std::endl;
+	if(reFileInfo.ifRepeatAvail)
+		log << "Mappability File:  " << mappabilityfile << std::endl;
     log << "bigWigSummary executable path:  " << bigwigsummarybinary << std::endl;
 	log << "Probe Length:  " << ProbeLen << std::endl;
 	log << "Minimum distance between Probes:  " << DistanceBetweenProbes << std::endl;
@@ -308,13 +338,14 @@ int HiCapTools::ProbeDesignMain(std::string whichchr) {
 		log << "Number of Exonic Negative control probes:  " <<exonNegCtrls << std::endl;
 		log << "Minimum distance to a known promoter for negative control probes:  " << dforbidProm << std::endl;
 		log << "Minimum distance to a known gene for intergenic negative control probes:  "<< dforbidIntergen << std::endl;
-		if(ifRegRegion)
-			log << "Use user provided regions to avoid?:  " << "Yes" << std::endl;
-		else
-			log << "Use user provided regions to avoid?:  " << "No" << std::endl;
+		if(ifRegRegion){
+			log << "Use user provided forbidden regions?:  " << "Yes" << std::endl;
+			log << "User provided forbidden regions File:  " <<regRegionFile << std::endl;
+			log << "Minimum distance to a user provided forbidden regions:  " << dforbidRegReg << std::endl; 
 			
-		log << "User provided forbidden regions File:  " <<regRegionFile << std::endl;
-		log << "Minimum distance to a user provided forbidden regions:  " << dforbidRegReg << std::endl; 
+		}
+		else
+			log << "Use user provided forbidden regions?:  " << "No" << std::endl;		
 	}
     
     
@@ -390,4 +421,12 @@ int HiCapTools::ProbeDesignMain(std::string whichchr) {
 	
 	log<<"Execution Complete...................."<<std::endl;
     return 1;
+}
+
+bool HiCapTools::CheckFile(std::string filename){
+	std::ifstream in(filename);
+	if(in.good())
+		return true;
+	else
+		return false;
 }

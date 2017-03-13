@@ -8,6 +8,6 @@ public:
 	int ProxDetectMain(std::string, std::string, std::string);
 	
 private:
-	bool checkFile(std::string);
+	bool CheckFile(std::string);
 };
 #endif // PRDE_INC_HCTMAIN_H_

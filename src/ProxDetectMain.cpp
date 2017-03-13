@@ -343,31 +343,31 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 		return 0;
 	}
 	
-	if(!checkFile(ExpFileName)){
+	if(!CheckFile(ExpFileName)){
 		log<< "!!Error!! : Experiment File is not accessible"<<std::endl;
 		return 0;
 	}
-	if(!checkFile(ProbeFileName)){
+	if(!CheckFile(ProbeFileName)){
 		log<< "!!Error!! : Feature Probe File is not accessible"<<std::endl;
 		return 0;
 	}
-	if(CALCULATE_P_VALUES && !checkFile(NegCtrlProbeFileName)){
+	if(CALCULATE_P_VALUES && !CheckFile(NegCtrlProbeFileName)){
 		log<< "!!Error!! : Negative control Probe File is not accessible"<<std::endl;
 		return 0;
 	}
-	if(!checkFile(DigestedGenomeFileName)){
+	if(!CheckFile(DigestedGenomeFileName)){
 		log<< "!!Error!! : Genome Digest File is not accessible"<<std::endl;
 		return 0;
 	}
-	if(!TranscriptListFileName.empty() && !checkFile(TranscriptListFileName)){
+	if(!TranscriptListFileName.empty() && !CheckFile(TranscriptListFileName)){
 		log<<"!!Error!! : Transcript List File is not accessible " << std::endl;
 		return 0;
 	}
-	if(!SNPFile.empty() && !checkFile(SNPFile)){
+	if(!SNPFile.empty() && !CheckFile(SNPFile)){
 		log<<"!!Error!! : SNV List File is not accessible " << std::endl;
 		return 0;
 	}
-	if(CALCULATE_P_VALUES && !checkFile(negCtrlRegFile)){
+	if(CALCULATE_P_VALUES && !CheckFile(negCtrlRegFile)){
 		log<< "!!Error!! : Negative control Regions File is not accessible"<<std::endl;
 		return 0;
 	}
@@ -388,7 +388,7 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 	for (unsigned i=0; i<Experiments.size(); ++i){ 
 		log<<"Experiment "<<i<<std::endl;
 		log << "BAM file path                  "<<Experiments[i].filepath<<std::endl;
-		if(!checkFile(Experiments[i].filepath)){
+		if(!CheckFile(Experiments[i].filepath)){
 			log<< "!!Error!! : BAM File "<< i +1 <<" is not accessible"<<std::endl;
 			return 0;
 		}

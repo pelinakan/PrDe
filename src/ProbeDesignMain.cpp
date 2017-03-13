@@ -284,27 +284,27 @@ int HiCapTools::ProbeDesignMain(std::string whichchr) {
 		return 0;
 	}
 	
-	if(!checkFile(DigestedGenomeFileName)){
+	if(!CheckFile(DigestedGenomeFileName)){
 		log<<"!!Error!! : Digested Genome File is not accessible " << std::endl;
 		return 0;
 	}
-	if(!transcriptfile.empty() && !checkFile(transcriptfile)){
+	if(!transcriptfile.empty() && !CheckFile(transcriptfile)){
 		log<<"!!Error!! : Transcript List File is not accessible " << std::endl;
 		return 0;
 	}
-	if(!SNPfile.empty() && !checkFile(SNPfile)){
+	if(!SNPfile.empty() && !CheckFile(SNPfile)){
 		log<<"!!Error!! : SNV List File is not accessible " << std::endl;
 		return 0;
 	}
-	if(reFileInfo.ifRepeatAvail && !checkFile(repeatfile)){
+	if(reFileInfo.ifRepeatAvail && !CheckFile(repeatfile)){
 		log<<"!!Error!! : Repeats File is not accessible " << std::endl;
 		return 0;
 	}
-	if(reFileInfo.ifMapAvail && !checkFile(mappabilityfile)){
+	if(reFileInfo.ifMapAvail && !CheckFile(mappabilityfile)){
 		log<<"!!Error!! : Mappability File is not accessible " << std::endl;
 		return 0;
 	}
-	if(ifRegRegion && !checkFile(regRegionFile)){
+	if(ifRegRegion && !CheckFile(regRegionFile)){
 		log<<"!!Error!! : User provided forbidden regions file is not accessible " << std::endl;
 		return 0;
 	}

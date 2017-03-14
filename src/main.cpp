@@ -55,7 +55,7 @@ int main(int argc, const char * argv[]) {
 			return -1;
 		}
 		else{
-			for(int i=2; i<argc; ++i){
+			for(int i=2; i<argc; i+=2){
 				if(std::string(argv[i])=="-c" || std::string(argv[i])=="--chr"){
 					whichChr=argv[i+1];
 				}

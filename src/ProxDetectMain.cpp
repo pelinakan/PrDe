@@ -67,7 +67,7 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 	std::time_t now_time = std::time(NULL);
     std::strftime(reFileInfo.currTime, sizeof(currTime), "%H.%M.%S_%F", std::localtime(&now_time));//Date and time when run starts
     
-    std::ofstream logFile(std::string("ProxDetLog_")+currTime+".log");
+    std::ofstream logFile(std::string("ProxDetLog_")+reFileInfo.currTime+".log");
     
     OutStream log;
     log.AddStreams(&std::cout, &logFile);

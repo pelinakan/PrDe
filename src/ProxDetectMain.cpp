@@ -214,7 +214,7 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 					}
 					ProbeFileName = s;
 				}
-				if(line.substr(0, line.find('=')).find("Negative Control Probe File")!=std::string::npos){
+				if(line.substr(0, line.find('=')).find("Negative control Probe File")!=std::string::npos){
 					string s;
 					s=line.substr(line.find('=')+1);
 					s.erase(std::remove_if(s.begin(), s.end(), [l](char ch) { return std::isspace(ch, l); }), s.end());

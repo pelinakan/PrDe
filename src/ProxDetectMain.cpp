@@ -76,7 +76,7 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 		while (!configFile.eof()){
 			getline(configFile, line);
 			if(line.find("=")!=string::npos){
-				if(line.substr(0, line.find('=')).find("Experiment File Name Path")){
+				if(line.substr(0, line.find('=')).find("Experiment File Name Path")!=std::string::npos){
 					string s;
 					s=line.substr(line.find('=')+1);
 					s.erase(std::remove_if(begin(s), end(s), [l](char ch) { return std::isspace(ch, l); }), end(s));
@@ -86,33 +86,33 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 					}
 					ExpFileName=s;
 				}
-				if(line.substr(0, line.find('=')).find("Minimum Number of Supporting Pairs")){
+				if(line.substr(0, line.find('=')).find("Minimum Number of Supporting Pairs")!=std::string::npos){
 					if(!(line.substr(line.find('=')+1).empty()))
 						MinNumberofSupportingPairs=std::stoi(line.substr(line.find('=')+1));
 					else{
 						log<<"##Warning## : Minimum Number of Supporting Pairs is empty. Set to default : "<<MinNumberofSupportingPairs<<std::endl;
 					}
 				}
-				if(line.substr(0, line.find('=')).find("Minimum Junction Distance")){
+				if(line.substr(0, line.find('=')).find("Minimum Junction Distance")!=std::string::npos){
 					if(!(line.substr(line.find('=')+1).empty()))
 						MinimumJunctionDistance=std::stoi(line.substr(line.find('=')+1));
 					else
 						log<<"##Warning## : Minimum Junction Distance is empty. Set to default : "<< MinimumJunctionDistance<<std::endl;
 				}
-				if(line.substr(0, line.find('=')).find("Padding")){
+				if(line.substr(0, line.find('=')).find("Padding")!=std::string::npos){
 					if(!(line.substr(line.find('=')+1).empty()))
 						padding=std::stoi(line.substr(line.find('=')+1));
 					else
 						log<<"##Warning## : Padding is empty. Set to default : "<< padding<<std::endl;
 				}
-				if(line.substr(0, line.find('=')).find("Read Length")){
+				if(line.substr(0, line.find('=')).find("Read Length")!=std::string::npos){
 					if(!(line.substr(line.find('=')+1).empty()))
 						ReadLen=std::stoi(line.substr(line.find('=')+1));
 					else
 						log<<"##Warning## : Read Length is empty. Set to default : "<< ReadLen<<std::endl;
 					
 				}
-				if(line.substr(0, line.find('=')).find("Base File Name")){
+				if(line.substr(0, line.find('=')).find("Base File Name")!=std::string::npos){
 					string s;
 					s=line.substr(line.find('=')+1);
 					s.erase(std::remove_if(begin(s), end(s), [l](char ch) { return std::isspace(ch, l); }), end(s));
@@ -122,7 +122,7 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 					}
 					BaseFileName=s;
 				}
-				if(line.substr(0, line.find('=')).find("Calculate p_values")){
+				if(line.substr(0, line.find('=')).find("Calculate p_values")!=std::string::npos){
 					string s;
 					s=line.substr(line.find('=')+1);
 					s.erase(std::remove_if(begin(s), end(s), [l](char ch) { return std::isspace(ch, l); }), end(s));
@@ -135,25 +135,25 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 							log<<"##Note## : Calculate p values is empty. Set to default: No!" <<std::endl;
 					}
 				}
-				if(line.substr(0, line.find('=')).find("Bin Size for Probe-Distal")){
+				if(line.substr(0, line.find('=')).find("Bin Size for Probe-Distal")!=std::string::npos){
 					if(!(line.substr(line.find('=')+1).empty()))
 						BinSize=std::stoi(line.substr(line.find('=')+1));
 					else
 						log<<"##Warning## :Bin Size for Probe-Distal is empty. Set to default : "<< BinSize<<std::endl;
 				}
-				if(line.substr(0, line.find('=')).find("Window Size for Probe-Distal")){
+				if(line.substr(0, line.find('=')).find("Window Size for Probe-Distal")!=std::string::npos){
 					if(!(line.substr(line.find('=')+1).empty()))
 						WindowSize=std::stoi(line.substr(line.find('=')+1));
 					else
 						log<<"##Warning## :Window Size for Probe-Distal is empty. Set to default : "<< WindowSize<<std::endl;
 				}
-				if(line.substr(0, line.find('=')).find("Bin Size for Probe-Probe")){
+				if(line.substr(0, line.find('=')).find("Bin Size for Probe-Probe")!=std::string::npos){
 					if(!(line.substr(line.find('=')+1).empty()))
 						BinSizeProbeProbe=std::stoi(line.substr(line.find('=')+1));
 					else
 						log<<"##Warning## :Bin Size for Probe-Probe is empty. Set to default : "<< BinSizeProbeProbe<<std::endl;
 				}
-				if(line.substr(0, line.find('=')).find("Window Size for Probe-Probe")){
+				if(line.substr(0, line.find('=')).find("Window Size for Probe-Probe")!=std::string::npos){
 					if(!(line.substr(line.find('=')+1).empty()))
 						WindowSizeProbeProbe=std::stoi(line.substr(line.find('=')+1));
 					else
@@ -204,7 +204,7 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 		while (!ExpFile.eof()){
 			getline(ExpFile, line);
 			if(line.find("=")!=string::npos){
-				if(line.substr(0, line.find('=')).find("Feature Probe File")){
+				if(line.substr(0, line.find('=')).find("Feature Probe File")!=std::string::npos){
 					string s;
 					s=line.substr(line.find('=')+1);
 					s.erase(std::remove_if(s.begin(), s.end(), [l](char ch) { return std::isspace(ch, l); }), s.end());
@@ -214,7 +214,7 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 					}
 					ProbeFileName = s;
 				}
-				if(line.substr(0, line.find('=')).find("Negative Control Probe File")){
+				if(line.substr(0, line.find('=')).find("Negative Control Probe File")!=std::string::npos){
 					string s;
 					s=line.substr(line.find('=')+1);
 					s.erase(std::remove_if(s.begin(), s.end(), [l](char ch) { return std::isspace(ch, l); }), s.end());
@@ -224,7 +224,7 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 					}
 					NegCtrlProbeFileName = s;
 				}
-				if(line.substr(0, line.find('=')).find("Digested Genome File")){
+				if(line.substr(0, line.find('=')).find("Digested Genome File")!=std::string::npos){
 					string s;
 					s=line.substr(line.find('=')+1);
 					s.erase(std::remove_if(s.begin(), s.end(), [l](char ch) { return std::isspace(ch, l); }), s.end());
@@ -234,7 +234,7 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 					}
 					DigestedGenomeFileName = s;
 				}
-				if(line.substr(0, line.find('=')).find("Transcript List File")){
+				if(line.substr(0, line.find('=')).find("Transcript List File")!=std::string::npos){
 					string s;
 					s=line.substr(line.find('=')+1);
 					s.erase(std::remove_if(s.begin(), s.end(), [l](char ch) { return std::isspace(ch, l); }), s.end());
@@ -266,7 +266,7 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 					}
 					negCtrlRegFile=s;
 				}
-				if(line.substr(0, line.find('=')).find("Promoters")){
+				if(line.substr(0, line.find('=')).find("Promoters")!=std::string::npos){
 					string s;
 					s=line.substr(line.find('=')+1);
 					s.erase(std::remove_if(s.begin(), s.end(), [l](char ch) { return std::isspace(ch, l); }), s.end());
@@ -277,7 +277,7 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 					}
 					probeType["promoter"]=s;
 				}
-				if(line.substr(0, line.find('=')).find("SNVs")){
+				if(line.substr(0, line.find('=')).find("SNVs")!=std::string::npos){
 					string s;
 					s=line.substr(line.find('=')+1);
 					s.erase(std::remove_if(s.begin(), s.end(), [l](char ch) { return std::isspace(ch, l); }), s.end());
@@ -288,7 +288,7 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 					}
 					probeType["SNP"]=s;
 				}
-				if(line.substr(0, line.find('=')).find("Negative controls")){
+				if(line.substr(0, line.find('=')).find("Negative controls")!=std::string::npos){
 					string s;
 					s=line.substr(line.find('=')+1);
 					s.erase(std::remove_if(s.begin(), s.end(), [l](char ch) { return std::isspace(ch, l); }), s.end());
@@ -299,7 +299,7 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 					}
 					probeType["negctrl"]=s;
 				}
-				if(line.substr(0, line.find('=')).find("Other")){
+				if(line.substr(0, line.find('=')).find("Other")!=std::string::npos){
 					string s;
 					s=line.substr(line.find('=')+1);
 					s.erase(std::remove_if(s.begin(), s.end(), [l](char ch) { return std::isspace(ch, l); }), s.end());
@@ -310,10 +310,10 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 					}
 					probeType["other"]=s;
 				}
-				if(line.substr(0, line.find('=')).find("Number of Experiments")){
+				if(line.substr(0, line.find('=')).find("Number of Experiments")!=std::string::npos){
 					NOFEXPERIMENTS=std::stoi(line.substr(line.find('=')+1));
 				}
-				if(line.substr(0, line.find('=')).find("Experiment BAM File Name Path")){
+				if(line.substr(0, line.find('=')).find("Experiment BAM File Name Path")!=std::string::npos){
 					
 					string s;
 					s=line.substr(line.find('=')+1);

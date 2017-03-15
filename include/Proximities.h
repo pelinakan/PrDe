@@ -1,5 +1,5 @@
-#ifndef INTSUITE_INC_PROX_H_
-#define INTSUITE_INC_PROX_H_
+#ifndef HCT_PROXDET_INC_PROX_H_
+#define HCT_PROXDET_INC_PROX_H_
 
 #include "Probes.h"
 
@@ -40,4 +40,4 @@ private:
 
 };
 
-#endif //INTSUITE_INC_PROX_H_
+#endif //HCT_PROXDET_INC_PROX_H_

@@ -1,5 +1,5 @@
-#ifndef INTSUITE_INC_FI_H_
-#define INTSUITE_INC_FI_H_
+#ifndef HCT_PROXDET_INC_FI_H_
+#define HCT_PROXDET_INC_FI_H_
 
 #include "BackgroundInteractionFrequency.h"
 
@@ -35,4 +35,4 @@ typedef struct{
 }intparams;
 
 
-#endif // INTSUITE_INC_FI_H_
+#endif // HCT_PROXDET_INC_FI_H_

@@ -1,5 +1,5 @@
-#ifndef INTSUITE_INC_PPAIRS_H_
-#define INTSUITE_INC_PPAIRS_H_
+#ifndef HCT_PROXDET_INC_PPAIRS_H_
+#define HCT_PROXDET_INC_PPAIRS_H_
 
 #include "Proximities.h"
 
@@ -28,4 +28,4 @@ private:
 };
 
 
-#endif //INTSUITE_INC_PPAIRS_H_
+#endif //HCT_PROXDET_INC_PPAIRS_H_

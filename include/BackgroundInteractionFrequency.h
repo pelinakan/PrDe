@@ -1,5 +1,5 @@
-#ifndef INTSUITE_INC_BIF_H_
-#define INTSUITE_INC_BIF_H_
+#ifndef HCT_PROXDET_INC_BIF_H_
+#define HCT_PROXDET_INC_BIF_H_
 /*
 Background interaction frequency is calculated 
 * 
@@ -17,4 +17,4 @@ public:
 
 };
 
-#endif  // INTSUITE_INC_BIF_H_
+#endif  // HCT_PROXDET_INC_BIF_H_

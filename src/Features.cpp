@@ -66,6 +66,7 @@ void FeatureClass::GetTrFeats(std::stringstream &trx, temppars &tpars, std::stri
 	   tpars.strand="+";
 	   
 	   getline(trx,tpars.name,'\t');
+	   for (auto & c: tpars.name) c = toupper(c);
 	   tpars.tr_id=tpars.name;
 	   if(option=="SNV")
 		tpars.FeatureType = 2;

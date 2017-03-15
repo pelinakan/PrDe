@@ -1,5 +1,5 @@
-#ifndef INTSUITE_INC_DS_H_
-#define INTSUITE_INC_DS_H_
+#ifndef HCT_PROXDET_INC_DS_H_
+#define HCT_PROXDET_INC_DS_H_
 
 #include <map>
 #include <vector>
@@ -108,4 +108,4 @@ struct BG_signals{
 	double b; 
 };
 
-#endif  // INTSUITE_INC_DS_H_
+#endif  // HCT_PROXDET_INC_DS_H_

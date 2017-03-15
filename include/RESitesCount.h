@@ -1,5 +1,5 @@
-#ifndef PRSUITE_INC_RE_H_
-#define PRSUITE_INC_RE_H_
+#ifndef HCT_INC_RE_H_
+#define HCT_INC_RE_H_
 
 #include "ProbeDataStructs.h"
 #include "OutStream.h"
@@ -28,4 +28,4 @@ private:
 };
 
 
-#endif // PRSUITE_INC_RE_H_
+#endif // HCT_INC_RE_H_

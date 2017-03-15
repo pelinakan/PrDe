@@ -1,5 +1,5 @@
-#ifndef PRSUITE_INC_UTSTR_H_
-#define PRSUITE_INC_UTSTR_H_
+#ifndef HCT_INC_UTSTR_H_
+#define HCT_INC_UTSTR_H_
 
 #include <iostream>
 
@@ -30,4 +30,4 @@ public:
    }
 };
 
-#endif //PRSUITE_INC_UTSTR_H_
+#endif //HCT_INC_UTSTR_H_

@@ -5,8 +5,8 @@
 //  Created by Pelin Sahlen on 12/03/2015.
 //  Copyright (c) 2015 Pelin Sahlen. All rights reserved.
 //
-#ifndef PRSUITE_INC_NEGPRDES_H_
-#define PRSUITE_INC_NEGPRDES_H_
+#ifndef HCT_PROBDES_INC_NEGPRDES_H_
+#define HCT_PROBDES_INC_NEGPRDES_H_
 
 #include "DesignProbes.h"
 
@@ -51,4 +51,4 @@ private:
     
 };
 
-#endif //PRSUITE_INC_NEGPRDES_H_
+#endif //HCT_PROBDES_INC_NEGPRDES_H_

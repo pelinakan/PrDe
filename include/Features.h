@@ -1,5 +1,5 @@
-#ifndef INTSUITE_INC_PROM_H_
-#define INTSUITE_INC_PROM_H_
+#ifndef HCT_PROXDET_INC_PROM_H_
+#define HCT_PROXDET_INC_PROM_H_
 
 #include <sstream>
 #include "RESitesCount.h"
@@ -41,7 +41,7 @@ private:
     int FindRightMostCoord(std::vector<int>);
 };
 
-#endif //INTSUITE_INC_PROM_H_
+#endif //HCT_PROXDET_INC_PROM_H_
 
 
 

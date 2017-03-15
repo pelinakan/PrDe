@@ -64,10 +64,10 @@ void ProcessBAM::ProcessSortedBamFile_NegCtrls(ProbeSet& ProbeClass, RESitesClas
     pairinfo.resites1 = new int [2];
     pairinfo.resites2 = new int [2];
     
-    while (reader.GetNextAlignment(al)) {
+    //while (reader.GetNextAlignment(al)) {
 
-        totalNumberofPairs=totalNumberofPairs+1;
-    }
+      //  totalNumberofPairs=totalNumberofPairs+1;
+    //}
     
 	
 	for(int i = 0; i < Design_NegCtrl[DesignName].Probes.size(); i++){

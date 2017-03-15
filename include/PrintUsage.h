@@ -6,8 +6,8 @@
 //  Copyright © 2016 Pelin Sahlen. All rights reserved.
 //
 
-#ifndef PrintUsage_h
-#define PrintUsage_h
+#ifndef HCT_PRINTUSE_INC_H_
+#define HCT_PRINTUSE_INC_H_
 
 #include <iostream>
 #include <iomanip>
@@ -35,4 +35,4 @@ static int print_usage()
     return 0;
 }
 
-#endif /* PrintUsage_h */
+#endif // HCT_PRINTUSE_INC_H_

@@ -455,7 +455,7 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
     vector < DetermineBackgroundLevels > background;
     
     ProximityClass proximities(NOFEXPERIMENTS);
-        
+       
 		
 	for (unsigned i=0; i<Experiments.size(); ++i){ // Reads all the pairs in each experiment and fills the interaction maps
 
@@ -521,6 +521,5 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 		Interactions.CalculatePvalAndPrintInteractionsProbeProbe(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSizeProbeProbe, reFileInfo);//Print all same type of interactions
 		Interactions.CalculatePvalAndPrintInteractionsProbeProbe_NegCtrls(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSizeProbeProbe, reFileInfo); //Print all same type of interactions
 	}
-	
 
 }

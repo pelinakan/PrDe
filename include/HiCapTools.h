@@ -1,5 +1,5 @@
-#ifndef PRDE_INC_HCTMAIN_H_
-#define PRDE_INC_HCTMAIN_H_
+#ifndef HCT_INC_HCTMAIN_H_
+#define HCT_INC_HCTMAIN_H_
 
 
 class HiCapTools{ //Probe Clusters Associated with a Promoter
@@ -10,4 +10,4 @@ public:
 private:
 	bool CheckFile(std::string);
 };
-#endif // PRDE_INC_HCTMAIN_H_
+#endif // HCT_INC_HCTMAIN_H_

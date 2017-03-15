@@ -11,10 +11,11 @@ void ProbeSet::GetProbeFeats(std::stringstream& line, CaptureProbes& t, std::str
     
     std::string promoter, snp, negctrl, other, SOterm;
     
-    std::string field, field2, temp, attributes;
+    std::string field, field2, temp, attributes, start, end;
     
     std::locale l;
-    
+
+
     // gff3 field 1 chromosome
     getline(line,t.chr,'\t'); 
     
@@ -30,8 +31,8 @@ void ProbeSet::GetProbeFeats(std::stringstream& line, CaptureProbes& t, std::str
     t.start = std::stoi(field);
     
     // gff3 field 5 end     
-    getline(line,field,'\t');
-    t.end = std::stoi(field);
+    getline(line,end,'\t');
+    t.end = std::stoi(end);
     
     if(SOterm.find("probe")==std::string::npos && SOterm.find("SO:0000051")==std::string::npos){
 		prLog<<"The probe with chr:"<<t.chr<<" Start:"<<t.start<< " End:"<<t.end<< " is not identified by SO term for 'probe'"<< std::endl; 
@@ -46,9 +47,10 @@ void ProbeSet::GetProbeFeats(std::stringstream& line, CaptureProbes& t, std::str
     getline(line,temp,'\t');
     // gff3 field 9 attributes
     getline(line,attributes,'\t'); // semicolon separated tags for upstream/downstream
-     
+    
     size_t smpos1 = attributes.find_first_of(";");
     if(smpos1!=std::string::npos){
+		
 		std::string parsename, parseside, parsetarget, parsedesign;
 		
 		parsename = attributes.substr(0, smpos1);
@@ -57,9 +59,13 @@ void ProbeSet::GetProbeFeats(std::stringstream& line, CaptureProbes& t, std::str
 		
 		parseside = attributes.substr(smpos1+1, smpos2);
 		
+		smpos2=smpos1+1+smpos2;
+		
 		size_t smpos3 = attributes.substr(smpos2+1, std::string::npos).find_first_of(";");
 		
 		parsetarget=attributes.substr(smpos2+1, smpos3);
+		
+		smpos3=smpos2+1+smpos3;
 		
 		size_t smpos4 = attributes.substr(smpos3+1, std::string::npos).find_first_of(";");
 		
@@ -95,6 +101,7 @@ void ProbeSet::GetProbeFeats(std::stringstream& line, CaptureProbes& t, std::str
 				t.annotated = 4;
 			}
 		}
+		
 		if(parsedesign.substr(0, parsedesign.find('=')).find("design")!= -1){
 			parsedesign.erase(std::remove_if(parsedesign.begin(), parsedesign.end(), [l](char ch) { return std::isspace(ch, l); }), parsedesign.end());
 			t.name_of_design=parsedesign.substr(parsedesign.find('=')+1);// Design Name 
@@ -165,7 +172,6 @@ void ProbeSet::ReadProbeCoordinates(std::string ProbeFileName, std::map <std::st
     //Discard headers///////
     while(flag == true){
 		getline(probefile, temp);
-		temp.erase(std::remove_if(temp.begin(), temp.end(), [l](char ch) { return std::isspace(ch, l); }), temp.end()); 
 		if(temp[0] != '#'){		// Read the first probe
 			flag=false;
 			pline0=temp;
@@ -196,10 +202,15 @@ void ProbeSet::ReadProbeCoordinates(std::string ProbeFileName, std::map <std::st
                     found = true;
                 }
                 else{ //Could not find the first probe in transcript file, try again
+					if(pline.empty()){
+						found=true;
+						break;
+					}
                     std::stringstream probeline ( pline );
                     GetProbeFeats(probeline, tempprobe, Name);
                     chr1 = tempprobe.chr; //take the first chr outside the loop
-                    getline(probefile, pline);
+                    if (!getline(probefile, pline))
+						break;
                     found = false;
                 }
             }while(!found);
@@ -220,7 +231,8 @@ void ProbeSet::ReadProbeCoordinates(std::string ProbeFileName, std::map <std::st
                 std::stringstream probeline ( pline );
                 GetProbeFeats(probeline, tempprobe, Name);
                 chr2 = tempprobe.chr;
-                getline(probefile, pline);
+                if(!getline(probefile, pline))
+					break;
                 found = false;
             }
         }while(!found);
@@ -260,11 +272,19 @@ void ProbeSet::ReadProbeCoordinates(std::string ProbeFileName, std::map <std::st
                 break; // one chromosome finished, get out of the loop
             }
         }
-        
-        for(auto it = probes_interval.begin(); it != probes_interval.end();++it){
+        if(isNeg){
+			for(auto it = negctrl_probes_interval.begin(); it != negctrl_probes_interval.end();++it){
 				designname = it->first;
 				AddTotheIntervalTree(probes_interval[designname], negctrl_probes_interval[designname], chr1, designname, isNeg);
+			}
 		}
+		else{
+			for(auto it = probes_interval.begin(); it != probes_interval.end();++it){
+				designname = it->first;
+				AddTotheIntervalTree(probes_interval[designname], negctrl_probes_interval[designname], chr1, designname, isNeg);
+			}
+		}
+        
 	
         chr1 = tempprobe.chr;
     }
@@ -272,10 +292,6 @@ void ProbeSet::ReadProbeCoordinates(std::string ProbeFileName, std::map <std::st
     probefile.close();
     
     ++filesReadCount; 
- //////////////////////////////////////////////   how to get chr?what does this do
-    //if(fileReadCount==fileCount){
-	//}	
-/////////////////////////////////////////////////////////
 }
 
 

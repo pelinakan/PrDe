@@ -1,5 +1,5 @@
-#ifndef PRSUITE_INC_PROMOTER_H_
-#define PRSUITE_INC_PROMOTER_H_
+#ifndef HCT_PROBDES_INC_PROMOTER_H_
+#define HCT_PROBDES_INC_PROMOTER_H_
 
 #include "RESitesCount.h"
 #include "IntervalTree.h"
@@ -44,4 +44,4 @@ private:
     int FindRightMostCoord(std::vector<int>);
 	void DealwithSharedPromoters();
 };
-#endif // PRSUITE_INC_PROMOTER_H_
+#endif // HCT_PROBDES_INC_PROMOTER_H_

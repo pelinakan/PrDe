@@ -347,7 +347,7 @@ void NegativeProbeDesign::chooseRandomProbesFromPool(int nProbesReq, std::vector
 	
 	bool leftEnd, rightEnd;
 	int loopIndex;
-	std::mt19937 rng;
+	std::mt19937_64 rng;
 	std::uniform_int_distribution<int> fragDist(0, whichgenPool.size());
 	std::vector<int> fragSeen;
 	

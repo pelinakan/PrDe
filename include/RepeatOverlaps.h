@@ -6,8 +6,8 @@
 //  Copyright © 2016 Pelin Sahlen. All rights reserved.
 //
 
-#ifndef PRSUITE_INC_REPOVER_H_
-#define PRSUITE_INC_REPOVER_H_
+#ifndef HCT_PROBDES_INC_REPOVER_H_
+#define HCT_PROBDES_INC_REPOVER_H_
 
 #include "IntervalTree.h"
 #include "ProbeDataStructs.h"
@@ -31,4 +31,4 @@ private:
     int AddTotheIntervalTree(std::vector <Interval < repeat_features >  >&, std::string);
 };
 
-#endif // PRSUITE_INC_REPOVER_H_
+#endif // HCT_PROBDES_INC_REPOVER_H_

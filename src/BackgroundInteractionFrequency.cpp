@@ -47,6 +47,7 @@ void DetermineBackgroundLevels::CalculateMeanandStdRegress(std::string BaseFileN
 		}
 		///////////Probe-Probe
         else if(whichProx=="ProbeProbe"){
+			log<<"Size probeprobe "<<Features[feature_id].Inter_feature_ints.size()<<std::endl; 
 			for (auto iter = Features[feature_id].Inter_feature_ints.begin(); iter != Features[feature_id].Inter_feature_ints.end(); ++iter){
 								
 				distance = Features[feature_id].start - Features[(*iter).interacting_feature_id].start;
@@ -74,6 +75,7 @@ void DetermineBackgroundLevels::CalculateMeanandStdRegress(std::string BaseFileN
     
 // Calculate Mean and stdev
 	std::map< int, double>::iterator it; // iterator for bin signals
+	log<<"Size bglevels "<<bglevelsloc.mean.size()<<std::endl; 
 	for (it = bglevelsloc.mean.begin(); it != bglevelsloc.mean.end(); ++it){
         bglevelsloc.samplesize[it->first] = nofentries_perBin[it->first];
         if(bglevelsloc.samplesize[it->first] == 0){

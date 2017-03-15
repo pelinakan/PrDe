@@ -1,5 +1,5 @@
-#ifndef INTSUITE_INC_PROBES_H_
-#define INTSUITE_INC_PROBES_H_
+#ifndef HCT_PROXDET_INC_PROBES_H_
+#define HCT_PROXDET_INC_PROBES_H_
 
 #include <map>
 #include "Features.h"
@@ -30,4 +30,4 @@ private:
 };
 
 
-#endif //INTSUITE_INC_PROBES_H_
+#endif //HCT_PROXDET_INC_PROBES_H_

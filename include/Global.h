@@ -1,5 +1,5 @@
-#ifndef INTSUITE_INC_GLOB_H_
-#define INTSUITE_INC_GLOB_H_
+#ifndef HCT_PROXDET_INC_GLOB_H_
+#define HCT_PROXDET_INC_GLOB_H_
 
 
 extern unsigned int NumberofPairs;
@@ -11,4 +11,4 @@ extern const int coreprom_upstream;
 extern const int coreprom_downstream;
 extern unsigned int totalNumberofPairs;
 
-#endif // INTSUITE_INC_GLOB_H_
+#endif // HCT_PROXDET_INC_GLOB_H_

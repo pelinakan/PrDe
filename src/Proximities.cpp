@@ -95,7 +95,7 @@ int n = interactor_resite[0];
 }
 
 void ProximityClass::RecordProximities(Alignment pair, std::string feature_id1, std::string feature_id2, int ExperimentNo) {
-    
+    std::cout<<"Feat1 "<<feature_id1<< " Feat2 "<<feature_id2<<std::endl;
     if ((feature_id1.length() != 4 && feature_id2.length() != 4)) { //"null"
         AnnotateFeatFeatInteraction(feature_id1, feature_id2, ExperimentNo);
         AnnotateFeatFeatInteraction(feature_id2, feature_id1, ExperimentNo);

@@ -91,6 +91,8 @@ int HiCapTools::ProbeDesignMain(std::string whichchr) {
 	
     std::ifstream config_file("config/probeDesignConfig.txt");
     
+    log<<"READ IN INPUTS"<<std::endl;
+    
     if(config_file.good()){
 		while (!config_file.eof()){
 			getline(config_file, line);

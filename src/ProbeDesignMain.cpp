@@ -1,10 +1,33 @@
+/*** 
+   HiCapTools.
+   Copyright (c) 2017 Pelin Sahlén <pelin.akan@scilifelab.se>
+
+	Permission is hereby granted, free of charge, to any person obtaining a 
+	copy of this software and associated documentation files (the "Software"), 
+	to deal in the Software with some restriction, including without limitation 
+	the rights to use, copy, modify, merge, publish, distribute the Software, 
+	and to permit persons to whom the Software is furnished to do so, subject to
+	the following conditions:
+
+	The above copyright notice and this permission notice shall be included in all 
+	copies or substantial portions of the Software. The Software shall not be used 
+	for commercial purposes.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+	INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
+	PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
+	HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+	CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
+	OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+***/
+
 //
 //  ProbeDesignMain.cpp
-//  PrDe
+//  HiCapTools
 //
-//  Created by Pelin Sahlen and Anandashankar Anil on 28/02/2017.
-//  Copyright (c) 2015 Pelin Sahlen. All rights reserved.
+//  Created by Pelin Sahlen and Anandashankar Anil.
 //
+
 
 #include <iostream>
 #include <fstream>
@@ -50,13 +73,6 @@ int HiCapTools::ProbeDesignMain(std::string whichchr) {
     int repeatOverlapExtent = 6;
     int BUFSIZE = 128;
     
-    
-   // if (argc < 2) {
-     //   print_usage();
-       // return -1;
-    //}
-    
-    //whichchr = argv[1];
     
     std::time_t now_time = std::time(NULL);
     std::strftime(reFileInfo.currTime, sizeof(reFileInfo.currTime), "%H.%M.%S_%F", std::localtime(&now_time));//Date and time when run starts
@@ -311,41 +327,41 @@ int HiCapTools::ProbeDesignMain(std::string whichchr) {
 	
     
         
-    log << "Base File Name: " << reFileInfo.desName << std::endl;    
-    log << "Digested Genome File:  " << DigestedGenomeFileName << std::endl;
-    log << "RE cut site motif:  " << motif << std::endl;
+    log << std::setw(75)<<std::left<<"Base File Name:" << reFileInfo.desName << std::endl;    
+    log << std::setw(75)<<"Digested Genome File:" << DigestedGenomeFileName << std::endl;
+    log << std::setw(75)<<"RE cut site motif:" << motif << std::endl;
     if(!transcriptfile.empty())
-		log << "Transcript List File:  " << transcriptfile << std::endl;
+		log <<std::setw(75)<< "Transcript List File:" << transcriptfile << std::endl;
 	if(!SNPfile.empty())
-		log << "SNV List File:  " << SNPfile << std::endl;
+		log << std::setw(75)<<"SNV List File:" << SNPfile << std::endl;
 	if(reFileInfo.ifRepeatAvail)	
-		log << "Repeat File:  " << repeatfile << std::endl;
+		log << std::setw(75)<<"Repeat File:" << repeatfile << std::endl;
 	if(reFileInfo.ifRepeatAvail)
-		log << "Mappability File:  " << mappabilityfile << std::endl;
-    log << "bigWigSummary executable path:  " << bigwigsummarybinary << std::endl;
-	log << "Probe Length:  " << ProbeLen << std::endl;
-	log << "Minimum distance between Probes:  " << DistanceBetweenProbes << std::endl;
-	log << "Maximum distance from Probe to TSS:  "<<MaxDistancetoTSS << std::endl;
-	log << "Cluster Promoters:  "<< ClusterPromoters << std::endl;
-	log << "Extent of Repeat Overlaps:  "<< repeatOverlapExtent << std::endl;
-	log << "Mappability Threshold:  "<< reFileInfo.mappabilityThreshold << std::endl;
+		log << std::setw(75)<<"Mappability File:" << mappabilityfile << std::endl;
+    log << std::setw(75)<<"bigWigSummary executable path:" << bigwigsummarybinary << std::endl;
+	log << std::setw(75)<<"Probe Length:" << ProbeLen << std::endl;
+	log << std::setw(75)<<"Minimum distance between Probes:" << DistanceBetweenProbes << std::endl;
+	log << std::setw(75)<<"Maximum distance from Probe to TSS:"<<MaxDistancetoTSS << std::endl;
+	log << std::setw(75)<<"Cluster Promoters:"<< ClusterPromoters << std::endl;
+	log << std::setw(75)<<"Extent of Repeat Overlaps:"<< repeatOverlapExtent << std::endl;
+	log << std::setw(75)<<"Mappability Threshold:"<< reFileInfo.mappabilityThreshold << std::endl;
 
 	if(ifNeg=="Yes"){
-		log << "Design negative probe set:  "<< ifNeg << std::endl;
-		log << "Minimum fragment length for negative probe:  "<< MinNegFragLen << std::endl;
-		log << "Number of Intergenic Negative control probes:  "<< intergenNegCtrls << std::endl;
-		log << "Number of Intronic Negative control probes:  " << intronNegCtrls << std::endl;
-		log << "Number of Exonic Negative control probes:  " <<exonNegCtrls << std::endl;
-		log << "Minimum distance to a known promoter for negative control probes:  " << dforbidProm << std::endl;
-		log << "Minimum distance to a known gene for intergenic negative control probes:  "<< dforbidIntergen << std::endl;
+		log << std::setw(75)<<"Design negative probe set:"<< ifNeg << std::endl;
+		log << std::setw(75)<<"Minimum fragment length for negative probe:"<< MinNegFragLen << std::endl;
+		log << std::setw(75)<<"Number of Intergenic Negative control probes:"<< intergenNegCtrls << std::endl;
+		log << std::setw(75)<<"Number of Intronic Negative control probes:" << intronNegCtrls << std::endl;
+		log << std::setw(75)<<"Number of Exonic Negative control probes:" <<exonNegCtrls << std::endl;
+		log << std::setw(75)<<"Minimum distance to a known promoter for negative control probes:" << dforbidProm << std::endl;
+		log << std::setw(75)<<"Minimum distance to a known gene for intergenic negative control probes:"<< dforbidIntergen << std::endl;
 		if(ifRegRegion){
-			log << "Use user provided forbidden regions?:  " << "Yes" << std::endl;
-			log << "User provided forbidden regions File:  " <<regRegionFile << std::endl;
-			log << "Minimum distance to a user provided forbidden regions:  " << dforbidRegReg << std::endl; 
+			log << std::setw(75)<<"Use user provided forbidden regions?:" << "Yes" << std::endl;
+			log << std::setw(75)<<"User provided forbidden regions File:" <<regRegionFile << std::endl;
+			log << std::setw(75)<<"Minimum distance to a user provided forbidden regions:" << dforbidRegReg << std::endl; 
 			
 		}
 		else
-			log << "Use user provided forbidden regions?:  " << "No" << std::endl;		
+			log << std::setw(75)<<"Use user provided forbidden regions?:" << "No" << std::endl;		
 	}
     
     

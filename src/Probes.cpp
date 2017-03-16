@@ -1,3 +1,33 @@
+/*** 
+   HiCapTools.
+   Copyright (c) 2017 Pelin Sahlén <pelin.akan@scilifelab.se>
+
+	Permission is hereby granted, free of charge, to any person obtaining a 
+	copy of this software and associated documentation files (the "Software"), 
+	to deal in the Software with some restriction, including without limitation 
+	the rights to use, copy, modify, merge, publish, distribute the Software, 
+	and to permit persons to whom the Software is furnished to do so, subject to
+	the following conditions:
+
+	The above copyright notice and this permission notice shall be included in all 
+	copies or substantial portions of the Software. The Software shall not be used 
+	for commercial purposes.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+	INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
+	PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
+	HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+	CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
+	OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+***/
+
+//
+//  Probes.cpp
+//  HiCapTools
+//
+//  Created by Pelin Sahlen and Anandashankar Anil.
+//
+
 #include "Probes.h"
 #include "Global.h"
 #include <fstream>
@@ -327,11 +357,8 @@ int ProbeSet::FindClosestFeature(int probe_coord, std::vector<int>& isoformcoord
 
 int ProbeSet::AddTotheIntervalTree(std::vector<Interval< int > >& intervals, std::vector<Interval< int > >& intervals_negctrls, std::string chr_of_vector, std::string nameofdesign, bool isNeg){
     
-    //IntervalTree< int > tree, tree_negctrls;
     std::vector<Interval< int >  > temp, temp2;
     
-    //tree = IntervalTree< int >(intervals);
-    //tree_negctrls = IntervalTree< int >(intervals_negctrls);
     if(isNeg){
 			Design_NegCtrl[nameofdesign].Probe_Tree[chr_of_vector] = IntervalTree< int >(intervals_negctrls);
 			intervals_negctrls.swap(temp2); //empty the tree
@@ -348,7 +375,6 @@ int ProbeSet::AddTotheIntervalTree(std::vector<Interval< int > >& intervals, std
 
 int ProbeSet::FindOverlaps(std::string chr, unsigned long int readstart, unsigned long int readend, std::string nameofdesign){
     
-    //results.clear();
     std::vector<Interval< int > > results;
     
     Design[nameofdesign].Probe_Tree[chr].findOverlapping(readstart, readend, results);
@@ -362,7 +388,6 @@ int ProbeSet::FindOverlaps(std::string chr, unsigned long int readstart, unsigne
 
 int ProbeSet::FindOverlaps_NegCtrls(std::string chr, unsigned long int readstart, unsigned long int readend, std::string nameofdesign){
     
-    //results.clear();
     std::vector<Interval< int > > results;
     
     Design_NegCtrl[nameofdesign].Probe_Tree[chr].findOverlapping(readstart, readend, results);

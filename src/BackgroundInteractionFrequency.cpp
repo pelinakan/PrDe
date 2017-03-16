@@ -1,3 +1,33 @@
+/*** 
+   HiCapTools.
+   Copyright (c) 2017 Pelin Sahlén <pelin.akan@scilifelab.se>
+
+	Permission is hereby granted, free of charge, to any person obtaining a 
+	copy of this software and associated documentation files (the "Software"), 
+	to deal in the Software with some restriction, including without limitation 
+	the rights to use, copy, modify, merge, publish, distribute the Software, 
+	and to permit persons to whom the Software is furnished to do so, subject to
+	the following conditions:
+
+	The above copyright notice and this permission notice shall be included in all 
+	copies or substantial portions of the Software. The Software shall not be used 
+	for commercial purposes.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+	INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
+	PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
+	HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+	CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
+	OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+***/
+
+//
+//  BackgroundInteractionFrequency.cpp
+//  HiCapTools
+//
+//  Created by Pelin Sahlen and Anandashankar Anil.
+//
+
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics/stats.hpp>
 #include <boost/accumulators/statistics/rolling_mean.hpp>
@@ -47,18 +77,17 @@ void DetermineBackgroundLevels::CalculateMeanandStdRegress(std::string BaseFileN
 		}
 		///////////Probe-Probe
         else if(whichProx=="ProbeProbe"){
-			log<<"Size probeprobe "<<Features[feature_id].Inter_feature_ints.size()<<std::endl; 
 			for (auto iter = Features[feature_id].Inter_feature_ints.begin(); iter != Features[feature_id].Inter_feature_ints.end(); ++iter){
 								
 				distance = Features[feature_id].start - Features[(*iter).interacting_feature_id].start;
 				
 				if((Features[feature_id].FeatureType == 3 && Features[(*iter).interacting_feature_id].FeatureType == 3) && Features[feature_id].TranscriptName != Features[(*iter).interacting_feature_id].TranscriptName && (abs(distance) >= MinimumJunctionDistance)){
             
-					int bin = abs(distance) / binsize; ////////
-					if(bglevelsloc.mean.find(bin) == bglevelsloc.mean.end())//////////
-						bglevelsloc.mean[bin] = (*iter).signal[ExperimentNo];///////////
+					int bin = abs(distance) / binsize; 
+					if(bglevelsloc.mean.find(bin) == bglevelsloc.mean.end())
+						bglevelsloc.mean[bin] = (*iter).signal[ExperimentNo];
 					else
-						bglevelsloc.mean[bin] = bglevelsloc.mean[bin] + (*iter).signal[ExperimentNo];////////////
+						bglevelsloc.mean[bin] = bglevelsloc.mean[bin] + (*iter).signal[ExperimentNo];
                 
 					if(nofentries_perBin.find(bin) == nofentries_perBin.end()){
 						nofentries_perBin[bin] = 1;
@@ -75,7 +104,6 @@ void DetermineBackgroundLevels::CalculateMeanandStdRegress(std::string BaseFileN
     
 // Calculate Mean and stdev
 	std::map< int, double>::iterator it; // iterator for bin signals
-	log<<"Size bglevels "<<bglevelsloc.mean.size()<<std::endl; 
 	for (it = bglevelsloc.mean.begin(); it != bglevelsloc.mean.end(); ++it){
         bglevelsloc.samplesize[it->first] = nofentries_perBin[it->first];
         if(bglevelsloc.samplesize[it->first] == 0){

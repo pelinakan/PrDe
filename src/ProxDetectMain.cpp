@@ -1,8 +1,40 @@
+/*** 
+   HiCapTools.
+   Copyright (c) 2017 Pelin Sahlén <pelin.akan@scilifelab.se>
+
+	Permission is hereby granted, free of charge, to any person obtaining a 
+	copy of this software and associated documentation files (the "Software"), 
+	to deal in the Software with some restriction, including without limitation 
+	the rights to use, copy, modify, merge, publish, distribute the Software, 
+	and to permit persons to whom the Software is furnished to do so, subject to
+	the following conditions:
+
+	The above copyright notice and this permission notice shall be included in all 
+	copies or substantial portions of the Software. The Software shall not be used 
+	for commercial purposes.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+	INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
+	PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
+	HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+	CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
+	OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+***/
+//
+//	ProxDetectMain.cpp
+//  HiCapTools
+//
+//  Created by Pelin Sahlen and Anandashankar Anil.
+//
+
+
 #include <cstdlib>
 #include <iostream>
 #include <ctime>
 #include <cstring>
 #include <fstream>
+#include <iomanip>
 using namespace std;
 
 #include "Global.h"
@@ -183,21 +215,21 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 		}		
 	}
 
-	log << "Min Number of Supporting Pairs      " << MinNumberofSupportingPairs << std::endl;
-	log << "Min Junction Distance               " << MinimumJunctionDistance << std::endl;
-	log << "Padding around Probes               " << padding << std::endl;
-	log << "Calculate p values                  " ;
+	log << std::setw(30)<<std::left<<"Min Number of Supporting Pairs" << MinNumberofSupportingPairs << std::endl;
+	log << std::setw(30)<<"Min Junction Distance" << MinimumJunctionDistance << std::endl;
+	log << std::setw(30)<<"Padding around Probes" << padding << std::endl;
+	log << std::setw(30)<<"Calculate p values" ;
 	if(CALCULATE_P_VALUES)
 		log<< "Yes" << std::endl;
 	if(!CALCULATE_P_VALUES)
 		log<< "No" << std::endl;
 	
-	log << "Read Length                  "<<	ReadLen<<std::endl;
-	log << "Base File name                  "<<	BaseFileName<<std::endl;
-	log << "Bin Size for Probe-Distal                 "	<<BinSize<<std::endl;
-	log << "Window Size for Probe-Distal                  "	<<WindowSize<<std::endl;
-	log << "Bin Size for Probe-Probe                  "	<<BinSizeProbeProbe<<std::endl;
-	log << "Window Size for Probe-Probe                  "<<WindowSizeProbeProbe<<std::endl;
+	log << std::setw(30)<<"Read Length"<<	ReadLen<<std::endl;
+	log << std::setw(30)<<"Base File name"<<	BaseFileName<<std::endl;
+	log << std::setw(30)<<"Bin Size for Probe-Distal"	<<BinSize<<std::endl;
+	log << std::setw(30)<<"Window Size for Probe-Distal"	<<WindowSize<<std::endl;
+	log << std::setw(30)<<"Bin Size for Probe-Probe"	<<BinSizeProbeProbe<<std::endl;
+	log << std::setw(30)<<"Window Size for Probe-Probe"<<WindowSizeProbeProbe<<std::endl;
     
     ifstream ExpFile(ExpFileName.c_str());
     if(ExpFile.good()){
@@ -372,29 +404,29 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 		return 0;
 	}
 	
-	log << "Feature Probe File                  "<<ProbeFileName<<std::endl;
+	log <<std::setw(30)<< "Feature Probe File"<<ProbeFileName<<std::endl;
 	if(CALCULATE_P_VALUES)
-		log << "Negative Control Probe File                 "<<NegCtrlProbeFileName<<std::endl;
-	log << "Digested Genome File                  "<<DigestedGenomeFileName<<std::endl;
+		log << std::setw(30)<<"Negative Control Probe File"<<NegCtrlProbeFileName<<std::endl;
+	log << std::setw(30)<<"Digested Genome File"<<DigestedGenomeFileName<<std::endl;
 	if(!TranscriptListFileName.empty())
-		log << "Transcript List File                  "<<TranscriptListFileName<<std::endl;
+		log << std::setw(30)<<"Transcript List File"<<TranscriptListFileName<<std::endl;
 	if(!SNPFile.empty())
-		log << "SNV List File                  "<<SNPFile<<std::endl;
+		log << std::setw(30)<<"SNV List File"<<SNPFile<<std::endl;
 	if(CALCULATE_P_VALUES)
-		log << "Negative control region File                  "<<negCtrlRegFile<<std::endl;
+		log << std::setw(30)<<"Negative control region File"<<negCtrlRegFile<<std::endl;
 	for(auto i=probeType.begin(); i!=probeType.end();++i)
-		log << "Target-"<<i->first<<":                 "<<i->second<<std::endl;
-	log << "Number of Experiments                  "<<NOFEXPERIMENTS<<std::endl;
+		log << "Target-"<<i->first<<std::setw(25)<<":"<<i->second<<std::endl;
+	log << std::setw(30)<<"Number of Experiments"<<NOFEXPERIMENTS<<std::endl;
 	for (unsigned i=0; i<Experiments.size(); ++i){ 
 		log<<"Experiment "<<i<<std::endl;
-		log << "BAM file path                  "<<Experiments[i].filepath<<std::endl;
+		log << std::setw(30)<<"BAM file path"<<Experiments[i].filepath<<std::endl;
 		if(!CheckFile(Experiments[i].filepath)){
 			log<< "!!Error!! : BAM File "<< i +1 <<" is not accessible"<<std::endl;
 			return 0;
 		}
 			
-		log << "Experiment Name                  "<<Experiments[i].name<<std::endl;
-		log << "Probe Design Name                   "<<Experiments[i].designname<<std::endl;
+		log << std::setw(30)<<"Experiment Name"<<Experiments[i].name<<std::endl;
+		log << std::setw(30)<<"Probe Design Name"<<Experiments[i].designname<<std::endl;
 	}
     
     //------------------------------------------------------------------------------------
@@ -417,7 +449,6 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 	log << "Reading Feature files and annotating features: Starting!" << std::endl;
     proms.InitialiseData(ClusterPromoters, countFeatFiles+CALCULATE_P_VALUES);
     
-   // proms.ReadPromoterAnnotation(dpnII, TranscriptListFileName, ClusterPromoters);
     switch(featFileCount){
 		case 1:	
 			proms.ReadFeatureAnnotation(dpnII, SNPFile, "SNV");

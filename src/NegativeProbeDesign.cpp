@@ -484,7 +484,7 @@ void NegativeProbeDesign::WritetoFile(){
     
 			outfile <<probeStart << '\t' << probeEnd << '\t'<< "." << '\t'<< "." << '\t'<< "." << '\t'; // to adjust for 1-based coords
         
-			outfile << "Name="<< toWriteSorted[ind].name <<"; " << "side="<<side<<"; "<<"target="<<target<<"; "<<"design="<<designName<<"; "<< "featuresinvicinity=";
+			outfile << "Name="<< toWriteSorted[ind].name <<"; " <<"transcriptid="<< "none"<<"; " << "side="<<side<<"; "<<"target="<<target<<"; "<<"design="<<designName<<"; "<< "featuresinvicinity=";
           
 			outfile << "none"<<"; ";
 	
@@ -499,7 +499,7 @@ void NegativeProbeDesign::WritetoFile(){
     
 			outfile <<probeStart << '\t' << probeEnd << '\t'<< "." << '\t'<< "." << '\t'<< "." << '\t'; // to adjust for 1-based coords
         
-			outfile << "Name="<< toWriteSorted[ind].name <<"; " << "side="<<side<<"; "<<"target="<<target<<"; "<<"design="<<designName<<"; "<< "featuresinvicinity=";
+			outfile << "Name="<< toWriteSorted[ind].name <<"; " <<"transcriptid="<< "none"<<"; " << "side="<<side<<"; "<<"target="<<target<<"; "<<"design="<<designName<<"; "<< "featuresinvicinity=";
           
 			outfile << "none"<<"; " ;
 	

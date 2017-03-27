@@ -340,7 +340,7 @@ bool DesignClass::WritetoFile(std::ofstream &outfile, std::string chr, int chrin
     
     outfile <<probestart << '\t' << probeend << '\t'<< "." << '\t'<< "." << '\t'<< "." << '\t'; // to adjust for 1-based coords
         
-    outfile << "Name="<<feats.promFeatures[values[0]].genes[0]<<"; " << "side="<<side<<"; "<<"target="<<target<<"; "<<"design="<<design<<"; "<< "featuresinvicinity=";
+    outfile << "Name="<<feats.promFeatures[values[0]].genes[0]<<"; " <<"transcriptid="<< feats.promFeatures[values[0]].transcripts[0]<<"; "<< "side="<<side<<"; "<<"target="<<target<<"; "<<"design="<<design<<"; "<< "featuresinvicinity=";
         
     //check for multiple promoters
     if(values.size()>1){

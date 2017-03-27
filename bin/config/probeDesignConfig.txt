@@ -5,11 +5,11 @@
 /--A name which which the output file names will start. Enter in format 'FileName' --/
 Base File Name=T1
 
-/--The file path to the Digested Genome File Name in txt format--/
-Digested Genome File=/pica/v16/b2015060_nobackup/ANALYSIS/checkBAM/Digest_hg19_HindIII_None_12-48-39_07-03-2017.txt
+/--The file path to the Digested Genome File Name in txt format--//pica/v16/b2015060_nobackup/ANALYSIS/checkBAM/Digest_hg19_HindIII_None_12-48-39_07-03-2017.txt
+Digested Genome File=/pica/v16/b2015060/supplementaryFiles/Digest_hg19_MboI_None_11-39-03_22-01-2016.txt
 
 /--The cut site motif of the restiction enzyme used to digest the genome in the following format with the cut site indicated by a '^'. X^XXX,EnzymeName. Eg. ^GATC,MboI ; A^AGCTT,HindIII--/
-RE cut site motif=A^AGCTT,HindIII
+RE cut site motif=^GATC,MboI
 
 /--The genome assembly build version in the format 'buildVersion,source'. Eg. hg19,UCSC --/
 Genome assembly=hg19,UCSC

@@ -55,6 +55,7 @@ protected:
 	
     bool overlap(RESitesClass&, Repeats, int&, int, int, std::string, int, int, bool, bool);
     double BigWigSummary(std::string, int, int);
+    std::vector<std::string> chrIDsFasta;
     
 private:
 	

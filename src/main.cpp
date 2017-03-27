@@ -42,7 +42,8 @@ int main(int argc, const char * argv[]) {
 	std::string whichChr;
 	std::string proxType;
 	std::string statsOption;
-	std::string printOption; 
+	std::string printOption;
+	std::string extraConfig; 
 	
 	HiCapTools prde;
 	
@@ -72,7 +73,7 @@ int main(int argc, const char * argv[]) {
 	}
 	
 	else if(whichMod=="ProximityDetector"){
-		if (argc != 8) {
+		if (argc != 8 || argc!=10) {
 			print_usage();
 			return 1;
 		}
@@ -93,18 +94,23 @@ int main(int argc, const char * argv[]) {
 				else if(std::string(argv[i])=="-p" || std::string(argv[i])=="--proximitytype"){
 					if(std::string(argv[i+1])=="Neg" || std::string(argv[i+1]) == "NonNeg"||std::string(argv[i+1])=="Both")
 						printOption=argv[i+1];
-						else{
+					else{
 						std::cout<<"!!Error!! Invalid argument for -p"<<std::endl;
 						print_usage();
 						return 1;
 					}
+				}
+				else if(argc==10 && (std::string(argv[i])=="--config")){
+						extraConfig=argv[i+1];
+					}
+					
 				}
 				else{
 					print_usage();
 					return 1;
 				}
 			}
-			prde.ProxDetectMain(whichChr, statsOption, printOption);
+			prde.ProxDetectMain(whichChr, statsOption, printOption, extraConfig);
 			
 		}
 		
@@ -113,4 +119,5 @@ int main(int argc, const char * argv[]) {
 		print_usage();
 		return 1;
 	}
+	return 0;
 }

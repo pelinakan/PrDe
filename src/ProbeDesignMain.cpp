@@ -43,7 +43,7 @@
 
 int DistanceBetweenProbes = 1000;
 
-int HiCapTools::ProbeDesignMain(std::string whichchr) {
+int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig) {
 	
 	int ClusterPromoters  = 1200;
 	int ProbeLen = 120;
@@ -89,9 +89,15 @@ int HiCapTools::ProbeDesignMain(std::string whichchr) {
     //-----------------------------------//
 	
 	
-    std::ifstream config_file("config/probeDesignConfig.txt");
+    
     
     log<<"READ IN INPUTS"<<std::endl;
+    
+    if(extraConfig.empty()){
+		extraConfig="config/probeDesignConfig.txt";
+	}
+	
+	std::ifstream config_file(extraConfig);
     
     if(config_file.good()){
 		while (!config_file.eof()){
@@ -290,7 +296,7 @@ int HiCapTools::ProbeDesignMain(std::string whichchr) {
 		}
 	}
 	else{
-		log<<"probeDesignConfig.txt not found in config directory."<<std::endl;
+		log<<"Provided config file not found or probeDesignConfig.txt not found in config directory."<<std::endl;
 	}
 	
 	if(transcriptfile.empty()&&SNPfile.empty()){

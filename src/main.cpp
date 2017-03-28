@@ -55,19 +55,24 @@ int main(int argc, const char * argv[]) {
     whichMod = argv[1];
     
     if(whichMod=="ProbeDesigner"){
-		if (argc != 4) {
+		if (argc != 4 || argc != 6) {
 			print_usage();
 			return 1;
 		}
 		else{
-			if(std::string(argv[2])=="-c" || std::string(argv[2])=="--chr"){
-				whichChr=argv[3];
-				prde.ProbeDesignMain(whichChr);
+			for(int i=2; i<argc; i+=2){
+				if((std::string(argv[i])=="-c" || std::string(argv[i])=="--chr")){
+					whichChr=argv[i+1];					
+				}
+				else if((std::string(argv[i])=="-config")){
+					extraconfig=argv[i+1];
+				}
 			}
 			else{
 				print_usage();
 				return 1;
 			}
+			prde.ProbeDesignMain(whichChr, extraConfig);
 		}
 		
 	}

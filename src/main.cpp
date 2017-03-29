@@ -64,7 +64,7 @@ int main(int argc, const char * argv[]) {
 				if((std::string(argv[i])=="-c" || std::string(argv[i])=="--chr")){
 					whichChr=argv[i+1];					
 				}
-				else if((std::string(argv[i])=="-config")){
+				else if(argc==6 && (std::string(argv[i])=="-config")){
 					extraConfig=argv[i+1];
 				}
 				else{

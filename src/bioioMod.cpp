@@ -91,24 +91,7 @@ GenomicRegion bioioMod::parse_region(std::string region, const bioio::FastaIndex
 
 std::string bioioMod::GetFasta(std::string regionToGet){
 	
-	/***
-    if (cmd_option_exists(argv, argv + argc, "-h")) {
-        print_usage();
-        std::cout << "options:" << '\n';
-        std::cout << "\t-h\tprint help" << '\n';
-        std::cout << "\t-s\toutput sequence size of region" << '\n';
-        //std::cout << "\t" << '\n';
-        return 0;
-    } else if (argc < 3) {
-        std::cerr << "Error: not enough command line arguments" << std::endl;
-        print_usage();
-        return 1;
-    }
-    ***/
-    //auto index_path = get_cmd_option(argv, argv + argc, "-i");
-    
-    //std::string fasta_path {argv[argc - 2]};
-    
+	  
     std::ifstream fasta {fasta_path, std::ios::binary};
     
     if (!fasta) {

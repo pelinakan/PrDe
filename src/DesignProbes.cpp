@@ -414,26 +414,9 @@ bool DesignClass::ConstructSeq(PrDes::RENFileInfo& reInfo, bioioMod& getSeq){
     std::ofstream outfile;
     outfile.open(fname, std::fstream::app);
 
-	//header.append("##gff-version 3.2.1");
-	//header.append("\n");
-	//header.append("##genome-build "<<reInfo.genomeAssembly.substr(reInfo.genomeAssembly.find_first_of(',')+1)<<" "<<reInfo.genomeAssembly.substr(0, reInfo.genomeAssembly.find_first_of(',')));
-	//header.append("\n");
-    
-    //outfile<<header;
-
-	//outfile.close();
-	
-	//outfile.open(fnameAllChr, std::ios_base::binary | std::ios_base::app);
 	
 	for(auto &probeVar : probeList){
 		
-		//std::string fName=reInfo.desName+"."+reInfo.genomeAssembly.substr(0, reInfo.genomeAssembly.find_first_of(','))+"_"+iChr+"."+reInfo.REName+"."+reInfo.currTime+".gff3";
-		//std::ifstream readChrFiles(fName, std::ios_base::binary);
-		//readChrFiles.seekg(header.size()); //strip header
-		//outfile << readChrFiles.rdbuf();
-		//readChrFiles.close();
-		
-		//remove(fName.c_str());
 		std::string toFas = getSeq.GetFasta(probeVar.chr+":"+std::to_string(probeVar.start)+"-"+std::to_string(probeVar.end));
 		
 		if(toFas!="Error"){

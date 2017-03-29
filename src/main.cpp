@@ -105,7 +105,7 @@ int main(int argc, const char * argv[]) {
 						return 1;
 					}
 				}
-				else if(argc==10 && (std::string(argv[i])=="--config")){
+				else if(argc==10 && (std::string(argv[i])=="-config")){
 						extraConfig=argv[i+1];
 				}
 				else{
@@ -123,6 +123,6 @@ int main(int argc, const char * argv[]) {
 		print_usage();
 		return 1;
 	}
-	return 0;
-		
+	
+	return 0;		
 }

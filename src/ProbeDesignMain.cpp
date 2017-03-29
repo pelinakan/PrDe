@@ -473,15 +473,11 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig) {
 		res = NegctrlProbes.ConstructNegativeControlProbes(intergenNegCtrls, "intergenic", hg19repeats, dforbidIntergen, dforbidRegReg);
 		NegctrlProbes.WritetoFile(getSeq);
 		
-		if(!isFas){
-			log << "!!Error getting sequence from fasta file!! Aborting!" << std::endl;
-			return 0;
-		}
-		
 		log << "Designing Negative control Probes: Done!" << std::endl;
 	}
 	
 	log<<"Execution Complete...................."<<std::endl;
+	
     return 1;
 }
 

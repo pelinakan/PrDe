@@ -55,7 +55,7 @@ int main(int argc, const char * argv[]) {
     whichMod = argv[1];
     
     if(whichMod=="ProbeDesigner"){
-		if (argc != 4 || argc != 6) {
+		if (!(argc == 4 || argc == 6)){
 			print_usage();
 			return 1;
 		}
@@ -65,12 +65,12 @@ int main(int argc, const char * argv[]) {
 					whichChr=argv[i+1];					
 				}
 				else if((std::string(argv[i])=="-config")){
-					extraconfig=argv[i+1];
+					extraConfig=argv[i+1];
 				}
-			}
-			else{
+				else{
 				print_usage();
 				return 1;
+				}
 			}
 			prde.ProbeDesignMain(whichChr, extraConfig);
 		}
@@ -78,7 +78,7 @@ int main(int argc, const char * argv[]) {
 	}
 	
 	else if(whichMod=="ProximityDetector"){
-		if (argc != 8 || argc!=10) {
+		if (!(argc == 8 || argc==10)) {
 			print_usage();
 			return 1;
 		}
@@ -107,22 +107,22 @@ int main(int argc, const char * argv[]) {
 				}
 				else if(argc==10 && (std::string(argv[i])=="--config")){
 						extraConfig=argv[i+1];
-					}
-					
 				}
 				else{
 					print_usage();
 					return 1;
 				}
+					
 			}
-			prde.ProxDetectMain(whichChr, statsOption, printOption, extraConfig);
-			
+				
 		}
-		
+		prde.ProxDetectMain(whichChr, statsOption, printOption, extraConfig);
+			
 	}
 	else{
 		print_usage();
 		return 1;
 	}
 	return 0;
+		
 }

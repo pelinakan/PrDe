@@ -357,6 +357,18 @@ bool DesignClass::WritetoFile(std::ofstream &outfile, std::string chr, int chrin
 	}
 	
 	outfile<< "targettss="<<feats.promFeatures[values[0]].TSS<<"; "<<"distancetotss="<<disttotss<< std::endl;
+	
+	int offset=0;
+	if(side=="L")
+		offset=1; // subtract 1 for bioio coordinates on Left side
+	BaseProbe t;
+	t.chr=chr;
+	t.start=probestart-offset;
+	t.end=probeend-offset;
+	t.strand="+";
+	t.feature=feats.promFeatures[values[0]].genes[0];
+    
+    probeList.push_back(t);
     
     return true;
 }
@@ -393,38 +405,44 @@ void DesignClass::MergeAllChrOutputs(ProbeFeatureClass& Feats, PrDes::RENFileInf
 	}	
 }
 
-/***
-void DesignClass::GetFasta(ProbeFeatureClass& Feats, PrDes::RENFileInfo& reInfo){
+
+bool DesignClass::ConstructSeq(PrDes::RENFileInfo& reInfo, bioioMod& getSeq){
 	
-	
-	
-	std::string fnameAllChr = reInfo.desName+"."+reInfo.genomeAssembly.substr(0, reInfo.genomeAssembly.find_first_of(','))+".AllProbes."+reInfo.REName+"."+reInfo.currTime+".gff3";    
+	std::string fname = reInfo.desName+"."+reInfo.genomeAssembly.substr(0, reInfo.genomeAssembly.find_first_of(','))+".ProbeSequences."+reInfo.REName+"."+reInfo.currTime+".txt";    
     std::string header;
     
     std::ofstream outfile;
-    outfile.open(fnameAllChr, std::fstream::out);
+    outfile.open(fname, std::fstream::app);
 
-	header.append("##gff-version 3.2.1");
-	header.append("\n");
-	header.append("##genome-build "<<reInfo.genomeAssembly.substr(reInfo.genomeAssembly.find_first_of(',')+1)<<" "<<reInfo.genomeAssembly.substr(0, reInfo.genomeAssembly.find_first_of(',')));
-	header.append("\n");
+	//header.append("##gff-version 3.2.1");
+	//header.append("\n");
+	//header.append("##genome-build "<<reInfo.genomeAssembly.substr(reInfo.genomeAssembly.find_first_of(',')+1)<<" "<<reInfo.genomeAssembly.substr(0, reInfo.genomeAssembly.find_first_of(',')));
+	//header.append("\n");
     
-    outfile<<header;
+    //outfile<<header;
 
-	outfile.close();
+	//outfile.close();
 	
-	outfile.open(fnameAllChr, std::ios_base::binary | std::ios_base::app);
+	//outfile.open(fnameAllChr, std::ios_base::binary | std::ios_base::app);
 	
-	for(auto &iChr : Feats.ChrNames_proms){
+	for(auto &probeVar : probeList){
 		
-		std::string fName=reInfo.desName+"."+reInfo.genomeAssembly.substr(0, reInfo.genomeAssembly.find_first_of(','))+"_"+iChr+"."+reInfo.REName+"."+reInfo.currTime+".gff3";
-		std::ifstream readChrFiles(fName, std::ios_base::binary);
-		readChrFiles.seekg(header.size()); //strip header
-		outfile << readChrFiles.rdbuf();
-		readChrFiles.close();
+		//std::string fName=reInfo.desName+"."+reInfo.genomeAssembly.substr(0, reInfo.genomeAssembly.find_first_of(','))+"_"+iChr+"."+reInfo.REName+"."+reInfo.currTime+".gff3";
+		//std::ifstream readChrFiles(fName, std::ios_base::binary);
+		//readChrFiles.seekg(header.size()); //strip header
+		//outfile << readChrFiles.rdbuf();
+		//readChrFiles.close();
 		
-		remove(fName.c_str());
+		//remove(fName.c_str());
+		std::string toFas = getSeq.GetFasta(probeVar.chr+":"+std::to_string(probeVar.start)+"-"+std::to_string(probeVar.end));
 		
-	}	
+		if(toFas!="Error"){
+			outfile<<probeVar.chr<<'\t'<<probeVar.start<<'\t'<<probeVar.end<<'\t'<<probeVar.strand<<'\t'<<probeVar.feature<<'\t'<<toFas<<std::endl;
+		}
+		else
+			return false;	
+	}
+	
+	return true;	
 }
-***/
+

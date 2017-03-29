@@ -1,4 +1,4 @@
-/*  fasta.cpp
+/*
  
  Copyright (C) 2015 University of Oxford.
  
@@ -35,6 +35,8 @@
 #include <fstream>
 #include <cstddef>
 #include <algorithm>
+
+using GenomicRegion = std::tuple<std::string, size_t, size_t> ;
 
 GenomicRegion bioioMod::parse_region(std::string region, const bioio::FastaIndex& index){
 	
@@ -87,7 +89,7 @@ GenomicRegion bioioMod::parse_region(std::string region, const bioio::FastaIndex
     throw std::runtime_error {"could not parse region " + region};
 }
 
-std::string bioioMod::GetFasta(std::string index_path, std::string fasta_path, std::string regionToGet){
+std::string bioioMod::GetFasta(std::string regionToGet){
 	
 	/***
     if (cmd_option_exists(argv, argv + argc, "-h")) {
@@ -103,7 +105,6 @@ std::string bioioMod::GetFasta(std::string index_path, std::string fasta_path, s
         return 1;
     }
     ***/
-    
     //auto index_path = get_cmd_option(argv, argv + argc, "-i");
     
     //std::string fasta_path {argv[argc - 2]};
@@ -111,13 +112,11 @@ std::string bioioMod::GetFasta(std::string index_path, std::string fasta_path, s
     std::ifstream fasta {fasta_path, std::ios::binary};
     
     if (!fasta) {
-        std::cerr << "Error: could not open fasta " << fasta_path << std::endl;
-    //    print_usage();
-        //return 1;
+        bLog << "Error: could not open fasta " << fasta_path << std::endl;
         return "Error";
     }
     
-    if (index_path.empty() && index_path.find(".") != std::string::npos) {
+    if (index_path.empty()) { //changed
         index_path = fasta_path;
         index_path.replace(index_path.begin() + index_path.find_last_of("."), index_path.end(), ".fai");
     }
@@ -127,8 +126,7 @@ std::string bioioMod::GetFasta(std::string index_path, std::string fasta_path, s
     if (!index_file) {
         index_file.open(fasta_path + ".fai");
         if (!index_file) {
-            std::cerr << "Error: could not open index file, use samtools faidx <fasta> to make index file" << std::endl;
-            //return 1;
+            bLog << "Error: could not open index file, use samtools faidx <fasta> to make index file" << std::endl;
             return "Error";
         }
     }
@@ -146,6 +144,6 @@ std::string bioioMod::GetFasta(std::string index_path, std::string fasta_path, s
         return sequence;
     }
     catch (std::runtime_error& e) {
-        std::cerr << "Error: " << e.what() << std::endl;
+        bLog << "Error: " << e.what() << std::endl;
     }
 }

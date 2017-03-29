@@ -33,23 +33,23 @@
 
 #include <string>
 #include <tuple>
+#include "OutStream.h"
 #include "bioio.hpp"
 
 class bioioMod{
 public :
 	
-	//RESitesClass(OutStream& rlog) : rLog (rlog) {}
-	
-	std::tuple<std::string, size_t, size_t> GenomicRegion;
+	using GenomicRegion = std::tuple<std::string, size_t, size_t> ;
 	
 	GenomicRegion parse_region(std::string, const bioio::FastaIndex&);
-	std::string GetFasta(std::string, std::string, std::string);
-	
+	std::string GetFasta(std::string);
+	bioioMod(OutStream& blog, std::string inpath, std::string faspath) : bLog (blog), index_path (inpath), fasta_path (faspath) {}
 	
 	
 private:
-
-	//OutStream& rLog;
+	std::string index_path;
+	std::string fasta_path;
+	OutStream& bLog;
 };
 
 #endif // HCT_INC_BIOIO_H_

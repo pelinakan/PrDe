@@ -409,9 +409,9 @@ void DesignClass::MergeAllChrOutputs(ProbeFeatureClass& Feats, PrDes::RENFileInf
 }
 
 
-bool DesignClass::ConstructSeq(PrDes::RENFileInfo& reInfo, bioioMod& getSeq){
+bool DesignClass::ConstructSeq(PrDes::RENFileInfo& reInfo, bioioMod& getSeq, std::string calledChr){
 	
-	std::string fname = reInfo.desName+"."+reInfo.genomeAssembly.substr(0, reInfo.genomeAssembly.find_first_of(','))+".ProbeSequences."+reInfo.REName+"."+reInfo.currTime+".txt";    
+	std::string fname = reInfo.desName+"."+reInfo.genomeAssembly.substr(0, reInfo.genomeAssembly.find_first_of(','))+".ProbeSequences."+calledChr+"."+reInfo.REName+"."+reInfo.currTime+".txt";    
     std::string header;
     
     std::ofstream outfile;

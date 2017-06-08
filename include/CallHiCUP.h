@@ -31,7 +31,7 @@
 #ifndef HCT_PROXDET_INC_CHICUP_H_
 #define HCT_PROXDET_INC_CHICUP_H_
 
-#include "OusStream.h"
+#include "OutStream.h"
 
 class CallHiCUP{
     
@@ -39,7 +39,7 @@ public:
 	//BG_signals bglevels;
 	//BG_signals bglevelsProbeProbe;
 	
-	int GenerateRestrictionFile(std::string, std::string, std::string, std::string&);
+	int GenerateRestrictionFile(std::string, std::string, std::string, std::string, std::string&);
 	CallHiCUP(OutStream& clog) : cLog (clog) {}
 	
 private:

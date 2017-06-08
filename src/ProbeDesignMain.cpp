@@ -42,6 +42,7 @@
 #include "PrintUsage.h"
 #include "OutStream.h"
 #include "bioioMod.h"
+#include "CallHiCUP.h"
 
 int DistanceBetweenProbes = 1000;
 
@@ -332,7 +333,7 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig) {
 		return 0;
 	}
 	
-	if(!DigestedGenomeFileName && !CheckFile(DigestedGenomeFileName)){
+	if(!DigestedGenomeFileName.empty() && !CheckFile(DigestedGenomeFileName)){
 		log<<"!!Error!! : Digested Genome File is not accessible " << std::endl;
 		return 0;
 	}
@@ -410,7 +411,7 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig) {
 		CallHiCUP getDigest(log); 
 		std::string assemblyVer =reFileInfo.genomeAssembly.substr(0, reFileInfo.genomeAssembly.find_first_of(","));
 		 digestErr = getDigest.GenerateRestrictionFile("hiCUPDigester/hicup_digester",reFileInfo.REName, assemblyVer, fastaFile, DigestedGenomeFileName);
-		 if(digestError!=1){
+		 if(digestErr!=1){
 			 log<<"!!Digest file could not be generated. Program exiting!!"<<std::endl;
 			 return 0;
 		 }

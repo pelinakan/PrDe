@@ -27,8 +27,9 @@
 //
 //  Created by Pelin Sahlen and Anandashankar Anil.
 //
+#include <vector>
 #include <dirent.h>
-
+#include "CallHiCUP.h"
 
 int CallHiCUP::GenerateRestrictionFile(std::string hicupdigesterPath, std::string enzymeMotif, std::string genomeName, std::string fastaFilepath, std::string& digestFile){
 	
@@ -61,7 +62,7 @@ int CallHiCUP::GenerateRestrictionFile(std::string hicupdigesterPath, std::strin
         return -1;
     }
     
-    while (fgets(buf, BUFSIZE, fp) != NULL) {        
+    while (fgets(buf, 512, fp) != NULL) {        
         a = atof(buf);
     }
     
@@ -71,9 +72,11 @@ int CallHiCUP::GenerateRestrictionFile(std::string hicupdigesterPath, std::strin
     }
     
     
+    std::vector<std::string> retNames;
+    
+    
     while ((dirStruct = readdir(dr)) != NULL) {
 		std::string fname = dirStruct->d_name;
-		std::vector<std::string> retNames;
 		int count=0;
 		if(fname.find(nameComp) != std::string::npos){
 			retNames.push_back(fname);

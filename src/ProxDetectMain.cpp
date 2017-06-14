@@ -116,9 +116,9 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 	if(configFile.good()){
 		while (!configFile.eof()){
 			getline(configFile, line);
-			if(line.find("=")!=string::npos){
+			if(line.find("=")!=std::string::npos){
 				if(line.substr(0, line.find('=')).find("Experiment File Name Path")!=std::string::npos){
-					string s;
+					std::string s;
 					s=line.substr(line.find('=')+1);
 					s.erase(std::remove_if(begin(s), end(s), [l](char ch) { return std::isspace(ch, l); }), end(s));
 					if(s.empty()){
@@ -240,11 +240,11 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 	log << std::setw(35)<<"Bin Size for Probe-Probe"	<<BinSizeProbeProbe<<std::endl;
 	log << std::setw(35)<<"Window Size for Probe-Probe"<<WindowSizeProbeProbe<<std::endl;
     
-    ifstream ExpFile(ExpFileName.c_str());
+    std::ifstream ExpFile(ExpFileName.c_str());
     if(ExpFile.good()){
 		while (!ExpFile.eof()){
 			getline(ExpFile, line);
-			if(line.find("=")!=string::npos){
+			if(line.find("=")!=std::string::npos){
 				if(line.substr(0, line.find('=')).find("Feature Probe File")!=std::string::npos){
 					std::string s;
 					s=line.substr(line.find('=')+1);
@@ -554,7 +554,7 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 	}
     
     //---------------------------------------------------------------------------------
-    vector < DetermineBackgroundLevels > background;
+    std::vector < DetermineBackgroundLevels > background;
     
     ProximityClass proximities(NOFEXPERIMENTS);
        

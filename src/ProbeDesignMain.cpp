@@ -362,6 +362,20 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig) {
 		return 0;
 	}
 	
+	
+	if(generateDigest){
+		log<< "Generating Restriction Digest File : Starting!"<<std::endl;
+		int digestErr;
+		CallHiCUP getDigest(log); 
+		std::string assemblyVer =reFileInfo.genomeAssembly.substr(0, reFileInfo.genomeAssembly.find_first_of(","));
+		 digestErr = getDigest.GenerateRestrictionFile("hiCUPDigester/hicup_digester", motif, assemblyVer, fastaFile, DigestedGenomeFileName);
+		 if(digestErr!=1){
+			 log<<"!!Digest file could not be generated. Program exiting!!"<<std::endl;
+			 return 0;
+		 }
+		 log<< "Generating Restriction Digest File : Done!"<<std::endl;
+	}
+	
 	          
     log << std::setw(75)<<std::left<<"Base File Name:" << reFileInfo.desName << std::endl;    
     log << std::setw(75)<<"Digested Genome File:" << DigestedGenomeFileName << std::endl;
@@ -405,17 +419,6 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig) {
     reFileInfo.leftOfCut = motif.substr(0, motif.find_first_of(",")).find_first_of("^");
     reFileInfo.rightOfCut = (motif.substr(0, motif.find_first_of(",")).size() -1) - reFileInfo.leftOfCut;
 	reFileInfo.REName = motif.substr(motif.find_first_of(",")+1);
-    
-    if(generateDigest){
-		int digestErr;
-		CallHiCUP getDigest(log); 
-		std::string assemblyVer =reFileInfo.genomeAssembly.substr(0, reFileInfo.genomeAssembly.find_first_of(","));
-		 digestErr = getDigest.GenerateRestrictionFile("hiCUPDigester/hicup_digester",reFileInfo.REName, assemblyVer, fastaFile, DigestedGenomeFileName);
-		 if(digestErr!=1){
-			 log<<"!!Digest file could not be generated. Program exiting!!"<<std::endl;
-			 return 0;
-		 }
-	}
     
     log << "Reading Digest file and finding RE sites: Starting!" << std::endl;
     RESitesClass dpnIIsites(log);

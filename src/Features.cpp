@@ -59,6 +59,7 @@ void FeatureClass::GetTrFeats(std::stringstream &trx, temppars &tpars, std::stri
 	
 	if(option=="transcript"){
 		getline(trx,tpars.name,'\t'); 
+		for (auto & c: tpars.name) c = toupper(c);
 		getline(trx,tpars.tr_id,'\t'); 
     }
     

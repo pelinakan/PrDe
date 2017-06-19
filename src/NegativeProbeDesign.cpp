@@ -517,7 +517,7 @@ void NegativeProbeDesign::WritetoFile(bioioMod& getSeq){
 			
 			outFasFile<<it->first<<'\t'<<probeStart<<'\t'<<probeEnd<<'\t'<<"+"<<'\t'<<ind.name<<'\t'<<getFas<<std::endl;
 			
-			write2ProbesBedFileName<<it->first<<'\t'<<probeStart<<'\t'<<probeEnd<<'\t'<<ind.name<<std::endl;
+			write2ProbesBedFile<<it->first<<'\t'<<probeStart<<'\t'<<probeEnd<<'\t'<<ind.name<<std::endl;
 		}
 	}
 }

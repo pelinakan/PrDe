@@ -247,6 +247,11 @@ void DesignClass::DesignProbes(ProbeFeatureClass & Feats, RESitesClass & dpnII, 
             left_res = CheckDistanceofProbetoTSS(dpnII, pIt->second.chr, pIt->second.TSS, pIt->second.closestREsitenums[0], 0);
             right_res = CheckDistanceofProbetoTSS(dpnII, pIt->second.chr, pIt->second.TSS, pIt->second.closestREsitenums[1], 1);
             //last parameter is design direction not the promoter (RE on the left or right side of TSS)
+            
+            if(abs(right_res-left_res)< ProbeLen){
+				right_res=left_res;
+				left_res = CheckDistanceofProbetoTSS(dpnII, pIt->second.chr, right_res, pIt->second.closestREsitenums[0], 0);
+			}
              
             passed_upstream = CheckRepeatOverlaps(dpnII, pIt->second.chr, pIt->second.TSS, left_res, 0, repeat_trees, reInfo.ifRepeatAvail, reInfo.ifMapAvail);
             passed_downstream = CheckRepeatOverlaps(dpnII, pIt->second.chr, pIt->second.TSS, right_res, 1, repeat_trees, reInfo.ifRepeatAvail, reInfo.ifMapAvail);
@@ -414,11 +419,17 @@ bool DesignClass::ConstructSeq(PrDes::RENFileInfo& reInfo, bioioMod& getSeq, std
 	std::string fname = reInfo.desName+"."+reInfo.genomeAssembly.substr(0, reInfo.genomeAssembly.find_first_of(','))+".ProbeSequences."+calledChr+"."+reInfo.REName+"."+reInfo.currTime+".txt";    
     std::string header;
     
-    std::ofstream outfile;
+	std::string probesBedFile= reInfo.desName+"."+reInfo.genomeAssembly.substr(0, reInfo.genomeAssembly.find_first_of(','))+".AllProbeSequences."+reInfo.REName+"."+reInfo.currTime+".bed";
+	    
+    
+    std::ofstream outfile, outfile2;
     outfile.open(fname, std::fstream::app);
+    outfile2.open(probesBedFile, std::fstream::app);
 
 	
 	for(auto &probeVar : probeList){
+		
+		outfile2<<probeVar.chr<<'\t'<<probeVar.start<<'\t'<<probeVar.end<<'\t'<<probeVar.feature<<std::endl;
 		
 		std::string toFas = getSeq.GetFasta(probeVar.chr+":"+std::to_string(probeVar.start)+"-"+std::to_string(probeVar.end));
 		

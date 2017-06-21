@@ -34,8 +34,8 @@
 #include <fstream>
 #include <algorithm>
 
-std::map< std::string, FeatureStruct > Features;
-std::map< std::string, std::vector < std::string > > MetaFeatures;
+std::map< std::string, FeatureStruct, caseInsensComp > Features;
+std::map< std::string, std::vector < std::string > , caseInsensComp> MetaFeatures;
 
 void FeatureClass::InitialiseData(int clustProm, int fCount){
 	

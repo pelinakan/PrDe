@@ -460,12 +460,15 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 	}
 	log << "Reading Feature files and annotating features: Done!" << std::endl;
 	
+//--------------------//------------------------------	
+	bioioMod getSeq(log, fastaIndexFile, fastaFile);
+	
 //-------------------//------------------------------ 
 
 	if(ifNeg=="No"){
 		log << "Designing Probes: Starting!" << std::endl;
 		DesignClass designProbes(log);
-		bioioMod getSeq(log, fastaIndexFile, fastaFile);
+		
     
 		if(whichchr=="chrAll"){
 			for(auto &iChr: Features.ChrNames_proms){

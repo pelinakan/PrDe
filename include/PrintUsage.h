@@ -49,7 +49,7 @@ static int print_usage()
     std::cerr<< '\t'<<std::left<<std::setw(25)<<"-o or --option"<< "'FeatureProbes' to create probes targeting Features for chromosomes or 'NegativeControls' to create negative control probes for all chromosomes"<<std::endl;
     std::cerr<<std::endl;
     std::cerr<< '\t'<< "Optional Arguments:"<<std::endl;
-    std::cerr<< '\t'<<std::left<<std::setw(25)<<"-c or --chr"<< "the Chromosome to process in the format chrN, where N can be the name/number of the chromosome or All if processing all available chromosomes. Required input for option 'FeatureProbes'"<<std::endl;
+    std::cerr<< '\t'<<std::left<<std::setw(25)<<"-c or --chr"<< "the Chromosome to process in the format chrN, where N can be the name/number of the chromosome or All if processing all available chromosomes."<<std::endl;
     std::cerr<< '\t'<<std::left<<std::setw(25)<<" "<< "Required input for option 'FeatureProbes'"<<std::endl;
     std::cerr<< '\t'<<std::left<<std::setw(25)<<"-config"<< "the path to the Probe config file, if changed from default in bin/config directory"<<std::endl;
     std::cerr<<std::endl;

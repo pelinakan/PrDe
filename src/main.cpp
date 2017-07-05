@@ -64,10 +64,15 @@ int main(int argc, const char * argv[]) {
 			for(int i=2; i<argc; i+=2){
 				if((std::string(argv[i])=="-o" || std::string(argv[i])=="--option")){
 					probeOption=argv[i+1];
+					if(probeOption=="FeatureProbes" && argc <= 4){
+						print_usage();
+						return 1;
+					}
+					continue;
 				}
-				if(probeOption=="FeatureProbes" && argc > 4){
+				if(probeOption=="FeatureProbes" && argc > 4){										
 					if((std::string(argv[i])=="-c" || std::string(argv[i])=="--chr")){
-						whichChr=argv[i+1];					
+						whichChr=argv[i+1];
 					}
 					else if(argc==8 && (std::string(argv[i])=="-config")){
 						extraConfig=argv[i+1];

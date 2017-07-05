@@ -60,12 +60,13 @@ void ProbeFeatureClass::GetTrFeats(std::stringstream &trx, temppars &tpars, std:
     
     //Transcript Line Format
     //name2	 name	chrom	strand	txStart	txEnd	exonCount	exonStarts	exonEnds
+    //#bin	name	chrom	strand	txStart	txEnd	cdsStart	cdsEnd	exonCount	exonStarts	exonEnds	score	name2	cdsStartStat	cdsEndStat	exonFrames
     
     //BED Line Format for SNP
     //chrom	Start	End	name
 	
 	if(option=="transcript"){
-		getline(trx,tpars.name,'\t'); 
+		getline(trx,field,'\t'); 
 		getline(trx,tpars.tr_id,'\t'); 
     }
     
@@ -79,9 +80,18 @@ void ProbeFeatureClass::GetTrFeats(std::stringstream &trx, temppars &tpars, std:
     getline(trx,end,'\t');
     
     if(option=="transcript"){
-		getline(trx,field,'\t');
-		getline(trx,field,'\t');
-		getline(trx,field,'\t');
+		getline(trx,field,'\t'); //cdsStart
+		getline(trx,field,'\t'); //cdsEnd
+		getline(trx,field,'\t'); //exonCount
+		getline(trx,field,'\t'); //exonStarts
+		getline(trx,field,'\t'); //exonEnds
+		getline(trx,field,'\t'); //score
+		
+		getline(trx,tpars.name,'\t'); 
+		
+		getline(trx,field,'\t'); //cdsStartStat
+		getline(trx,field,'\t'); //cdsEndStat
+		getline(trx,field,'\t'); //exonFrames
     
 		if(tpars.strand=="+"){
 			tpars.start=std::stoi(start);

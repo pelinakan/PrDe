@@ -46,7 +46,7 @@
 
 int DistanceBetweenProbes = 1000;
 
-int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig) {
+int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, std::string probeOption) {
 	
 	int ClusterPromoters  = 1200;
 	int ProbeLen = 120;
@@ -95,6 +95,12 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig) {
     //-----------------------------------//
 	
 	
+	if(probeOption=="NegativeControls"){
+		ifNeg="Yes";
+	}
+	else{
+		ifNeg="No";
+	}
     
     
     log<<"READ IN INPUTS"<<std::endl;
@@ -252,7 +258,7 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig) {
 					fastaIndexFile=s;
 				}
 //--------------------------------------Negative Control Probes ---------------------------------------------------//
-			
+			/***
 				if(line.substr(0, line.find('=')).find("Design negative probe set")!=std::string::npos){
 					std::string s;
 					s=line.substr(line.find('=')+1);
@@ -264,7 +270,8 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig) {
 					}
 					else
 						ifNeg=s;
-				}
+				}***/
+				
 				if(line.substr(0, line.find('=')).find("Minimum fragment length for negative probe")!=std::string::npos){
 					if(!(line.substr(line.find('=')+1).empty()))
 						MinNegFragLen=std::stoi(line.substr(line.find('=')+1));
@@ -453,29 +460,31 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig) {
 	}
 	log << "Reading Feature files and annotating features: Done!" << std::endl;
 	
-//-------------------//------------------------------    
-    log << "Designing Probes: Starting!" << std::endl;
-    DesignClass designProbes(log);
-    bioioMod getSeq(log, fastaIndexFile, fastaFile);
+//-------------------//------------------------------ 
+
+	if(ifNeg=="No"){
+		log << "Designing Probes: Starting!" << std::endl;
+		DesignClass designProbes(log);
+		bioioMod getSeq(log, fastaIndexFile, fastaFile);
     
-    if(whichchr=="chrAll"){
-		for(auto &iChr: Features.ChrNames_proms){
-				designProbes.DesignProbes(Features, dpnIIsites, hg19repeats, bigwigsummarybinary, mappabilityfile, iChr, MaxDistancetoTSS, ProbeLen, reFileInfo, BUFSIZE) ;
+		if(whichchr=="chrAll"){
+			for(auto &iChr: Features.ChrNames_proms){
+					designProbes.DesignProbes(Features, dpnIIsites, hg19repeats, bigwigsummarybinary, mappabilityfile, iChr, MaxDistancetoTSS, ProbeLen, reFileInfo, BUFSIZE) ;
+			}
+			designProbes.MergeAllChrOutputs(Features, reFileInfo);
 		}
-		designProbes.MergeAllChrOutputs(Features, reFileInfo);
+		else
+			designProbes.DesignProbes(Features, dpnIIsites, hg19repeats, bigwigsummarybinary, mappabilityfile, whichchr, MaxDistancetoTSS, ProbeLen, reFileInfo, BUFSIZE) ;
+	
+		bool isFas = designProbes.ConstructSeq(reFileInfo, getSeq, whichchr);
+	
+		if(!isFas){
+			log << "!!Error getting sequence from fasta file!! Aborting!" << std::endl;
+			return 0;
+		}
+	
+		log << "Designing Probes: Done!" << std::endl;
 	}
-	else
-		designProbes.DesignProbes(Features, dpnIIsites, hg19repeats, bigwigsummarybinary, mappabilityfile, whichchr, MaxDistancetoTSS, ProbeLen, reFileInfo, BUFSIZE) ;
-	
-	bool isFas = designProbes.ConstructSeq(reFileInfo, getSeq, whichchr);
-	
-	if(!isFas){
-		log << "!!Error getting sequence from fasta file!! Aborting!" << std::endl;
-		return 0;
-	}
-	
-	log << "Designing Probes: Done!" << std::endl;
-    
 //-------------------//------------------------------    
     
     if(ifNeg=="Yes"){

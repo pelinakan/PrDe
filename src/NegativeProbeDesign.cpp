@@ -69,7 +69,7 @@ void NegativeProbeDesign::InitialiseDesign(ProbeFeatureClass& Features, std::str
 	bool flag=true;
 	int istart, iend;
 	std::string temp, lineReadin;
-	std::string chr, start, end, strand, intId;	
+	std::string chr, start, end, strand, intId, discardtemp;	
 	std::string genename, tr_id, exonCounts, exonStarts, exonEnds;
 	
 	std::map <std::string, genetemp> genemap;
@@ -87,11 +87,12 @@ void NegativeProbeDesign::InitialiseDesign(ProbeFeatureClass& Features, std::str
       		
 		std::stringstream geneline ( lineReadin );
 		
-		//name2	 name	chrom	strand	txStart	txEnd	exonCount	exonStarts	exonEnds
-		getline(geneline,genename,'\t');
-		 
-		getline(geneline, tr_id,'\t'); 
+		//#bin	name	chrom	strand	txStart	txEnd	cdsStart	cdsEnd	exonCount	exonStarts	exonEnds	score	name2	cdsStartStat	cdsEndStat	exonFrames
 		
+		getline(geneline,discardtemp,'\t');
+		
+		getline(geneline, tr_id,'\t'); 
+	
 		getline(geneline, chr,'\t'); 
         	  
 		getline(geneline, strand,'\t');
@@ -99,9 +100,20 @@ void NegativeProbeDesign::InitialiseDesign(ProbeFeatureClass& Features, std::str
 		getline(geneline, start,'\t');
 		getline(geneline, end,'\t');
 		
+		getline(geneline,discardtemp,'\t');
+		getline(geneline,discardtemp,'\t');
+		
 		getline(geneline, exonCounts,'\t');
 		getline(geneline, exonStarts,'\t');
 		getline(geneline, exonEnds,'\t');
+		
+		getline(geneline,discardtemp,'\t');
+		
+		getline(geneline,genename,'\t');
+		
+		getline(geneline,discardtemp,'\t');
+		getline(geneline,discardtemp,'\t');
+		getline(geneline,discardtemp,'\t');
 		
 		genetemp gt;
 		gt.chr=chr;

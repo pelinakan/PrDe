@@ -232,7 +232,7 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 				}
 				if(line.substr(0, line.find('=')).find("Extent of Repeat Overlaps")!=std::string::npos){
 					if(!(line.substr(line.find('=')+1).empty()))
-						repeatOverlapExtent=std::stoi(line.substr(line.find('=')+1));
+						reFileInfo.repeatOverlapExtent=std::stoi(line.substr(line.find('=')+1));
 				}
 				if(line.substr(0, line.find('=')).find("Mappability Threshold")!=std::string::npos){
 					if(!(line.substr(line.find('=')+1).empty()))

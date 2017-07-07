@@ -96,6 +96,7 @@ namespace PrDes{
 		int rightOfCut;
 		char currTime[100];
 		double mappabilityThreshold;
+		int repeatOverlapExtent;
 		bool ifRepeatAvail;
 		bool ifMapAvail;
 		std::string genomeAssembly;

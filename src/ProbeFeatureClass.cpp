@@ -62,8 +62,8 @@ void ProbeFeatureClass::GetTrFeats(std::stringstream &trx, temppars &tpars, std:
     //name2	 name	chrom	strand	txStart	txEnd	exonCount	exonStarts	exonEnds
     //#bin	name	chrom	strand	txStart	txEnd	cdsStart	cdsEnd	exonCount	exonStarts	exonEnds	score	name2	cdsStartStat	cdsEndStat	exonFrames
     
-    //BED Line Format for SNP
-    //chrom	Start	End	name
+    //BED detail Line Format for SNP
+    //chrom	Start	End	name	ID	Description
 	
 	if(option=="transcript"){
 		getline(trx,field,'\t'); 
@@ -116,6 +116,8 @@ void ProbeFeatureClass::GetTrFeats(std::stringstream &trx, temppars &tpars, std:
 	   tpars.tr_id=tpars.name;
 	   tpars.FeatureType = 2;
 	   tpars.probe_id=tpars.tr_id+"."+start;
+	   getline(trx,field,'\t');
+	   getline(trx,tpars.tr_id,'\t');
    }  
 }
 

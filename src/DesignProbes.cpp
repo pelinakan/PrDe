@@ -181,7 +181,7 @@ int DesignClass::CheckDistanceofProbetoTSS(RESitesClass& dpnII, std::string chr,
 		refound = dpnII.GettheREPositions(chr, closest_re, resites, invalidRECoordinate);
 		if (refound){
 			closest_re = resites[whichside];
-			resFragflag=CheckFragmentSize(dpnII, chr, closest_re, whichside); // flag becomes false when restriction fragment is longer than probe length
+			resFragFlag=CheckFragmentSize(dpnII, chr, closest_re, whichside); // flag becomes false when restriction fragment is longer than probe length
 			
 		}
 		else{
@@ -242,6 +242,8 @@ void DesignClass::DesignProbes(ProbeFeatureClass & Feats, RESitesClass & dpnII, 
     fn.append(reInfo.currTime);
     fn.append(".txt");
     std::ofstream summaryfile(fn.c_str());
+    
+    summaryfile<<"Feature_Name"<<'\t'<<"Feature_chr"<<'\t'<<"Feature_coordinate"<<'\t'<<"Dist between Left ProbeStart and Closest RESite to fragment"<<'\t'<<"Dist between Right ProbeEnd and Closest RESite to fragment"<<'\t'<<"If Upstream(left)/Downstream(right) probes created"<<std::endl;
     
     std::string fname = reInfo.desName;
     fname.append(".");

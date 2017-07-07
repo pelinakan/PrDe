@@ -117,6 +117,8 @@ void FeatureClass::GetTrFeats(std::stringstream &trx, temppars &tpars, std::stri
 	   if(option=="neg_ctrl")
 		tpars.FeatureType = 3;
 	   tpars.probe_id=tpars.tr_id+"_"+start;
+	   getline(trx,field,'\t');
+	   getline(trx,tpars.tr_id,'\t'); 
    }
 }
 

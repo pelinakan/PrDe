@@ -218,10 +218,11 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 					if(!(line.substr(line.find('=')+1).empty()))
 						ProbeLen=std::stoi(line.substr(line.find('=')+1));
 				}
+				/***
 				if(line.substr(0, line.find('=')).find("Minimum distance between Probes")!=std::string::npos){
 					if(!(line.substr(line.find('=')+1).empty()))
 						DistanceBetweenProbes=std::stoi(line.substr(line.find('=')+1));
-				}
+				}***/
 				if(line.substr(0, line.find('=')).find("Maximum distance from Probe to feature start (TSS if the feature is transcript)")!=std::string::npos){
 					if(!(line.substr(line.find('=')+1).empty()))
 						MaxDistancetoTSS=std::stoi(line.substr(line.find('=')+1));
@@ -397,7 +398,7 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 		log << std::setw(75)<<"Mappability File:" << mappabilityfile << std::endl;
     log << std::setw(75)<<"bigWigSummary executable path:" << bigwigsummarybinary << std::endl;
 	log << std::setw(75)<<"Probe Length:" << ProbeLen << std::endl;
-	log << std::setw(75)<<"Minimum distance between Probes:" << DistanceBetweenProbes << std::endl;
+	//log << std::setw(75)<<"Minimum distance between Probes:" << DistanceBetweenProbes << std::endl;
 	log << std::setw(75)<<"Maximum distance from Probe to TSS:"<<MaxDistancetoTSS << std::endl;
 	log << std::setw(75)<<"Cluster Promoters:"<< ClusterPromoters << std::endl;
 	log << std::setw(75)<<"Extent of Repeat Overlaps:"<< repeatOverlapExtent << std::endl;

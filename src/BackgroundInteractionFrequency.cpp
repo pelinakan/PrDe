@@ -37,6 +37,7 @@ using namespace boost::accumulators;
 #include "Global.h"
 #include "linear.h"
 #include <fstream>
+#include <cmath>
 
 
 ///For Probe-Distal and Probe-Probe
@@ -133,6 +134,9 @@ void DetermineBackgroundLevels::CalculateMeanandStdRegress(std::string eName, in
 	std::ofstream outf(FileName.c_str());
     outf << "Distance Bin" << '\t' << "Mean " << '\t' << "Stdev" << '\t' << "Sample Size" << '\t' << "Mean (Smoothed)" << '\t' << "StDev (Smoothed)" <<  std::endl;
     ***/
+    
+    int firtst25kb = ceil(25000/(double)binsize); // to exclude bins of first 25 kb from smoothing 
+    
     boost::accumulators::accumulator_set<double, stats<tag::rolling_mean> > acc(tag::rolling_window::window_size = (WindowSizeloc*2));
     boost::accumulators::accumulator_set<double, stats<tag::rolling_mean> > acc2(tag::rolling_window::window_size = (WindowSizeloc*2));
     
@@ -152,7 +156,8 @@ void DetermineBackgroundLevels::CalculateMeanandStdRegress(std::string eName, in
 	if(dm.empty())
 		log<<"No Element in dm Outloop"<<std::endl;
 	
-    for(z = 0; z < WindowSizeloc - 1; ++z){
+    //for(z = 0; z < WindowSizeloc - 1; ++z){
+    for(z = firtst25kb; z < firtst25kb + WindowSizeloc - 1; ++z){
 	
         dwm.push_back(dm[z]);
 	
@@ -165,7 +170,7 @@ void DetermineBackgroundLevels::CalculateMeanandStdRegress(std::string eName, in
 	
     }
 	
-    s = WindowSizeloc;
+    s = firtst25kb + WindowSizeloc;
     for(w = ((WindowSizeloc - 1)/2); w < (dm.size() - ((WindowSizeloc - 1)/2));++w){
         boost::accumulators::accumulator_set<double, stats<tag::rolling_mean> > acc(tag::rolling_window::window_size = (WindowSizeloc));
         boost::accumulators::accumulator_set<double, stats<tag::rolling_mean> > acc2(tag::rolling_window::window_size = (WindowSizeloc));
@@ -174,11 +179,12 @@ void DetermineBackgroundLevels::CalculateMeanandStdRegress(std::string eName, in
 		dws.push_back(ds[s - 1]);
 		
 		
-        for(z = 0; z < WindowSizeloc;++z){
+        //for(z = 0; z < WindowSizeloc;++z){
+        for(z = firtst25kb; z < firtst25kb + WindowSizeloc; ++z){
             acc(dwm[z]);
             acc2(dws[z]);
         }
-        if(w>WindowSizeloc-1){
+        if(w > firtst25kb + WindowSizeloc-1){
 			bglevelsloc.smoothed[db[w]] = rolling_mean(acc);
 			bglevelsloc.smoothed_stdev[db[w]] = rolling_mean(acc2);
         }

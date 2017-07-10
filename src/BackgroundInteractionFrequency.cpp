@@ -179,8 +179,8 @@ void DetermineBackgroundLevels::CalculateMeanandStdRegress(std::string eName, in
 		dws.push_back(ds[s - 1]);
 		
 		
-        //for(z = 0; z < WindowSizeloc;++z){
-        for(z = firtst25kb; z < firtst25kb + WindowSizeloc; ++z){
+        for(z = 0; z < WindowSizeloc;++z){
+        //for(z = firtst25kb; z < firtst25kb + WindowSizeloc; ++z){
             acc(dwm[z]);
             acc2(dws[z]);
         }

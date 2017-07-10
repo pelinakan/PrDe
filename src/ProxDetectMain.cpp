@@ -572,8 +572,8 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 		
 			background.push_back(DetermineBackgroundLevels());
 		
-			background.back().CalculateMeanandStdRegress(Exptemp.name+".Probe_Distal", ExperimentNo, Exptemp.designname, background.back().bglevels, BinSize, "ProbeDistal", MinimumJunctionDistance, log, WindowSize);
-			background.back().CalculateMeanandStdRegress(Exptemp.name+".Probe_Probe", ExperimentNo, Exptemp.designname, background.back().bglevelsProbeProbe, BinSizeProbeProbe, "ProbeProbe", MinimumJunctionDistance, log, WindowSizeProbeProbe);
+			background.back().CalculateMeanandStdRegress(Exptemp.name, ExperimentNo, Exptemp.designname, background.back().bglevels, BinSize, "ProbeDistal", MinimumJunctionDistance, log, WindowSize);
+			background.back().CalculateMeanandStdRegress(Exptemp.name, ExperimentNo, Exptemp.designname, background.back().bglevelsProbeProbe, BinSizeProbeProbe, "ProbeProbe", MinimumJunctionDistance, log, WindowSizeProbeProbe);
 			
 			log << "Total_Number_of_Pairs" << '\t' << totalNumberofPairs/2 << std::endl;
 			log << "Total_Number_of_Pairs on Probes" << '\t' << NumberofPairs << std::endl;
@@ -623,6 +623,12 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 		Interactions.CalculatePvalAndPrintInteractionsProbeDistal_NegCtrls(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSize, reFileInfo); //Print all same type of interactions
 		Interactions.CalculatePvalAndPrintInteractionsProbeProbe(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSizeProbeProbe, reFileInfo);//Print all same type of interactions
 		Interactions.CalculatePvalAndPrintInteractionsProbeProbe_NegCtrls(ProbeClass, background, BaseFileName, NOFEXPERIMENTS, ExperimentNames, whichchr, BinSizeProbeProbe, reFileInfo); //Print all same type of interactions
+	}
+	
+	if(CALCULATE_P_VALUES){
+		for(auto it=background.begin(); it!=background.end(); ++it){
+			(*it).PrintBackgroundFrequency(BinSize, BinSizeProbeProbe);
+		}
 	}
 
 }

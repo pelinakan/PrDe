@@ -68,7 +68,7 @@ double DesignClass::BigWigSummary(std::string chr, int start, int end){
     FILE *fp;
     
     if ((fp = popen(cmdchar, "r")) == NULL) {
-        dLog<<"Error opening pipe!"<<std::endl;
+        dLog<<"BigWigSummary: Error opening pipe!"<<std::endl;
         return -1;
     }
     
@@ -77,7 +77,7 @@ double DesignClass::BigWigSummary(std::string chr, int start, int end){
     }
     
     if(pclose(fp))  {
-        dLog<<"Command not found or exited with error status"<<std::endl;
+        dLog<<"BigWigSummary: Command not found or exited with error status"<<std::endl;
         return -1;
     }
     return a;

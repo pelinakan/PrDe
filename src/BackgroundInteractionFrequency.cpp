@@ -40,9 +40,11 @@ using namespace boost::accumulators;
 
 
 ///For Probe-Distal and Probe-Probe
-void DetermineBackgroundLevels::CalculateMeanandStdRegress(std::string BaseFileName, int ExperimentNo, std::string DesignName, BG_signals& bglevelsloc, int binsize, std::string whichProx, int MinimumJunctionDistance, OutStream& log, int WindowSizeloc){
+void DetermineBackgroundLevels::CalculateMeanandStdRegress(std::string eName, int ExperimentNo, std::string DesignName, BG_signals& bglevelsloc, int binsize, std::string whichProx, int MinimumJunctionDistance, OutStream& log, int WindowSizeloc){
 
 
+	expName= eName; //set experiment name
+	
 	std::map< int, int > nofentries_perBin; // required for calculating mean
 	std::map< int, int > signal_square; // required for calculating stdev
     double sum_square, variance;
@@ -123,12 +125,14 @@ void DetermineBackgroundLevels::CalculateMeanandStdRegress(std::string BaseFileN
             bglevelsloc.stdev[it->first] = sqrt(variance); //stdev
         }
 	}
+	
+	/***
     std::string FileName;
 	FileName.append(BaseFileName);
 	FileName.append(".BackgroundLevels.txt");
 	std::ofstream outf(FileName.c_str());
     outf << "Distance Bin" << '\t' << "Mean " << '\t' << "Stdev" << '\t' << "Sample Size" << '\t' << "Mean (Smoothed)" << '\t' << "StDev (Smoothed)" <<  std::endl;
-    
+    ***/
     boost::accumulators::accumulator_set<double, stats<tag::rolling_mean> > acc(tag::rolling_window::window_size = (WindowSizeloc*2));
     boost::accumulators::accumulator_set<double, stats<tag::rolling_mean> > acc2(tag::rolling_window::window_size = (WindowSizeloc*2));
     
@@ -187,7 +191,32 @@ void DetermineBackgroundLevels::CalculateMeanandStdRegress(std::string BaseFileN
         ++s;
     }
 
-    for (it = bglevelsloc.mean.begin(); it != bglevelsloc.mean.end(); ++it)
+	/***
+    for (it = bglevelsloc.mean.begin(); it != bglevelsloc.mean.end(); ++it){
         outf << (it->first) << '\t' << it->second << '\t' << bglevelsloc.stdev[it->first] << '\t' << bglevelsloc.samplesize[it->first] << '\t' << bglevelsloc.smoothed[it->first] << '\t' << bglevelsloc.smoothed_stdev[it->first] << std::endl;
-
+	***/
 }
+
+void DetermineBackgroundLevels::PrintBackgroundFrequency(int bSize, int bSizePP){
+	
+	std::string FileNamePE, FileNamePP;
+	FileNamePE.append(expName);
+	FileNamePP.append(expName);
+	FileNamePE.append(".Probe_Distal.BackgroundLevels.txt");
+	FileNamePE.append(".Probe_Probe.BackgroundLevels.txt");
+	std::ofstream outfPE(FileNamePE.c_str());
+	std::ofstream outfPP(FileNamePP.c_str());
+    outfPE << "Distance Bin" << '\t' << "Interaction Distance" << '\t' << "Mean " << '\t' << "Stdev" << '\t' << "Sample Size" << '\t' << "Mean (Smoothed)" << '\t' << "StDev (Smoothed)" <<  std::endl;
+    
+	for (auto it = bglevels.smoothed.begin(); it != bglevels.smoothed.end(); ++it){
+        outfPE << (it->first) << '\t'<< (it->first)*bSize << '\t' << bglevels.mean[it->first] << '\t' << bglevels.stdev[it->first] << '\t' << bglevels.samplesize[it->first] << '\t' << it->second << '\t' << bglevels.smoothed_stdev[it->first] << std::endl;	
+	}
+	
+	outfPP << "Distance Bin" << '\t' << "Interaction Distance" << '\t' << "Mean " << '\t' << "Stdev" << '\t' << "Sample Size" << '\t' << "Mean (Smoothed)" << '\t' << "StDev (Smoothed)" <<  std::endl;
+	
+	for (auto it = bglevelsProbeProbe.smoothed.begin(); it != bglevelsProbeProbe.smoothed.end(); ++it){
+        outfPP << (it->first) << '\t' << (it->first)*bSizePP << '\t' << bglevelsProbeProbe.mean[it->first] << '\t' << bglevelsProbeProbe.stdev[it->first] << '\t' << bglevelsProbeProbe.samplesize[it->first] << '\t' << it->second << '\t' << bglevelsProbeProbe.smoothed_stdev[it->first] << std::endl;	
+	}
+	
+}
+

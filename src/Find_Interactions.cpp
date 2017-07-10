@@ -177,10 +177,18 @@ void DetectInteractions::CalculatePvalAndPrintInteractionsProbeDistal(ProbeSet& 
 							if(bin-i>=0 && bin-i<=background[e].bglevels.smoothed.rbegin()->first){
 								background[e].bglevels.smoothed[bin] = background[e].bglevels.smoothed[bin-i];
 								background[e].bglevels.smoothed_stdev[bin] = background[e].bglevels.smoothed_stdev[bin-i];
+								//empty bins to zero
+								background[e].bglevels.mean[bin]=0;
+								background[e].bglevels.stdev[bin]=0;
+								background[e].bglevels.samplesize[bin]=0;
 							}
 							else{
 								background[e].bglevels.smoothed[bin] = 0;
 								background[e].bglevels.smoothed_stdev[bin] = 1;
+								//empty bins to zero
+								background[e].bglevels.mean[bin]=0;
+								background[e].bglevels.stdev[bin]=0;
+								background[e].bglevels.samplesize[bin]=0;
 							}
 						}
      
@@ -352,10 +360,18 @@ void DetectInteractions::CalculatePvalAndPrintInteractionsProbeProbe(ProbeSet& p
 							if(bin-i>=0 && bin-i<=background[e].bglevelsProbeProbe.smoothed.rbegin()->first){
 								background[e].bglevelsProbeProbe.smoothed[bin] = background[e].bglevelsProbeProbe.smoothed[bin-i];
 								background[e].bglevelsProbeProbe.smoothed_stdev[bin] = background[e].bglevelsProbeProbe.smoothed_stdev[bin-i];
+								//set empty bins to zero
+								background[e].bglevelsProbeProbe.mean[bin] = 0;
+								background[e].bglevelsProbeProbe.stdev[bin] = 0;
+								background[e].bglevelsProbeProbe.samplesize[bin] = 0;
 							}
 							else{
 								background[e].bglevelsProbeProbe.smoothed[bin] = 0;
 								background[e].bglevelsProbeProbe.smoothed_stdev[bin] = 1;
+								//set empty bins to zero
+								background[e].bglevelsProbeProbe.mean[bin] = 0;
+								background[e].bglevelsProbeProbe.stdev[bin] = 0;
+								background[e].bglevelsProbeProbe.samplesize[bin] = 0;
 							}
 						}
 						if (background[e].bglevelsProbeProbe.smoothed[bin] == 0.0)

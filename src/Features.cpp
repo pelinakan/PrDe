@@ -282,6 +282,19 @@ void FeatureClass::ReadFeatureAnnotation(RESitesClass& dpnIIsites, std::string T
                 Features[feature_id].probe_target = tp[0].probetarget;
                 Features[feature_id].FeatureType = tp[0].FeatureType;
                 
+                ////////////
+                
+                if(chrIntervals.find(tp[0].chr)!=chrIntervals.end()){
+					//chrIntervals[tp[0].chr].push_back(Interval <std::string>((clusteredcoords[y] - promPadding),(clusteredcoords[y] + promPadding), feature_id));
+					chrIntervals[tp[0].chr].push_back(Interval <std::string>((clusteredcoords[y]),(clusteredcoords[y]), feature_id));
+				}
+				else{
+					std::vector < Interval < std::string > > tempvector ;
+					//tempvector.push_back(Interval <std::string>((clusteredcoords[y] - promPadding),(clusteredcoords[y] + promPadding), feature_id));
+					tempvector.push_back(Interval <std::string>((clusteredcoords[y]),(clusteredcoords[y]), feature_id));
+					chrIntervals.emplace(tp[0].chr, tempvector);
+				}
+                
              
                 MetaFeatures[Features[feature_id].Name].push_back(feature_id);
                 feature_id = "";
@@ -305,6 +318,17 @@ void FeatureClass::ReadFeatureAnnotation(RESitesClass& dpnIIsites, std::string T
             Features[feature_id].feature_id = feature_id;
             Features[feature_id].probe_target = tp[0].probetarget;
             Features[feature_id].FeatureType = tp[0].FeatureType;
+            
+            if(chrIntervals.find(tp[0].chr)!=chrIntervals.end()){
+				//chrIntervals[tp[0].chr].push_back(Interval <std::string>((isoformprs[0] - promPadding),(isoformprs[0] + promPadding), feature_id));
+				chrIntervals[tp[0].chr].push_back(Interval <std::string>((isoformprs[0]),(isoformprs[0]), feature_id));
+			}
+			else{
+				std::vector < Interval < std::string > > tempvector ;
+				//tempvector.push_back(Interval <std::string>((isoformprs[0] - promPadding),(isoformprs[0] + promPadding), feature_id));
+				tempvector.push_back(Interval <std::string>((isoformprs[0]),(isoformprs[0]), feature_id));
+				chrIntervals.emplace(tp[0].chr, tempvector);
+			}
             
             MetaFeatures[Features[feature_id].Name].push_back(feature_id);
         }
@@ -346,7 +370,23 @@ void FeatureClass::ReadFeatureAnnotation(RESitesClass& dpnIIsites, std::string T
     
     if(filesReadCount==fileCount){ 
 		pLog<<"Total Number of Features annotated: "<< Features.size()<<std::endl;
+		for(auto it = chrIntervals.begin(); it != chrIntervals.end(); ++it){
+				std::vector< Interval < std::string > > temp;
+				promIntTree[it->first] = IntervalTree< std::string >(it->second);
+				it->second.swap(temp);
+		}
 	}
+}
+
+std::string FeatureClass::FindOverlaps(std::string chr, unsigned long int readstart, unsigned long int readend){
+    
+    std::vector<Interval< std::string > > overlapResult;
+    promIntTree[chr].findOverlapping(readstart, readend, overlapResult);
+    if (overlapResult.size() > 0){ // value = probe_index
+        return overlapResult[0].value;
+    }
+    else
+        return "null";
 }
 
 

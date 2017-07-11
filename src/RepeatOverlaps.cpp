@@ -30,7 +30,7 @@
 #include "RepeatOverlaps.h"
 #include <fstream>
 
-int Repeats::ReadRepeatIntervals(std::string repeatfile, OutStream& log, int overlapExtent){
+int Repeats::ReadRepeatIntervals(std::string repeatfile, OutStream& log){
 
     repeat_features feats;
     

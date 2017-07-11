@@ -568,7 +568,7 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 		
 		
 		if(CALCULATE_P_VALUES){ //Fill NegCtrl proximities to calculate background interaction frequencies
-			bamfile.ProcessSortedBamFile_NegCtrls(ProbeClass, dpnII, proximities, Exptemp.filepath, ExperimentNo, Exptemp.designname, statsOption);
+			bamfile.ProcessSortedBamFile_NegCtrls(ProbeClass, dpnII, proximities, Exptemp.filepath, ExperimentNo, Exptemp.designname, statsOption, proms);
 		
 			background.push_back(DetermineBackgroundLevels());
 		
@@ -583,7 +583,7 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 			log << "FractionofPairsOnProbe" << '\t' << (NumberofPairs)/double(totalNumberofPairs) << std::endl; 	    
 			NumberofPairs = 0; NofPairs_Both_on_Probe = 0; NofPairs_One_on_Probe = 0; NofPairsNoAnn = 0;
 		}
-       	bamfile.ProcessSortedBAMFile(ProbeClass, dpnII, proximities, Exptemp.filepath, ExperimentNo, whichchr, Exptemp.designname, statsOption);
+       	bamfile.ProcessSortedBAMFile(ProbeClass, dpnII, proximities, Exptemp.filepath, ExperimentNo, whichchr, Exptemp.designname, statsOption, proms);
          
 		log << "Total_Number_of_Pairs" << '\t' << totalNumberofPairs/2 << std::endl;
 		log << "Total_Number_of_Pairs on Probes" << '\t' << NumberofPairs << std::endl;

@@ -74,7 +74,8 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
     bool generateDigest=false;
     int featFileCount = 3; //3 - both files, 2 - transcript file only, 1 - snp file only
     int countFeatFiles = 2;
-    int repeatOverlapExtent = 6;
+    //int repeatOverlapExtent = 6;
+    
     int BUFSIZE = 128;
     std::string fastaIndexFile;
     std::string fastaFile;
@@ -85,6 +86,7 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 	
 	//Initialise
     reFileInfo.mappabilityThreshold = 0.7;
+    reFileInfo.repeatOverlapExtent = 6;
     
 	//-----Output to Log and std::cout-----//
     
@@ -401,7 +403,7 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 	//log << std::setw(75)<<"Minimum distance between Probes:" << DistanceBetweenProbes << std::endl;
 	log << std::setw(75)<<"Maximum distance from Probe to TSS:"<<MaxDistancetoTSS << std::endl;
 	log << std::setw(75)<<"Cluster Promoters:"<< ClusterPromoters << std::endl;
-	log << std::setw(75)<<"Extent of Repeat Overlaps:"<< repeatOverlapExtent << std::endl;
+	log << std::setw(75)<<"Extent of Repeat Overlaps:"<< reFileInfo.repeatOverlapExtent << std::endl;
 	log << std::setw(75)<<"Mappability Threshold:"<< reFileInfo.mappabilityThreshold << std::endl;
 	log << std::setw(75)<<"Fasta File:"<< fastaFile << std::endl;
 
@@ -436,7 +438,7 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
     Repeats hg19repeats;
     if(reFileInfo.ifRepeatAvail){
 		log << "Reading repeat file and calculating repeat overlap: Starting!" << std::endl;
-		hg19repeats.ReadRepeatIntervals(repeatfile, log, repeatOverlapExtent);
+		hg19repeats.ReadRepeatIntervals(repeatfile, log);
 		log << "Reading repeat file and calculating repeat overlap: Done!" << std::endl;
     }
 //-------------------//------------------------------

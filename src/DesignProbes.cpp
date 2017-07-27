@@ -111,7 +111,6 @@ bool DesignClass::overlap(RESitesClass& dpnII, Repeats repeat_trees, int& closes
     int overlaprepeats;
     double mappability; 
     
-    
     if(ifRep && !ifMap){
 		overlaprepeats = repeat_trees.FindOverlaps(chr, probe_start ,probe_end);
 		mappability=mapThreshold;
@@ -186,14 +185,11 @@ int DesignClass::CheckDistanceofProbetoTSS(RESitesClass& dpnII, std::string chr,
 			closest_re = resites[whichside];
 			
 			resFragFlag=CheckFragmentSize(dpnII, chr, closest_re, whichside); // flag becomes false when restriction fragment is longer than probe length
-			
 		}
-		else{
-			
+		else{	
 			return closest_re;
 		}
 	}
-	
     return closest_re;
 }
 
@@ -231,7 +227,6 @@ void DesignClass::DesignProbes(ProbeFeatureClass & Feats, RESitesClass & dpnII, 
     
     OneDesign.push_back(PrDes::DesignLayers());
     InitialiseDesign(Feats, OneDesign.back().Layer);
-    
     
     dLog << "Design initialised in DesignProbes" << std::endl;
     

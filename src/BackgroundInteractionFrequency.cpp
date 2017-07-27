@@ -126,14 +126,6 @@ void DetermineBackgroundLevels::CalculateMeanandStdRegress(std::string eName, in
             bglevelsloc.stdev[it->first] = sqrt(variance); //stdev
         }
 	}
-	
-	/***
-    std::string FileName;
-	FileName.append("FirstFile");
-	FileName.append(".BackgroundLevels.txt");
-	std::ofstream outf(FileName.c_str());
-    outf << "Distance Bin" << '\t' << "Mean " << '\t' << "Stdev" << '\t' << "Sample Size" << '\t' << "Mean (Smoothed)" << '\t' << "StDev (Smoothed)" <<  std::endl;
-    ***/
     
     int first25kb = ceil(25000/(double)binsize); // to exclude bins of first 25 kb from smoothing 
     
@@ -338,10 +330,6 @@ void DetermineBackgroundLevels::CalculateMeanandStdRegress(std::string eName, in
         ++s;
     }
 **/
-	/**
-    for (it = bglevelsloc.mean.begin(); it != bglevelsloc.mean.end(); ++it)
-        outf << (it->first) << '\t' << it->second << '\t' << bglevelsloc.stdev[it->first] << '\t' << bglevelsloc.samplesize[it->first] << '\t' << bglevelsloc.smoothed[it->first] << '\t' << bglevelsloc.smoothed_stdev[it->first] << std::endl;
-	**/
 }
 
 void DetermineBackgroundLevels::PrintBackgroundFrequency(int bSize, int bSizePP){

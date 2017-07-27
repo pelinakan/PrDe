@@ -242,18 +242,6 @@ void DetectInteractions::CalculatePvalAndPrintInteractionsProbeDistal(ProbeSet& 
                
                //WashU
 				int wStart, wEnd;
-				/***
-				if(featiter->second.strand=="+"){
-					wStart=featiter->second.start;
-					wEnd= featiter->second.end;		
-				}
-				else{
-					wStart=featiter->second.end;
-					wEnd= featiter->second.start;	
-				}
-				if(featiter->second.FeatureType == 2)
-						wEnd=wEnd+1;
-               ***/
                if(featiter->second.start > featiter->second.end){
 					wStart=featiter->second.end;
 					wEnd= featiter->second.start;	
@@ -307,22 +295,6 @@ void DetectInteractions::CalculatePvalAndPrintInteractionsProbeDistal(ProbeSet& 
 						
 						//WashU
 						int wStart, wEnd;
-						/***
-						if(featiter->second.strand=="+"){
-							wStart=featiter->second.start;
-							wEnd= featiter->second.end;
-							
-						}
-						else{
-							wStart=featiter->second.end;
-							wEnd= featiter->second.start;
-							if(featiter->second.FeatureType == 2)
-								wEnd=wEnd+1;
-							
-						}
-						if(featiter->second.FeatureType == 2)
-								wEnd=wEnd+1;
-						***/
 						if(featiter->second.start > featiter->second.end){
 							wStart=featiter->second.end;
 							wEnd= featiter->second.start;	
@@ -346,7 +318,6 @@ void DetectInteractions::CalculatePvalAndPrintInteractionsProbeDistal(ProbeSet& 
 							dEnd= itt->second.refragend;	
 						}
 						
-						//outf2 << featiter->second.chr << ':' << wStart << '-' << wEnd<< '\t'<< itx->maptochrname<<':' << itt->first << '-' << itt->second.refragend << '\t';
 						outf2 << featiter->second.chr << ':' << wStart << '-' << wEnd<< '\t'<< itx->maptochrname<<':' << dStart << '-' << dEnd << '\t';
 						
 						//WashU
@@ -450,30 +421,6 @@ void DetectInteractions::CalculatePvalAndPrintInteractionsProbeProbe(ProbeSet& p
                 if(std::find(seenPP.begin(), seenPP.end(), constructPP)==seenPP.end()){ //If the interaction does not already have the duplicate written
 					seenPP.push_back(constructPP);
 					int start1, end1, start2, end2;
-					
-					/**
-					if(featiter->second.strand=="+"){
-						start1=featiter->second.start;
-						end1=featiter->second.end;
-					}
-					else if(featiter->second.strand=="-"){
-						start1=featiter->second.end;
-						end1=featiter->second.start;
-					}
-					
-					if(featiter2->second.strand=="+"){
-						start2=featiter2->second.start;
-						end2=featiter2->second.end;
-					}
-					else if(featiter2->second.strand=="-"){
-						start2=featiter2->second.end;
-						end2=featiter2->second.start;
-					}
-					if(featiter->second.FeatureType==2)
-						end1=end1+1;
-					if(featiter2->second.FeatureType==2)
-						end2=end2+1;
-					***/
 					if(featiter->second.start>featiter->second.end){
 						start1=featiter->second.end;
 						end1=featiter->second.start;

@@ -38,7 +38,7 @@ int CallHiCUP::GenerateRestrictionFile(std::string hicupdigesterPath, std::strin
 	struct dirent *dirStruct;
 	dr=opendir(".");
 	
-	std::string nameComp="Digest_"+genomeName+"_"+enzymeMotif+"_None";
+	std::string nameComp="Digest_"+genomeName+"_"+enzymeMotif.substr(enzymeMotif.find(",")+1)+"_None";
 	
 	 while ((dirStruct = readdir(dr)) != NULL) {
 		std::string fname = dirStruct->d_name;

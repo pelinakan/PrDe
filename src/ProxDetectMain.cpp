@@ -91,6 +91,8 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
 	int BinSize  = 1000; // Only To Calculate Background Interaction Frequencies
 	int BinSizeProbeProbe=20000;
 	
+	int FeatureOverlapCheckPadding = 2000; // 2KB padding hardcoded to check for distal interacting element overlap with features 
+	
 	PrDes::RENFileInfo reFileInfo;
 	
 	std::string line, motif, fastaFile;
@@ -518,7 +520,7 @@ int HiCapTools::ProxDetectMain(std::string whichchr, std::string statsOption, st
    
     //-------------------------------------------------------------------------------
 	log << "Reading Feature files and annotating features: Starting!" << std::endl;
-    proms.InitialiseData(ClusterPromoters, countFeatFiles+CALCULATE_P_VALUES);
+    proms.InitialiseData(ClusterPromoters, countFeatFiles+CALCULATE_P_VALUES, FeatureOverlapCheckPadding);
     
     switch(featFileCount){
 		case 1:	

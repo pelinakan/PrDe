@@ -56,7 +56,7 @@ class FeatureClass{ //Probe Clusters Associated with a Promoter
 public:
     
     temppars *tp;
-    void InitialiseData(int, int);
+    void InitialiseData(int, int, int);
     
     std::map< std::string, IntervalTree <std::string> > promIntTree; //Promoter Interval Tree
     
@@ -70,6 +70,7 @@ private:
 	int ClusterPromoters; 
 	int fileCount ;
 	int filesReadCount;
+	int fOverlapPad;
 	std::map< std::string, std::vector < Interval < std::string > > > chrIntervals;
 	
     void GetTrFeats(std::stringstream&, temppars&, std::string);

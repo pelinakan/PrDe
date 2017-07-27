@@ -36,6 +36,7 @@
 #include <algorithm>
 #include <ctime>
 #include <dirent.h>
+//#include <omp.h>
 
 #include "HiCapTools.h"
 #include "NegativeProbeDesign.h"
@@ -79,6 +80,7 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
     int BUFSIZE = 128;
     std::string fastaIndexFile;
     std::string fastaFile;
+    int distFromTSS = 300; //half of the average fragment length -- hardcoded for now
     
     
     std::time_t now_time = std::time(NULL);
@@ -261,19 +263,6 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 					fastaIndexFile=s;
 				}
 //--------------------------------------Negative Control Probes ---------------------------------------------------//
-			/***
-				if(line.substr(0, line.find('=')).find("Design negative probe set")!=std::string::npos){
-					std::string s;
-					s=line.substr(line.find('=')+1);
-					s.erase(std::remove_if(begin(s), end(s), [l](char ch) { return std::isspace(ch, l); }), end(s));
-					if(s.empty()){
-						log<<"##Warning## : Design negative probe set is empty and therefore set to No" <<std::endl;
-						//emptyErrFlag = true;
-						ifNeg="No";
-					}
-					else
-						ifNeg=s;
-				}***/
 				
 				if(line.substr(0, line.find('=')).find("Minimum fragment length for negative probe")!=std::string::npos){
 					if(!(line.substr(line.find('=')+1).empty()))
@@ -396,15 +385,17 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 		log << std::setw(75)<<"SNV List File:" << SNPfile << std::endl;
 	if(reFileInfo.ifRepeatAvail)	
 		log << std::setw(75)<<"Repeat File:" << repeatfile << std::endl;
-	if(reFileInfo.ifRepeatAvail)
+	if(reFileInfo.ifMapAvail)
 		log << std::setw(75)<<"Mappability File:" << mappabilityfile << std::endl;
     log << std::setw(75)<<"bigWigSummary executable path:" << bigwigsummarybinary << std::endl;
 	log << std::setw(75)<<"Probe Length:" << ProbeLen << std::endl;
 	//log << std::setw(75)<<"Minimum distance between Probes:" << DistanceBetweenProbes << std::endl;
 	log << std::setw(75)<<"Maximum distance from Probe to TSS:"<<MaxDistancetoTSS << std::endl;
 	log << std::setw(75)<<"Cluster Promoters:"<< ClusterPromoters << std::endl;
-	log << std::setw(75)<<"Extent of Repeat Overlaps:"<< reFileInfo.repeatOverlapExtent << std::endl;
-	log << std::setw(75)<<"Mappability Threshold:"<< reFileInfo.mappabilityThreshold << std::endl;
+	if(reFileInfo.ifRepeatAvail)	
+		log << std::setw(75)<<"Extent of Repeat Overlaps:"<< reFileInfo.repeatOverlapExtent << std::endl;
+	if(reFileInfo.ifMapAvail)
+		log << std::setw(75)<<"Mappability Threshold:"<< reFileInfo.mappabilityThreshold << std::endl;
 	log << std::setw(75)<<"Fasta File:"<< fastaFile << std::endl;
 
 	if(ifNeg=="Yes"){
@@ -474,13 +465,16 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 		
     
 		if(whichchr=="chrAll"){
-			for(auto &iChr: Features.ChrNames_proms){
-					designProbes.DesignProbes(Features, dpnIIsites, hg19repeats, bigwigsummarybinary, mappabilityfile, iChr, MaxDistancetoTSS, ProbeLen, reFileInfo, BUFSIZE) ;
+			//Parallelise probe design for each chromosome
+			//#pragma omp parallel for 
+			for(auto iChr=Features.ChrNames_proms.begin(); iChr < Features.ChrNames_proms.end(); ++iChr){
+			//for(auto &iChr: Features.ChrNames_proms){
+					designProbes.DesignProbes(Features, dpnIIsites, hg19repeats, bigwigsummarybinary, mappabilityfile, *iChr, MaxDistancetoTSS, ProbeLen, reFileInfo, BUFSIZE, distFromTSS) ;
 			}
 			designProbes.MergeAllChrOutputs(Features, reFileInfo);
 		}
 		else
-			designProbes.DesignProbes(Features, dpnIIsites, hg19repeats, bigwigsummarybinary, mappabilityfile, whichchr, MaxDistancetoTSS, ProbeLen, reFileInfo, BUFSIZE) ;
+			designProbes.DesignProbes(Features, dpnIIsites, hg19repeats, bigwigsummarybinary, mappabilityfile, whichchr, MaxDistancetoTSS, ProbeLen, reFileInfo, BUFSIZE, distFromTSS) ;
 	
 		bool isFas = designProbes.ConstructSeq(reFileInfo, getSeq, whichchr);
 	

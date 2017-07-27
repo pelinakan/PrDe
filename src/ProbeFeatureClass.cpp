@@ -210,7 +210,8 @@ void ProbeFeatureClass::ClusterIsoformPromoters(std::vector <int> isoformprs, st
 
 void ProbeFeatureClass::ReadFeatureAnnotation(RESitesClass& dpnIIsites, std::string transcriptfile, std::string option)
 {
-	std::string temp,tr1,tr2, feature_id;
+	std::string temp,tr1,tr2; 
+	//std::string feature_id;
 	int promindex = 0; 
 	int invalidRECoordinate=0;
 	
@@ -264,6 +265,7 @@ void ProbeFeatureClass::ReadFeatureAnnotation(RESitesClass& dpnIIsites, std::str
             ClusterIsoformPromoters(isoformprs, tr_ids, probe_ids, clusteredcoords, ids_of_clustered, probe_ids_of_clustered, tp[0].strand); //Promoters that are within "ClusterPromoters" of each other are clustered
             // Fill promoter struct each unclustered isoform will have its promoter
             for(int y = 0; y < clusteredcoords.size();++y){
+				std::string feature_id;
 				feature_id.append(tp[0].name);
                 feature_id.append("_");
                 std::string tr_st = std::to_string(clusteredcoords[y]);
@@ -286,16 +288,30 @@ void ProbeFeatureClass::ReadFeatureAnnotation(RESitesClass& dpnIIsites, std::str
 					tempvector.push_back(Interval <std::string>((clusteredcoords[y] - promPadding),(clusteredcoords[y] + promPadding), feature_id));
 					chrIntervals.emplace(tp[0].chr, tempvector);
 				}
-
-                
+				
+				//deal with shared promoters
+				if(transcriptCounter.find(tp[0].name+"_"+tp[0].chr)!=transcriptCounter.end()){
+					transcriptCounter[tp[0].name+"_"+tp[0].chr].count = transcriptCounter[tp[0].name].count + 1;
+				}
+				else{
+					cCounter tmp;
+					tmp.count=1;
+					tmp.probesDesigned=false;
+					transcriptCounter.emplace(tp[0].name+"_"+tp[0].chr, tmp);
+				}
+				
+				promFeatures[feature_id].sharedpromoter = false;
+				promFeatures[feature_id].probesSkip = false;
                 
                 promFeatures[feature_id].ProbeID.push_back(probe_ids_of_clustered[y]);
                 promFeatures[feature_id].FeatureType = tp[0].FeatureType;
+                promFeatures[feature_id].end = tp[0].end;
                                 
                 dpnIIsites.GettheREPositions(promFeatures[feature_id].chr, promFeatures[feature_id].TSS, promFeatures[feature_id].closestREsitenums, invalidRECoordinate);
             }
         }
         else{
+			std::string feature_id;
             feature_id.append(tp[0].name);
             feature_id.append("_");
             
@@ -310,6 +326,7 @@ void ProbeFeatureClass::ReadFeatureAnnotation(RESitesClass& dpnIIsites, std::str
             promFeatures[feature_id].TSS = isoformprs[0];
             promFeatures[feature_id].ProbeID.push_back(probe_ids[0]);
             promFeatures[feature_id].FeatureType = tp[0].FeatureType;
+            promFeatures[feature_id].end = tp[0].end;
             
             
 			if(chrIntervals.find(tp[0].chr)!=chrIntervals.end()){
@@ -321,6 +338,21 @@ void ProbeFeatureClass::ReadFeatureAnnotation(RESitesClass& dpnIIsites, std::str
 				tempvector.push_back(Interval <std::string>((isoformprs[0] - promPadding),(isoformprs[0] + promPadding), feature_id));
 				chrIntervals.emplace(tp[0].chr, tempvector);
 			}
+			
+			//deal with shared promoters
+			if(transcriptCounter.find(tp[0].name+"_"+tp[0].chr)!=transcriptCounter.end()){
+				transcriptCounter[tp[0].name+"_"+tp[0].chr].count = transcriptCounter[tp[0].name+"_"+tp[0].chr].count + 1;
+			}
+			else{
+				cCounter tmp;
+				tmp.count=1;
+				tmp.probesDesigned=false;
+				transcriptCounter.emplace(tp[0].name+"_"+tp[0].chr, tmp);
+			}
+				
+			promFeatures[feature_id].sharedpromoter = false;
+			promFeatures[feature_id].probesSkip = false;
+			
 		        
             dpnIIsites.GettheREPositions(promFeatures[feature_id].chr, promFeatures[feature_id].TSS, promFeatures[feature_id].closestREsitenums, invalidRECoordinate);
         }
@@ -357,13 +389,16 @@ void ProbeFeatureClass::ReadFeatureAnnotation(RESitesClass& dpnIIsites, std::str
 	pLog << "Number of Features Annotated from "<< option <<" file: "<<promindex<< std::endl;
 
 	NofPromoters += promindex; 
-	DealwithSharedPromoters();
-	pLog << "Shared Promoters Determined" << std::endl;
+	//DealwithSharedPromoters();
+	//pLog << "Shared Promoters Determined" << std::endl;
 	
 	++fileReadCount; 
 	
 	if(fileReadCount==fileCount){ 
+		//std::cout<<transcriptCounter["TP_chr17"].count<<" hyub"<<std::endl;
 		pLog<<"Total Number of Features annotated: "<< NofPromoters<<std::endl;
+		DealwithSharedPromoters();
+		pLog << "Shared Promoters Determined" << std::endl;
 		for(auto it = chrIntervals.begin(); it != chrIntervals.end(); ++it){
 				std::vector< Interval < std::string > > temp;
 				promIntTree[it->first] = IntervalTree< std::string >(it->second);
@@ -374,17 +409,89 @@ void ProbeFeatureClass::ReadFeatureAnnotation(RESitesClass& dpnIIsites, std::str
 
 
 void ProbeFeatureClass::DealwithSharedPromoters(){ // If promoters are too close to each other
-	
-	for (auto it = promFeatures.begin(); it != promFeatures.end(); ++it) {
-		it->second.sharedpromoter = false;
+	//bool d=false;
+	for (auto it = promFeatures.begin(); it != promFeatures.end(); ++it) {		
 		for (auto itj = std::next(it , 1); itj != promFeatures.end(); ++itj) {
-			itj->second.sharedpromoter = false;
 			if (it->second.chr == itj->second.chr){
-				if(((it->second.start < itj->second.start) && (it->second.end > itj->second.start)) || ((it->second.start < itj->second.end) && (it->second.end > itj->second.end))){
-					it->second.sharedpromoter = true; 
-					itj->second.sharedpromoter = true;
-                    it->second.genes_sharingproms.push_back(itj->second.genes[0]);
-                    itj->second.genes_sharingproms.push_back(it->second.genes[0]);
+				//d=false;
+				//if((it->first=="TP53_7590868" && itj->first=="WRAP53_7589388")||(itj->first=="TP53_7590868" && it->first=="WRAP53_7589388"))
+					//d=true;
+				if(!(it->second.probesSkip)){
+					if(!(itj->second.probesSkip)){
+						std::string tmpTrans1 = (it->second).genes[0]+"_"+it->second.chr;
+						std::string tmpTrans2 = (itj->second).genes[0]+"_"+itj->second.chr;;
+						if(abs(it->second.TSS - itj->second.TSS) < ClusterPromoters){
+							//if(d){
+							//std::cout<<transcriptCounter["TP53_chr17"].count<< " hi probes Designed "<<transcriptCounter["TP53_chr17"].probesDesigned<<std::endl;
+							//}
+							//std::string tmpTrans1 = (it->first).substr(0, (it->first).find("_"))+"_"+it->second.chr;
+							//std::string tmpTrans2 = (itj->first).substr(0, (itj->first).find("_"))+"_"+itj->second.chr;;		
+							if(transcriptCounter[tmpTrans1].count < transcriptCounter[tmpTrans2].count){
+								itj->second.probesSkip=true;
+								transcriptCounter[tmpTrans2].count = transcriptCounter[tmpTrans2].count - 1;
+								transcriptCounter[tmpTrans1].probesDesigned=true;
+								//if(d)
+									//std::cout<<"Hithere"<<std::endl;
+									
+							}
+							else if(transcriptCounter[tmpTrans1].count > transcriptCounter[tmpTrans2].count){
+								it->second.probesSkip=true;
+								transcriptCounter[tmpTrans1].count = transcriptCounter[tmpTrans1].count - 1;
+								transcriptCounter[tmpTrans2].probesDesigned=true;
+								//if(d)
+									//std::cout<<"Hihere"<<std::endl;
+									
+							}
+							else if(transcriptCounter[tmpTrans1].count == transcriptCounter[tmpTrans2].count){
+								//if(d)
+								//std::cout<<transcriptCounter["TP53_chr17"].count<< " ed probes Designed "<<transcriptCounter[tmpTrans1].probesDesigned<<std::endl;
+								if(transcriptCounter[tmpTrans1].probesDesigned && !(transcriptCounter[tmpTrans2].probesDesigned)){
+									it->second.probesSkip=true;
+									transcriptCounter[tmpTrans1].count = transcriptCounter[tmpTrans1].count - 1;	
+									transcriptCounter[tmpTrans2].probesDesigned=true;
+								}
+								else if(!(transcriptCounter[tmpTrans1].probesDesigned) && (transcriptCounter[tmpTrans2].probesDesigned)){
+									itj->second.probesSkip=true;
+									transcriptCounter[tmpTrans2].count = transcriptCounter[tmpTrans2].count - 1;
+									transcriptCounter[tmpTrans1].probesDesigned=true;
+									
+								}
+								else{
+									if(abs(it->second.TSS-it->second.end) > abs(itj->second.TSS-itj->second.end)){
+										itj->second.probesSkip=true;
+										transcriptCounter[tmpTrans2].count = transcriptCounter[tmpTrans2].count - 1;
+										transcriptCounter[tmpTrans1].probesDesigned=true;
+										//if(d)
+										//std::cout<<"Hi1"<<std::endl;
+									}
+									else if(abs(it->second.TSS-it->second.end) < abs(itj->second.TSS-itj->second.end)){
+										it->second.probesSkip=true;
+										transcriptCounter[tmpTrans1].count = transcriptCounter[tmpTrans1].count - 1;
+										transcriptCounter[tmpTrans2].probesDesigned=true;
+										//if(d)
+										//std::cout<<"Hi2"<<std::endl;
+									}
+								}
+								
+							}
+							/***
+							if(d){
+								std::cout<<"TP "<<it->second.TSS<< " counter "<< transcriptCounter[tmpTrans1].count<<" Trans "<< tmpTrans1<< " Skip "<<it->second.probesSkip<< "Len "<<abs(it->second.TSS-it->second.end)<<std::endl;
+								std::cout<<"Wrap "<<itj->second.TSS<<" counter "<< transcriptCounter[tmpTrans2].count<<" Trans "<< tmpTrans2<< " Skip "<<itj->second.probesSkip<< "Len "<<abs(itj->second.TSS-itj->second.end)<<std::endl;
+								
+							}
+							
+							/***if(((it->second.start < itj->second.start) && (it->second.end > itj->second.start)) || ((it->second.start < itj->second.end) && (it->second.end > itj->second.end))){
+								it->second.sharedpromoter = true; 
+								itj->second.sharedpromoter = true;
+								it->second.genes_sharingproms.push_back(itj->second.genes[0]);
+								itj->second.genes_sharingproms.push_back(it->second.genes[0]);
+							}***/
+						}
+						else{
+							transcriptCounter[tmpTrans1].probesDesigned=true;
+						}
+					}
 				}
 			}
 		}

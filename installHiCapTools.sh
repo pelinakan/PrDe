@@ -10,24 +10,24 @@ case "${unameOut}" in
     *)          machine="UNKNOWN:${unameOut}"
 esac
 
-if [$machine = "Mac"]
-	export CC=which gcc-5
-	export CXX=which g++-5
-then 
-fi
+#if [$machine = "Mac"]
+#	export CC=which gcc-5
+#	export CXX=which g++-5
+#then 
+#fi
 
 mkdir -p TMPcompileHiCapTools
 
 cd TMPcompileHiCapTools
 
-cmake .. > cmake.out
+cmake .. #> cmake.out
 
 wait
 
-make > make.out
+make #> make.out
 
 wait
 
 cd ../
 
-rm -r TMPcompileHiCapTools
+#rm -r TMPcompileHiCapTools

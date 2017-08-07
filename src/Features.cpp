@@ -50,15 +50,64 @@ void FeatureClass::InitialiseData(int clustProm, int fCount, int featOverlapPadd
 
 void FeatureClass::GetTrFeats(std::stringstream &trx, temppars &tpars, std::string option){
 	
-	std::string field, start, end;
+	std::string field, start, end, desc;
     
     //Transcript Line Format
     //name2	 name	chrom	strand	txStart	txEnd	exonCount	exonStarts	exonEnds
     //#bin	name	chrom	strand	txStart	txEnd	cdsStart	cdsEnd	exonCount	exonStarts	exonEnds	score	name2	cdsStartStat	cdsEndStat	exonFrames
     
-    //BED Line Format for SNP and Negative Control Region
+    //BED detail6+2 Line Format for SNP and transcript
+    //chrom	Start	End	name	score	strand	ID	Description
+    
+    //BED Line Format for Negative Control Region
     //chrom	Start	End	name
+    
+    getline(trx,tpars.chr,'\t'); 
+    getline(trx,start,'\t');
+    getline(trx,end,'\t');
+    getline(trx,tpars.name,'\t');  //gene name
+    
+    if(option!="neg_ctrl"){
+		getline(trx,field,'\t'); //score
+		getline(trx,tpars.strand,'\t');
+		getline(trx,tpars.tr_id,'\t');
+		getline(trx,desc,'\t'); 
+	}
 	
+	if(option=="transcript"){
+		tpars.FeatureType = 1;
+		if(tpars.strand=="+"){
+			tpars.start=std::stoi(start);
+			tpars.end=std::stoi(end);
+			tpars.probe_id=tpars.tr_id+"."+start;
+		}
+		else{
+			tpars.start=std::stoi(end);
+			tpars.end=std::stoi(start);
+			tpars.probe_id=tpars.tr_id+"."+end;
+		}
+    }
+    
+    if(option=="SNV") {
+		tpars.FeatureType = 2;
+		tpars.start=std::stoi(start);
+		tpars.end=std::stoi(end);
+		tpars.strand="+";
+		tpars.probe_id=tpars.name+"."+start;
+		tpars.tr_id = desc;
+	}
+	
+	if(option=="neg_ctrl"){
+		tpars.FeatureType = 3;
+		tpars.start=std::stoi(start);
+		tpars.end=std::stoi(end);
+		tpars.strand="+";
+		tpars.tr_id=tpars.name;
+		tpars.probe_id=tpars.tr_id+"."+start;
+		
+	}
+    
+	/***
 	if(option=="transcript"){
 		getline(trx,field,'\t'); 
 		getline(trx,tpars.tr_id,'\t'); 
@@ -121,6 +170,8 @@ void FeatureClass::GetTrFeats(std::stringstream &trx, temppars &tpars, std::stri
 	   getline(trx,field,'\t');
 	   getline(trx,tpars.tr_id,'\t'); 
    }
+   * ***/
+   
 }
 
 

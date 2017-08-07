@@ -61,9 +61,11 @@ void ProbeFeatureClass::GetTrFeats(std::stringstream &trx, temppars &tpars, std:
     //Transcript Line Format
     //#bin	name	chrom	strand	txStart	txEnd	cdsStart	cdsEnd	exonCount	exonStarts	exonEnds	score	name2	cdsStartStat	cdsEndStat	exonFrames
     
-    //BED detail Line Format for SNP
-    //chrom	Start	End	name	ID	Description
+    
+    //BED detail6+2 Line Format for SNP and transcript
+    //chrom	Start	End	name	score	strand	ID	Description
 	
+	/***
 	if(option=="transcript"){
 		getline(trx,field,'\t'); 
 		getline(trx,tpars.tr_id,'\t'); 
@@ -117,7 +119,40 @@ void ProbeFeatureClass::GetTrFeats(std::stringstream &trx, temppars &tpars, std:
 	   tpars.probe_id=tpars.tr_id+"."+start;
 	   getline(trx,field,'\t');
 	   getline(trx,tpars.tr_id,'\t');
-   }  
+   } 
+   * **/
+    getline(trx,tpars.chr,'\t'); 
+    getline(trx,start,'\t');
+    getline(trx,end,'\t');
+    getline(trx,tpars.name,'\t');  //gene name
+    getline(trx,field,'\t'); //score
+    getline(trx,tpars.strand,'\t');
+	
+	getline(trx,tpars.tr_id,'\t');
+	getline(trx,field,'\t'); 
+	
+	if(option=="transcript"){
+		tpars.FeatureType = 1;
+		if(tpars.strand=="+"){
+			tpars.start=std::stoi(start);
+			tpars.end=std::stoi(end);
+			tpars.probe_id=tpars.tr_id+"."+start;
+		}
+		else{
+			tpars.start=std::stoi(end);
+			tpars.end=std::stoi(start);
+			tpars.probe_id=tpars.tr_id+"."+end;
+		}
+    }
+   
+    if(option=="SNV") {
+		tpars.FeatureType = 2;
+		tpars.start=std::stoi(start);
+		tpars.end=std::stoi(end);
+		tpars.strand="+";
+		tpars.probe_id=tpars.name+"."+start;
+		tpars.tr_id = field;
+	}
 }
 
 int ProbeFeatureClass::FindLeftMostCoord(std::vector<int> coords){

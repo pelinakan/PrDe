@@ -77,6 +77,7 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
     int featFileCount = 3; //3 - both files, 2 - transcript file only, 1 - snp file only
     int countFeatFiles = 2;
     //int repeatOverlapExtent = 6;
+    std::string transcriptfileForNegCtrl;
     
     int BUFSIZE = 128;
     std::string fastaIndexFile;
@@ -264,6 +265,17 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 				}
 //--------------------------------------Negative Control Probes ---------------------------------------------------//
 				
+				if(line.substr(0, line.find('=')).find("Transcript List File for Negative Controls")!=std::string::npos){
+					std::string s;
+					s=line.substr(line.find('=')+1);
+					s.erase(std::remove_if(begin(s), end(s), [l](char ch) { return std::isspace(ch, l); }), end(s));
+					if(s.empty()){
+						log<<"##Warning## : Transcript List File for negative controls is required" <<std::endl;
+						emptyErrFlag = true;
+					}
+					transcriptfileForNegCtrl=s;
+				}
+				
 				if(line.substr(0, line.find('=')).find("Minimum fragment length for negative probe")!=std::string::npos){
 					if(!(line.substr(line.find('=')+1).empty()))
 						MinNegFragLen=std::stoi(line.substr(line.find('=')+1));
@@ -328,6 +340,10 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 		emptyErrFlag=true;
 	}
 	
+	if(transcriptfileForNegCtrl.empty()){
+		log << "Both transcript list file and SNV list file paths are not entered"<< std::endl;
+	}
+	
 	if(emptyErrFlag){ // a required field is empty
 		return 0;
 	}
@@ -360,7 +376,10 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 		log<<"!!Error!! : User provided forbidden regions file is not accessible " << std::endl;
 		return 0;
 	}
-	
+	if(ifNeg=="Yes"&& !transcriptfileForNegCtrl.empty() && !CheckFile(transcriptfileForNegCtrl)){
+		log<<"!!Error!! : Transcript List File for Negative controls is not accessible " << std::endl;
+		return 0;
+	}
 	
 	if(generateDigest){
 		log<< "Generating Restriction Digest File : Starting!"<<std::endl;
@@ -399,6 +418,7 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 	log << std::setw(75)<<"Fasta File:"<< fastaFile << std::endl;
 
 	if(ifNeg=="Yes"){
+		log <<std::setw(75)<< "Transcript List File fro Negative controls:" << transcriptfileForNegCtrl << std::endl;
 		log << std::setw(75)<<"Design negative probe set:"<< ifNeg << std::endl;
 		log << std::setw(75)<<"Minimum fragment length for negative probe:"<< MinNegFragLen << std::endl;
 		log << std::setw(75)<<"Number of Intergenic Negative control probes:"<< intergenNegCtrls << std::endl;
@@ -493,7 +513,7 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 		log << "Designing Negative control Probes: Starting!" << std::endl;
 		NegativeProbeDesign NegctrlProbes(log);
 		int res;
-		NegctrlProbes.InitialiseDesign(Features, transcriptfile, regRegionFile, ifRegRegion, ProbeLen, bigwigsummarybinary, mappabilityfile, MinNegFragLen, reFileInfo, BUFSIZE, DigestedGenomeFileName, dforbidIntergen, dforbidRegReg);
+		NegctrlProbes.InitialiseDesign(Features, transcriptfileForNegCtrl, regRegionFile, ifRegRegion, ProbeLen, bigwigsummarybinary, mappabilityfile, MinNegFragLen, reFileInfo, BUFSIZE, DigestedGenomeFileName, dforbidIntergen, dforbidRegReg);
 							
 		res = NegctrlProbes.ConstructNegativeControlProbes(exonNegCtrls, "exonic",  hg19repeats);
 		res = NegctrlProbes.ConstructNegativeControlProbes(intronNegCtrls,"intronic",  hg19repeats);

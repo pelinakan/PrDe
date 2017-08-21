@@ -76,7 +76,6 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
     bool generateDigest=false;
     int featFileCount = 3; //3 - both files, 2 - transcript file only, 1 - snp file only
     int countFeatFiles = 2;
-    //int repeatOverlapExtent = 6;
     std::string transcriptfileForNegCtrl;
     
     int BUFSIZE = 128;
@@ -228,6 +227,10 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 					if(!(line.substr(line.find('=')+1).empty()))
 						DistanceBetweenProbes=std::stoi(line.substr(line.find('=')+1));
 				}
+				if(line.substr(0, line.find('=')).find("Minimum distance between Feature and Probe")!=std::string::npos){
+					if(!(line.substr(line.find('=')+1).empty()))
+						distFromTSS=std::stoi(line.substr(line.find('=')+1));
+				}
 				if(line.substr(0, line.find('=')).find("Maximum distance from Probe to feature start (TSS if the feature is transcript)")!=std::string::npos){
 					if(!(line.substr(line.find('=')+1).empty()))
 						MaxDistancetoTSS=std::stoi(line.substr(line.find('=')+1));
@@ -265,7 +268,7 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 				}
 //--------------------------------------Negative Control Probes ---------------------------------------------------//
 				
-				if(line.substr(0, line.find('=')).find("Transcript List File for Negative Controls")!=std::string::npos){
+				if(line.substr(0, line.find('=')).find("Transcript File for Negative Controls")!=std::string::npos){
 					std::string s;
 					s=line.substr(line.find('=')+1);
 					s.erase(std::remove_if(begin(s), end(s), [l](char ch) { return std::isspace(ch, l); }), end(s));
@@ -409,6 +412,7 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
     log << std::setw(75)<<"bigWigSummary executable path:" << bigwigsummarybinary << std::endl;
 	log << std::setw(75)<<"Probe Length:" << ProbeLen << std::endl;
 	log << std::setw(75)<<"Minimum distance between Probes:" << DistanceBetweenProbes << std::endl;
+	log << std::setw(75)<<"Minimum distance between Feature and Probe:" << distFromTSS << std::endl;
 	log << std::setw(75)<<"Maximum distance from Probe to TSS:"<<MaxDistancetoTSS << std::endl;
 	log << std::setw(75)<<"Cluster Promoters:"<< ClusterPromoters << std::endl;
 	if(reFileInfo.ifRepeatAvail)	
@@ -456,16 +460,24 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
     log << "Reading Feature files and annotating features: Starting!" << std::endl;
     ProbeFeatureClass Features(log);
     Features.InitialiseData(ClusterPromoters, countFeatFiles, dforbidProm); //ReadFeatureAnnotation called with 1 or 2 files
+    
+    std::string whichTranscriptFile;
+    if(ifNeg=="No"){
+		whichTranscriptFile=transcriptfile;
+	}
+	else{
+		whichTranscriptFile=transcriptfileForNegCtrl;
+	}
    
     switch(featFileCount){
 		case 1:	
 			Features.ReadFeatureAnnotation(dpnIIsites, SNPfile, "SNV");
 			break;
 		case 2:
-			Features.ReadFeatureAnnotation(dpnIIsites, transcriptfile, "transcript");	
+			Features.ReadFeatureAnnotation(dpnIIsites, whichTranscriptFile, "transcript-"+ifNeg);	
 			break;
 		case 3:
-			Features.ReadFeatureAnnotation(dpnIIsites, transcriptfile, "transcript");
+			Features.ReadFeatureAnnotation(dpnIIsites, whichTranscriptFile, "transcript-"+ifNeg);
 			Features.ReadFeatureAnnotation(dpnIIsites, SNPfile, "SNV");
 			break;
 		default:
@@ -518,7 +530,7 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 		res = NegctrlProbes.ConstructNegativeControlProbes(exonNegCtrls, "exonic",  hg19repeats);
 		res = NegctrlProbes.ConstructNegativeControlProbes(intronNegCtrls,"intronic",  hg19repeats);
 		res = NegctrlProbes.ConstructNegativeControlProbes(intergenNegCtrls, "intergenic", hg19repeats);
-		NegctrlProbes.WritetoFile(getSeq);
+		NegctrlProbes.WritetoFile(getSeq, reFileInfo);
 		
 		log << "Designing Negative control Probes: Done!" << std::endl;
 	}

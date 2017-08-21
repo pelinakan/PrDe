@@ -17,4 +17,4 @@ sortedfilename="$sortedfilename.sorted."
 sortedfilename=$sortedfilename$ext
 
 
-(head -n 1 $filename && tail -n +2 $filename | sort -k13,13) > $sortedfilename
+(head -n 1 $filename && tail -n +2 $filename | sort -k4,4) > $sortedfilename

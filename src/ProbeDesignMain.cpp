@@ -79,8 +79,8 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
     std::string transcriptfileForNegCtrl;
     
     int BUFSIZE = 128;
-    std::string fastaIndexFile;
-    std::string fastaFile;
+    //std::string fastaIndexFile;
+    //std::string fastaFile;
     int distFromTSS = 300; //half of the average fragment length -- hardcoded for now
     
     
@@ -255,7 +255,8 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 						log<<"!!Error!! : Fasta File is required" <<std::endl;
 						emptyErrFlag = true;
 					}
-					fastaFile=s;
+					//fastaFile=s;
+					reFileInfo.fastafilepath=s;
 				}
 				if(line.substr(0, line.find('=')).find("Fasta Index File")!=std::string::npos){
 					std::string s;
@@ -264,7 +265,8 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 					if(s.empty()){
 						log<<"!!Note!! : Fasta Index File will be checked in the same directory as Fasta File" <<std::endl;
 					}
-					fastaIndexFile=s;
+					//fastaIndexFile=s;
+					reFileInfo.fastaindexpath=s;
 				}
 //--------------------------------------Negative Control Probes ---------------------------------------------------//
 				
@@ -371,7 +373,7 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 		log<<"!!Error!! : Mappability File is not accessible " << std::endl;
 		return 0;
 	}
-	if(!CheckFile(fastaFile)){
+	if(!CheckFile(reFileInfo.fastafilepath)){
 		log<<"!!Error!! : Fasta File is not accessible " << std::endl;
 		return 0;
 	}
@@ -389,7 +391,7 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 		int digestErr;
 		CallHiCUP getDigest(log); 
 		std::string assemblyVer =reFileInfo.genomeAssembly.substr(0, reFileInfo.genomeAssembly.find_first_of(","));
-		 digestErr = getDigest.GenerateRestrictionFile("hiCUPDigester/hicup_digester", motif, assemblyVer, fastaFile, DigestedGenomeFileName);
+		 digestErr = getDigest.GenerateRestrictionFile("hiCUPDigester/hicup_digester", motif, assemblyVer, reFileInfo.fastafilepath, DigestedGenomeFileName);
 		 if(digestErr!=1){
 			 log<<"!!Digest file could not be generated. Program exiting!!"<<std::endl;
 			 return 0;
@@ -419,10 +421,10 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 		log << std::setw(75)<<"Extent of Repeat Overlaps:"<< reFileInfo.repeatOverlapExtent << std::endl;
 	if(reFileInfo.ifMapAvail)
 		log << std::setw(75)<<"Mappability Threshold:"<< reFileInfo.mappabilityThreshold << std::endl;
-	log << std::setw(75)<<"Fasta File:"<< fastaFile << std::endl;
+	log << std::setw(75)<<"Fasta File:"<< reFileInfo.fastafilepath << std::endl;
 
 	if(ifNeg=="Yes"){
-		log <<std::setw(75)<< "Transcript List File fro Negative controls:" << transcriptfileForNegCtrl << std::endl;
+		log <<std::setw(75)<< "Transcript List File for Negative controls:" << transcriptfileForNegCtrl << std::endl;
 		log << std::setw(75)<<"Design negative probe set:"<< ifNeg << std::endl;
 		log << std::setw(75)<<"Minimum fragment length for negative probe:"<< MinNegFragLen << std::endl;
 		log << std::setw(75)<<"Number of Intergenic Negative control probes:"<< intergenNegCtrls << std::endl;
@@ -459,7 +461,7 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 //-------------------//------------------------------
     log << "Reading Feature files and annotating features: Starting!" << std::endl;
     ProbeFeatureClass Features(log);
-    Features.InitialiseData(ClusterPromoters, countFeatFiles, dforbidProm); //ReadFeatureAnnotation called with 1 or 2 files
+    Features.InitialiseData(ClusterPromoters, countFeatFiles, dforbidProm + MaxDistancetoTSS); //ReadFeatureAnnotation called with 1 or 2 files
     
     std::string whichTranscriptFile;
     if(ifNeg=="No"){
@@ -487,7 +489,7 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 	log << "Reading Feature files and annotating features: Done!" << std::endl;
 	
 //--------------------//------------------------------	
-	bioioMod getSeq(log, fastaIndexFile, fastaFile);
+	bioioMod getSeq(log, reFileInfo.fastaindexpath, reFileInfo.fastafilepath);
 	
 //-------------------//------------------------------ 
 
@@ -525,11 +527,11 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 		log << "Designing Negative control Probes: Starting!" << std::endl;
 		NegativeProbeDesign NegctrlProbes(log);
 		int res;
-		NegctrlProbes.InitialiseDesign(Features, transcriptfileForNegCtrl, regRegionFile, ifRegRegion, ProbeLen, bigwigsummarybinary, mappabilityfile, MinNegFragLen, reFileInfo, BUFSIZE, DigestedGenomeFileName, dforbidIntergen, dforbidRegReg);
+		NegctrlProbes.InitialiseDesign(Features, transcriptfileForNegCtrl, regRegionFile, ifRegRegion, ProbeLen, bigwigsummarybinary, mappabilityfile, MaxDistancetoTSS, reFileInfo, BUFSIZE, DigestedGenomeFileName, dforbidIntergen, dforbidRegReg, transcriptfile, dforbidProm, distFromTSS);
 							
-		res = NegctrlProbes.ConstructNegativeControlProbes(exonNegCtrls, "exonic",  hg19repeats);
-		res = NegctrlProbes.ConstructNegativeControlProbes(intronNegCtrls,"intronic",  hg19repeats);
-		res = NegctrlProbes.ConstructNegativeControlProbes(intergenNegCtrls, "intergenic", hg19repeats);
+		res = NegctrlProbes.ConstructNegativeControlProbes(exonNegCtrls, "exonic",  hg19repeats, reFileInfo, dpnIIsites);
+		res = NegctrlProbes.ConstructNegativeControlProbes(intronNegCtrls,"intronic",  hg19repeats, reFileInfo, dpnIIsites);
+		res = NegctrlProbes.ConstructNegativeControlProbes(intergenNegCtrls, "intergenic", hg19repeats, reFileInfo, dpnIIsites);
 		NegctrlProbes.WritetoFile(getSeq, reFileInfo);
 		
 		log << "Designing Negative control Probes: Done!" << std::endl;

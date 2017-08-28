@@ -407,55 +407,65 @@ int NegativeProbeDesign::ConstructNegativeControlProbes(int nCtrls,std::string n
 	std::string outFileName;
 	std::ofstream outFile, summaryFile;
 	bool flag=false;
+	auto cmp = [](std::pair<std::string,float> const & a, std::pair<std::string,float> const & b) {
+		return  a.second > b.second;
+    };
 	
 	std::string indPath, chr;
 	std::string temp, lineReadin, length;
 	std::map<std::string, long int> totalChr;
 	long int total=0;
 	////////////
-	if (reInfo.fastaindexpath.empty()) { 
-        indPath = reInfo.fastafilepath;
-        indPath.replace(indPath.begin() + indPath.find_last_of("."), indPath.end(), ".fai");
-    }
-    else
-		indPath=reInfo.fastaindexpath;
+	if(nCtrlType!="intronic"){
+		if (reInfo.fastaindexpath.empty()) { 
+			indPath = reInfo.fastafilepath;
+			indPath.replace(indPath.begin() + indPath.find_last_of("."), indPath.end(), ".fai");
+		}
+		else
+			indPath=reInfo.fastaindexpath;
 		
-	std::ifstream indFile {indPath, std::ifstream::in};
-	if (!indFile) {
-        indFile.open(reInfo.fastafilepath + ".fai");
-        if (!indFile) {
-			dLog<<"Fasta index file not found!!!"<<std::endl;
-			return 0;
+		std::ifstream indFile {indPath, std::ifstream::in};
+		if (!indFile) {
+			indFile.open(reInfo.fastafilepath + ".fai");
+			if (!indFile) {
+				dLog<<"Fasta index file not found!!!"<<std::endl;
+				return 0;
+			}
 		}
-	}
 	
-	if(indFile.good()){
-		while (getline(indFile, lineReadin)){  		
-			std::stringstream indLine ( lineReadin );
-			indLine>>chr>>length>>temp>>temp>>temp;
-			if(chr.length()<6){
-				totalChr.emplace(chr, std::stoi(length));
-				total=total + std::stoi(length);
-			}		
+		if(indFile.good()){
+			while (getline(indFile, lineReadin)){  		
+				std::stringstream indLine ( lineReadin );
+				indLine>>chr>>length>>temp>>temp>>temp;
+				if(chr.length()<6){
+					totalChr.emplace(chr, std::stoi(length));
+					total=total + std::stoi(length);
+				}		
+			}
 		}
-	}
-	indFile.close();
-	int checkTotal=nCtrls;
-	numProbesPerChr.clear();
-	for(auto it=totalChr.begin(); it!=totalChr.end(); ++it){
-		int num=(it->second/float(total))*nCtrls;
-		numProbesPerChr.emplace(it->first, num);
-		checkTotal =checkTotal-num; 
-	}
-	if(checkTotal>0){
-		while(checkTotal>0){
-			for(auto it=numProbesPerChr.begin(); it!=numProbesPerChr.end() && checkTotal>0; ++it){
-				it->second=it->second+1;
-				checkTotal=checkTotal-1;
+		indFile.close();
+		int checkTotal=nCtrls;
+		std::vector<std::pair<std::string, float>> frac;
+		numProbesPerChr.clear();
+		for(auto it=totalChr.begin(); it!=totalChr.end(); ++it){
+			float num= (it->second/float(total))*nCtrls;
+			numProbesPerChr.emplace(it->first, (int)num);
+			checkTotal =checkTotal-(int)num;
+			frac.push_back(std::make_pair(it->first, num-(int)num)); 
+		}
+		
+		std::sort(frac.begin(), frac.end(), cmp);
+		
+		if(checkTotal>0){
+			while(checkTotal>0){
+				for(auto it=frac.begin(); it!=frac.end() && checkTotal>0; ++it){
+					numProbesPerChr[it->first]= numProbesPerChr[it->first]+1;
+					checkTotal=checkTotal-1;
+				}
 			}
 		}
 	}
-	
+		
 	outFileName.append(fileName);
 
     std::ifstream checkFile(outFileName);

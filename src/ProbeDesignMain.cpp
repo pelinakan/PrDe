@@ -53,7 +53,6 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 	int ClusterPromoters  = 1200;
 	int ProbeLen = 120;
 	int MaxDistancetoTSS = 2500;
-	int MinNegFragLen=500;
 	std::string DigestedGenomeFileName;
 	std::string mappabilityfile;
 	std::string bigwigsummarybinary;
@@ -280,11 +279,6 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 					}
 					transcriptfileForNegCtrl=s;
 				}
-				
-				if(line.substr(0, line.find('=')).find("Minimum fragment length for negative probe")!=std::string::npos){
-					if(!(line.substr(line.find('=')+1).empty()))
-						MinNegFragLen=std::stoi(line.substr(line.find('=')+1));
-				}
 				if(line.substr(0, line.find('=')).find("Number of Intergenic Negative control fragments")!=std::string::npos){
 					if(!(line.substr(line.find('=')+1).empty()))
 						intergenNegCtrls=std::stoi(line.substr(line.find('=')+1));
@@ -426,7 +420,6 @@ int HiCapTools::ProbeDesignMain(std::string whichchr, std::string extraConfig, s
 	if(ifNeg=="Yes"){
 		log <<std::setw(75)<< "Transcript List File for Negative controls:" << transcriptfileForNegCtrl << std::endl;
 		log << std::setw(75)<<"Design negative probe set:"<< ifNeg << std::endl;
-		log << std::setw(75)<<"Minimum fragment length for negative probe:"<< MinNegFragLen << std::endl;
 		log << std::setw(75)<<"Number of Intergenic Negative control probes:"<< intergenNegCtrls << std::endl;
 		log << std::setw(75)<<"Number of Intronic Negative control probes:" << intronNegCtrls << std::endl;
 		log << std::setw(75)<<"Number of Exonic Negative control probes:" <<exonNegCtrls << std::endl;
